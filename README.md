@@ -3,4 +3,4 @@
 ## Authors
 
 - Christine Brinchmann <christibr@nmbu.no>
-- Marie ...
+- Marie Kolvik Valøy <mvaloy@nmbu.no>
