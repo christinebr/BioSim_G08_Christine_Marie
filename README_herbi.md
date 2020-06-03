@@ -1,3 +1,3 @@
 # Info on herbivores
 
-Herbivores eats plants
+Herbivores are animals that needs fodder, such as plants, and need this to survive
