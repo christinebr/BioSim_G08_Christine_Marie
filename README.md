@@ -20,4 +20,4 @@ The anuall cycle:
 - death
 
 ## About the authors
-Dr. Brinchmann and Dr. Valøy are  self-declared experts in programing of ecological simulations
+Dr. Brinchmann and Dr. Valøy are self-declared experts in programing of ecological simulations
