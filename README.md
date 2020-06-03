@@ -8,3 +8,4 @@
 - Marie Kolvik Valøy <mvaloy@nmbu.no>
 
 En god setning, snøen er her bare om vinteren
+En setning, snøen er borte, solen dør
