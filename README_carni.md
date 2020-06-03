@@ -1,3 +1,3 @@
-#All about carnivores
+#Info on carnivores
 
-Carnivores eat meat.
+Carnivores prey on herbivores to survive.
