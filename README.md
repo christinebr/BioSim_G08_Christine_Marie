@@ -7,4 +7,4 @@
 - Christine Brinchmann <christibr@nmbu.no>
 - Marie Kolvik Valøy <mvaloy@nmbu.no>
 
-En setning, snøen er borte
+En setning, snøen er borte, solen dør
