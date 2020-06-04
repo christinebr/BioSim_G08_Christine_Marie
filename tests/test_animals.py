@@ -14,6 +14,16 @@ class TestHerbivores:
         """
         Tests that the Herbivores class raises a KeyError if default parameter names are not used.
 
-        Todo: Denne skal teste at programmet blir avbrutt hvis man gir inn veil key
+        Todo: Denne skal teste at programmet blir avbrutt hvis man gir inn feil key
         """
         pass
+
+    def test_default_value_for_age(self):
+        h = Herbivores()
+        assert h.age == 0
+        h = Herbivores(age=3)
+        assert h.age != 0
+
+    def test_age_setter_cant_be_negative(self):
+        pass
+

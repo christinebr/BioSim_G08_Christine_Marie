@@ -22,16 +22,19 @@ class Herbivores:
 
     @property
     def age(self):
+        """A getter-method for age-property."""
         return self._age
 
     @age.setter
     def age(self, new_age):
+        """A setter-method for age."""
         if new_age >= 0 and isinstance(new_age, int):
             self._age = new_age
         else:
             raise ValueError("Age need to be a positive integer")
 
     def update_age(self):
+        """Updating the age by 1 when one year has passed."""
         self._age += 1
 
     def fitness(self):
