@@ -1,6 +1,14 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 
+# Default parameters for herbivores:
+default_params_herbi = {'w_birth': 8.0, 'sigma_birth': 1.5, 'beta': 0.9,
+                        'eta': 0.05, 'a_half': 40.0, 'phi_age': 0.6,
+                        'w_half': 10.0, 'phi_weight': 0.1, 'mu': 0.25,
+                        'gamma': 0.2, 'zeta': 3.5, 'xi': 1.2, 'omega': 0.4,
+                        'F': 10.0, 'DeltaPhiMax': None}
+
+
 class Animal:
     """This class will represent an animal."""
     pass
@@ -8,13 +16,6 @@ class Animal:
 
 class Herbivores:
     """This class will represent herbivores."""
-
-    # Default parameters for herbivores:
-    default_params_herbi = {'w_birth': 8.0, 'sigma_birth': 1.5, 'beta': 0.9,
-                            'eta': 0.05, 'a_half': 40.0, 'phi_age': 0.6,
-                            'w_half': 10.0, 'phi_weight': 0.1, 'mu': 0.25,
-                            'gamma': 0.2, 'zeta': 3.5, 'xi': 1.2, 'omega': 0.4,
-                            'F': 10.0, 'DeltaPhiMax': None}
 
     def __init__(self, weight, age=0):
         """Create a herbivore with age 0"""
@@ -46,10 +47,10 @@ class Herbivores:
     @weight.setter
     def weight(self, new_weight):
         """A setter-method for weight."""
-        if new_weight >= 0 and isinstance(new_weight, float):
+        if new_weight >= 0:
             self.weight = new_weight
         else:
-            raise ValueError("Weight need to be a positive integer")
+            raise ValueError("Weight need to be a positive number")
 
     def update_weight(self, delta_weight):
         """Updating the weight."""
@@ -59,11 +60,14 @@ class Herbivores:
     def _q(sign, x, x_half, phi):
         return 1./(1.+np.exp(sign*phi*(x-x_half)))
 
-    def fitness(self, age, weight, params):
+    def fitness(self):
         """
         Calculates the value of fitness. Note that the value of fitness should be between 0 and 1.
         :return: Value of fitness
         """
+        age = self._age
+        weight = self.weight
+        params = default_params_herbi
         if weight <= 0:
             return 0.
         else:
