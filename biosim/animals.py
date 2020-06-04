@@ -80,7 +80,7 @@ class Herbivores:
 
     @staticmethod
     def _q(sign, x, x_half, phi):
-        return 1./(1.+np.exp(sign*phi*(x-x_half)))
+        return 1.0 / (1.0 + np.exp(sign * phi * (x - x_half)))
 
     def fitness(self):
         """
@@ -94,14 +94,22 @@ class Herbivores:
         if weight <= 0:
             return 0.
         else:
-            (self._q(+1, age, params['a_half'], params['phi_age']))\
-                * (self._q(-1, weight, params['w_half'], params['phi_weight']))
+            return (self._q(+1, age, params['a_half'], params['phi_age']))\
+                      * (self._q(-1, weight, params['w_half'], params['phi_weight']))
 
     def set_params(self):
         pass
 
     def get_params(self):
         pass
+
+    def death(self):
+        if self.weight == 0:
+            return True  # the herbivore is dead
+        else:
+            # A herbivore dies with the probability:
+            prob_death = self.weight*(1-self.fitness())
+            return prob_death
 
 
 class Carnivores:
