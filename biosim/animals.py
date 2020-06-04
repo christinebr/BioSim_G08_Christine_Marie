@@ -79,6 +79,19 @@ class Herbivores:
         """Updating the weight."""
         self.weight += delta_weight
 
+    def update_weight2(self, amount_fodder_eaten=None):
+        """
+        amount_fodder_eaten: amount of fodder eaten by a herbivore
+        The method updated the weight of a herbivore:
+                - the weight increases if the herbivore have eaten
+                - the weight decreases if amount_fodder_eaten=None
+        """
+        params = default_params_herbi
+        if amount_fodder_eaten:
+            self.weight += params['beta']*amount_fodder_eaten
+        else:
+            self.weight -= params['eta']*self.weight
+
     @staticmethod
     def _q(sign, x, x_half, phi):
         return 1.0 / (1.0 + np.exp(sign * phi * (x - x_half)))
@@ -106,7 +119,7 @@ class Herbivores:
 
     def birth(self, N):
         """
-        N is the number of herbivores in the same place.
+        N: the number of herbivores in the same place.
         Returns the probability for a herbivore to give birth.
         Gender of animal is not important
         If N=1 -> the probability of giving birth is zero
@@ -120,8 +133,9 @@ class Herbivores:
         elif self.weight < weight_limit:
             return 0
         else:
+            # Probability of giving birth (maximum value is 1)
             prob_birth = min(1, params['gamma'] * self.fitness() * (N - 1))
-            return prob_birth      
+            return prob_birth
 
     def death(self):
         """
@@ -142,10 +156,13 @@ class Carnivores:
 
 
 if __name__ == "__main__":
-    h1 = Herbivores(weight=20, age=0)
-    print(h1.weight)
-    print(h1.age)
-    print(h1.fitness())
+    h1 = Herbivores(weight=40, age=5)
+    print(f"Weight:{h1.weight:17}")
+    print(f"Age:{h1.age:20}")
+    print(f"Fitness:{h1.fitness():20.3f}")
+
+    print(f"Prob of birth:{h1.birth(N=9):10}")
+    print(f"Prob of death:{h1.death():14.3f}\n")
 
     h2 = Herbivores(weight=60, age=0)
     print(h2.fitness())

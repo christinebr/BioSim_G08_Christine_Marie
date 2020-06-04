@@ -32,6 +32,17 @@ class TestHerbivores:
     def test_age_setter_cant_be_negative(self):
         pass
 
+    def test_increase_weight_when_eating(self, initial_herbivore_class):
+        old_weight = self.h.weight
+        self.h.update_weight2(amount_fodder_eaten=8)
+        assert self.h.weight > old_weight
+
+    def test_decrease_weight_not_eating(self, initial_herbivore_class):
+        old_weight = self.h.weight
+        self.h.update_weight2(amount_fodder_eaten=None)
+        assert self.h.weight < old_weight
+
+
     def test_fitness_between_0_and_1(self, initial_herbivore_class):
         """Testing if value of fitness is between 0 and 1"""
         fitness = self.h.fitness()
