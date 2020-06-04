@@ -67,3 +67,21 @@ class TestHerbivores:
 
     def test_no_birth_when_small_weight(self, initial_herbivore_class):
         assert self.h.birth(N=2) == 0
+
+    def test_not_eating_and_feeding_at_once(self, initial_herbivore_class):
+        """
+        This test checks that the update_weight method does not run if an animal tries to eat and
+        get a child at the same moment
+        """
+        h = self.h
+        weight = h.get_weight()
+        h.update(weight_of_newborn=10, amount_fodder_eaten=3)
+        assert weight == h.get_weight()
+
+    def test_fitness_update_whith_weight(self, initial_herbivore_class):
+        """Tests that the fitness of the animal updates automatically when the weight changes"""
+        h = self.h
+        fitness1 = h.fitness()
+        h.update_weight2(amount_fodder_eaten=50)
+        fitness2 = h.fitness()
+        assert fitness1 != fitness2
