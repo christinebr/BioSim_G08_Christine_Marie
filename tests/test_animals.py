@@ -50,3 +50,9 @@ class TestHerbivores:
         # Age 0 and weight 100 gives fitness 0.999...
         self.h.weight = 100
         assert self.h.death() < 0.1
+
+    def test_no_birth_when_n_is_1(self, initial_herbivore_class):
+        assert self.h.birth(N=1) == 0
+
+    def test_no_birth_when_small_weight(self, initial_herbivore_class):
+        assert self.h.birth(N=2) == 0
