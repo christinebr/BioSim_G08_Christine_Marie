@@ -79,18 +79,24 @@ class Herbivores:
         """Updating the weight."""
         self.weight += delta_weight
 
-    def update_weight2(self, amount_fodder_eaten=None):
+    def update_weight2(self, weight_of_newborn=None, amount_fodder_eaten=None):
         """
         amount_fodder_eaten: amount of fodder eaten by a herbivore
         The method updated the weight of a herbivore:
                 - the weight increases if the herbivore have eaten
                 - the weight decreases if amount_fodder_eaten=None
+                - the weight neither decreases nor increases if amount_fodder_eaten=0
+
+        In the spring animals will eat, then amount of fodder will be 0 or more, in the autumn
+        animals will loss weigth, i.e. amount_of_fodder=None
         """
         params = default_params_herbi
         if amount_fodder_eaten:
             self.weight += params['beta']*amount_fodder_eaten
-        else:
+        elif weight_of_newborn == None:
             self.weight -= params['eta']*self.weight
+        else:
+            self.weight -= params['xi']*weight_of_newborn
 
     @staticmethod
     def _q(sign, x, x_half, phi):
@@ -171,3 +177,9 @@ if __name__ == "__main__":
     h4 = Herbivores(weight=100, age=0)
     print(h4.fitness())
     print(h4.death())
+    h4.update_weight2(amount_fodder_eaten=3)
+    print(h4.get_weight())
+    print(h4.fitness())
+    h4.update_weight2(weight_of_newborn=10)
+    print(h4.get_weight())
+    print(h4.fitness())
