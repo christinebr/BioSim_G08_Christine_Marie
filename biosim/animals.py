@@ -1,6 +1,11 @@
 # -*- coding: utf-8 -*-
 
 
+class Animal:
+    """This class will represent an animal."""
+    pass
+
+
 class Herbivores:
     """This class will represent herbivores."""
 
@@ -23,3 +28,8 @@ class Herbivores:
 
     def get_params(self):
         pass
+
+
+class Carnivores:
+    """This class will represent carnivores."""
+    pass
