@@ -75,7 +75,7 @@ class TestHerbivores:
         """
         h = self.h
         weight = h.get_weight()
-        h.update(weight_of_newborn=10, amount_fodder_eaten=3)
+        h.update_weight2(weight_of_newborn=10, amount_fodder_eaten=3)
         assert weight == h.get_weight()
 
     def test_fitness_update_whith_weight(self, initial_herbivore_class):
