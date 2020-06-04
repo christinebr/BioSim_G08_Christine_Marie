@@ -36,7 +36,8 @@ class TestHerbivores:
 
     def test_fitness_between_0_and_1(self, initial_herbivore_class):
         """Testing if value of fitness is between 0 and 1"""
-        assert 0 <= self.h.fitness() <= 1
+        fitness = self.h.fitness()
+        assert 0 <= fitness <= 1
 
     def test_fitness_0_if_zero_weight(self, initial_herbivore_class):
         """Test if value of fitness is 0 when weight is zero or less"""

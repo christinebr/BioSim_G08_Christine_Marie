@@ -14,8 +14,8 @@ class Animal:
 
     def __init__(self, weight, age=0):
         """Create a herbivore with age 0"""
-        self._age = age
         self.weight = weight
+        self.age = age
 
 
 class Herbivores:
@@ -23,8 +23,8 @@ class Herbivores:
 
     def __init__(self, weight, age=0):
         """Create a herbivore with age 0"""
-        self.age = age
         self.weight = weight
+        self.age = age
 
     def get_weight(self):
         return self.weight
@@ -53,7 +53,7 @@ class Herbivores:
 
     def update_age(self):
         """Updating the age by 1 when one year has passed."""
-        self._age += 1
+        self.age += 1
 
     # @property
     # def weight(self):
@@ -81,9 +81,10 @@ class Herbivores:
         Calculates the value of fitness. Note that the value of fitness should be between 0 and 1.
         :return: Value of fitness
         """
-        age = self._age
+        age = self.age
         weight = self.weight
         params = default_params_herbi
+
         if weight <= 0:
             return 0.
         else:
@@ -103,7 +104,7 @@ class Carnivores:
 
 
 if __name__ == "__main__":
-    h1 = Herbivores(weight=20)
+    h1 = Herbivores(weight=20, age=0)
     print(h1.weight)
     print(h1.age)
-    print(h1.fitness)
+    print(h1.fitness())
