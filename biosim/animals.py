@@ -16,9 +16,10 @@ class Herbivores:
                             'gamma': 0.2, 'zeta': 3.5, 'xi': 1.2, 'omega': 0.4,
                             'F': 10.0, 'DeltaPhiMax': None}
 
-    def __init__(self, age=0):
+    def __init__(self, weight, age=0):
         """Create a herbivore with age 0"""
         self._age = age
+        self.weight = weight
 
     @property
     def age(self):
@@ -36,6 +37,23 @@ class Herbivores:
     def update_age(self):
         """Updating the age by 1 when one year has passed."""
         self._age += 1
+
+    @property
+    def weight(self):
+        """A getter-method for weight-property."""
+        return self.weight
+
+    @weight.setter
+    def weight(self, new_weight):
+        """A setter-method for weight."""
+        if new_weight >= 0 and isinstance(new_weight, float):
+            self.weight = new_weight
+        else:
+            raise ValueError("Weight need to be a positive integer")
+
+    def update_weight(self, delta_weight):
+        """Updating the weight."""
+        self.weight += delta_weight
 
     def fitness(self):
         pass
