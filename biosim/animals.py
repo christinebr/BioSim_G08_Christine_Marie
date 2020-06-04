@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+import numpy as np
 
 class Animal:
     """This class will represent an animal."""
@@ -55,8 +55,20 @@ class Herbivores:
         """Updating the weight."""
         self.weight += delta_weight
 
-    def fitness(self):
-        pass
+    @staticmethod
+    def _q(sign, x, x_half, phi):
+        return 1./(1.+np.exp(sign*phi*(x-x_half)))
+
+    def fitness(self, age, weight, params):
+        """
+        Calculates the value of fitness. Note that the value of fitness should be between 0 and 1.
+        :return: Value of fitness
+        """
+        if weight <= 0:
+            return 0.
+        else:
+            (self._q(+1, age, params['a_half'], params['phi_age']))\
+                * (self._q(-1, weight, params['w_half'], params['phi_weight']))
 
     def set_params(self):
         pass
