@@ -4,8 +4,6 @@ from biosim.animals import Herbivores
 import pytest
 
 
-
-
 class TestHerbivores:
 
     @pytest.fixture()
@@ -44,3 +42,11 @@ class TestHerbivores:
         self.h.weight = 0
         assert self.h.fitness() == 0
 
+    def test_death_when_zero_weight(self, initial_herbivore_class):
+        self.h.weight = 0
+        assert self.h.death() == True
+
+    def test_prob_of_death_when_fitness_is_one(self, initial_herbivore_class):
+        # Age 0 and weight 100 gives fitness 0.999...
+        self.h.weight = 100
+        assert self.h.death() < 0.1

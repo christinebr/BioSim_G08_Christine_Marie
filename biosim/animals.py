@@ -15,11 +15,12 @@ default_params_carni = {'w_birth': 6.0, 'sigma_birth': 1.0, 'beta': 0.75,
                         'gamma': 0.8, 'zeta': 3.5, 'xi': 1.1, 'omega': 0.8,
                         'F': 50.0, 'DeltaPhiMax': 10.0}
 
+
 class Animal:
     """This class will represent an animal."""
 
     def __init__(self, weight, age=0):
-        """Create a herbivore with age 0"""
+        """Create an animal with age 0"""
         self.weight = weight
         self.age = age
 
@@ -122,3 +123,11 @@ if __name__ == "__main__":
     print(h1.weight)
     print(h1.age)
     print(h1.fitness())
+
+    h2 = Herbivores(weight=60, age=0)
+    print(h2.fitness())
+    h3 = Herbivores(weight=80, age=0)
+    print(h3.fitness())
+    h4 = Herbivores(weight=100, age=0)
+    print(h4.fitness())
+    print(h4.death())
