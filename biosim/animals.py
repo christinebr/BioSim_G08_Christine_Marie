@@ -18,7 +18,21 @@ class Herbivores:
 
     def __init__(self, age=0):
         """Create a herbivore with age 0"""
-        self.age = age
+        self._age = age
+
+    @property
+    def age(self):
+        return self._age
+
+    @age.setter
+    def age(self, new_age):
+        if new_age >= 0 and isinstance(new_age, int):
+            self._age = new_age
+        else:
+            raise ValueError("Age need to be a positive integer")
+
+    def update_age(self):
+        self._age += 1
 
     def fitness(self):
         pass
