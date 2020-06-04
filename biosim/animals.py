@@ -113,7 +113,21 @@ class Herbivores:
         If the weight of a herbivore is less than zeta*(w_birth+sigma_birth) -> the probability of
         giving birth is also zero
         """
+        params = default_params_herbi
+        weight_limit = params['zeta']*(params['w_birth']+params['sigma_birth'])
+        if N == 1:
+            return 0
+        elif self.weight < weight_limit:
+            return 0
+        else:
+            prob_birth = min(1, params['gamma'] * self.fitness() * (N - 1))
+            return prob_birth      
+
     def death(self):
+        """
+        Returns True if the herbivores weight is zero, hence the herbivore is dead.
+        Returns the probability that the herbivore dies otherwise.
+        """
         if self.weight == 0:
             return True  # the herbivore is dead
         else:
