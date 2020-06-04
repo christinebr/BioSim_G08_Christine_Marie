@@ -104,6 +104,15 @@ class Herbivores:
     def get_params(self):
         pass
 
+    def birth(self, N):
+        """
+        N is the number of herbivores in the same place.
+        Returns the probability for a herbivore to give birth.
+        Gender of animal is not important
+        If N=1 -> the probability of giving birth is zero
+        If the weight of a herbivore is less than zeta*(w_birth+sigma_birth) -> the probability of
+        giving birth is also zero
+        """
     def death(self):
         if self.weight == 0:
             return True  # the herbivore is dead
