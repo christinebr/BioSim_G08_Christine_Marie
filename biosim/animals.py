@@ -11,7 +11,11 @@ default_params_herbi = {'w_birth': 8.0, 'sigma_birth': 1.5, 'beta': 0.9,
 
 class Animal:
     """This class will represent an animal."""
-    pass
+
+    def __init__(self, weight, age=0):
+        """Create a herbivore with age 0"""
+        self._age = age
+        self.weight = weight
 
 
 class Herbivores:
@@ -19,38 +23,50 @@ class Herbivores:
 
     def __init__(self, weight, age=0):
         """Create a herbivore with age 0"""
-        self._age = age
+        self.age = age
         self.weight = weight
 
-    @property
-    def age(self):
-        """A getter-method for age-property."""
-        return self._age
+    def get_weight(self):
+        return self.weight
 
-    @age.setter
-    def age(self, new_age):
-        """A setter-method for age."""
-        if new_age >= 0 and isinstance(new_age, int):
-            self._age = new_age
-        else:
-            raise ValueError("Age need to be a positive integer")
+    def set_weight(self, new_weight):
+        self.weight = new_weight
+
+    def get_age(self):
+        return self.age
+
+    def set_age(self, new_age):
+        self.age = new_age
+
+    # @property
+    # def age(self):
+    #     """A getter-method for age-property."""
+    #     return self._age
+    #
+    # @age.setter
+    # def age(self, new_age):
+    #     """A setter-method for age."""
+    #     if new_age >= 0 and isinstance(new_age, int):
+    #         self._age = new_age
+    #     else:
+    #         raise ValueError("Age need to be a positive integer")
 
     def update_age(self):
         """Updating the age by 1 when one year has passed."""
         self._age += 1
 
-    @property
-    def weight(self):
-        """A getter-method for weight-property."""
-        return self.weight
+    # @property
+    # def weight(self):
+    #     """A getter-method for weight-property."""
+    #     return self.weight
 
-    @weight.setter
-    def weight(self, new_weight):
-        """A setter-method for weight."""
-        if new_weight >= 0:
-            self.weight = new_weight
-        else:
-            raise ValueError("Weight need to be a positive number")
+    # @weight.setter
+    # def weight(self, new_weight):
+    #     """A setter-method for weight."""
+    #     if new_weight >= 0:
+    #         self.weight = new_weight
+    #     else:
+    #         raise ValueError("Weight need to be a positive number")
 
     def update_weight(self, delta_weight):
         """Updating the weight."""
@@ -84,3 +100,10 @@ class Herbivores:
 class Carnivores:
     """This class will represent carnivores."""
     pass
+
+
+if __name__ == "__main__":
+    h1 = Herbivores(weight=20)
+    print(h1.weight)
+    print(h1.age)
+    print(h1.fitness)

@@ -4,15 +4,18 @@ from biosim.animals import Herbivores
 import pytest
 
 
+
+
 class TestHerbivores:
 
-    @pytest.fixture
+    @pytest.fixture()
     def initial_herbivore_class(self):
         self.h = Herbivores(weight=20)
+        return self.h
 
     def test_constructor_default(self, initial_herbivore_class):
         """ Test that the class Herbivores creates an instance."""
-        assert isinstance(self.h, Herbivores)
+        assert isinstance(initial_herbivore_class, Herbivores)
 
     def test_if_raises_keyerror(self):
         """
