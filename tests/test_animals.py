@@ -42,7 +42,6 @@ class TestHerbivores:
         self.h.update_weight2(amount_fodder_eaten=None)
         assert self.h.weight < old_weight
 
-
     def test_fitness_between_0_and_1(self, initial_herbivore_class):
         """Testing if value of fitness is between 0 and 1"""
         fitness = self.h.fitness()
@@ -55,7 +54,7 @@ class TestHerbivores:
 
     def test_death_when_zero_weight(self, initial_herbivore_class):
         self.h.weight = 0
-        assert self.h.death() == True
+        assert self.h.death() is True
 
     def test_prob_of_death_when_fitness_is_one(self, initial_herbivore_class):
         # Age 0 and weight 100 gives fitness 0.999...
@@ -73,12 +72,10 @@ class TestHerbivores:
         This test checks that the update_weight method does not run if an animal tries to eat and
         get a child at the same moment
         """
-        h = self.h
-        weight = h.get_weight()
-        h.update_weight2(weight_of_newborn=10, amount_fodder_eaten=3)
-        assert weight == h.get_weight()
+        with pytest.raises(ValueError):
+            self.h.update_weight2(weight_of_newborn=10, amount_fodder_eaten=3)
 
-    def test_fitness_update_whith_weight(self, initial_herbivore_class):
+    def test_fitness_update_with_weight(self, initial_herbivore_class):
         """Tests that the fitness of the animal updates automatically when the weight changes"""
         h = self.h
         fitness1 = h.fitness()

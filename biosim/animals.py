@@ -94,14 +94,14 @@ class Herbivores:
         No animal should give birth and eat at the same time.
         """
         params = default_params_herbi
-        if weight_of_newborn is not None and amount_fodder_eaten is not None:
+        if weight_of_newborn and amount_fodder_eaten:
             raise ValueError('No animal could give birth and eat at the same time')
         elif amount_fodder_eaten:
             self.weight += params['beta']*amount_fodder_eaten
-        elif weight_of_newborn is None:
-            self.weight -= params['eta']*self.weight
+        elif weight_of_newborn:
+            self.weight -= params['xi'] * weight_of_newborn
         else:
-            self.weight -= params['xi']*weight_of_newborn
+            self.weight -= params['eta'] * self.weight
 
     @staticmethod
     def _q(sign, x, x_half, phi):
