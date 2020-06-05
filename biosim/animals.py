@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import numpy as np
+import random
 
 
 class Animal:
@@ -164,6 +165,15 @@ class Herbivores:
             # Probability of giving birth (maximum value is 1)
             prob_birth = min(1, self._params['gamma'] * self.fitness() * (N - 1))
             return prob_birth
+
+    def birth_weight(self):
+        """
+        Finds the weight of a newborn
+        Returns
+        -------
+        The weight of a newborn
+        """
+        return random.gauss(self._params['w_birth'], self._params['sigma_birth'])
 
     def death(self):
         """
