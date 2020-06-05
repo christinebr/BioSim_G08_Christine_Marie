@@ -171,7 +171,7 @@ class Herbivores:
         Returns the probability that the herbivore dies otherwise.
         """
         if self.weight == 0:
-            return True  # the herbivore is dead
+            return 1.0  # the herbivore is dead
         else:
             # A herbivore dies with the probability:
             prob_death = self.weight*(1-self.fitness())
