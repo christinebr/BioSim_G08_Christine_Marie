@@ -28,7 +28,8 @@ class TestHerbivores:
         old_param = h1.get_params()
         h1.set_params({'w_half': 2.0, 'beta': 0.8})
         new_param = h1.get_params()
-        assert old_param != new_param
+        assert old_param ['beta']== pytest.approx(new_param['beta'])
+        assert old_param['w_half'] == pytest.approx(new_param['w_half'])
 
     def test_default_value_for_age(self, initial_herbivore_class):
         """Testing default value for age"""
