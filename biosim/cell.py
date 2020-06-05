@@ -28,8 +28,6 @@ class SingleCell:
 
     def birth(self):
         """Decides if animales are born and updates the animal_list
-
-        TODO: oppdater vekt
         """
         for animal in self.animals_list:
             w = animal['weight']
@@ -39,22 +37,31 @@ class SingleCell:
                 prob_birth = herbi.birth()
                 birth_weight = herbi.birth_weight()
                 speci = 'Herbivore'
+                if random.random() > prob_birth:
+                    new_animal = {'species': speci, 'age': 0, 'weight': birth_weight}
+                    self.animals_list.append(new_animal)
+                    herbi.update_weight2(weight_of_newborn=birth_weight)
+                    animal['weight'] = herbi.weight
             else:
                 carni = Carnivores(weight=w, age=a)
                 prob_birth = carni.birth()
                 birth_weight = carni.birth_weight()
                 speci = 'Carnivore'
+                if random.random() > prob_birth:
+                    new_animal = {'species': speci, 'age': 0, 'weight': birth_weight}
+                    self.animals_list.append(new_animal)
+                    carni.update_weight2(weight_of_newborn=birth_weight)
+                    animal['weight'] = carni.weight
 
-            if random.random() > prob_birth:
-                new_animal = {'species': speci, 'age': 0, 'weight': birth_weight}
-                self.animals_list.append(new_animal)
 
 
     def migration(self):
         pass
 
-    def aging of animales(self):
-        pass
+    def aging_of_animales(self):
+        """Makes sure animals ages"""
+        for animal in self.animals_list:
+            animal['age'] += 1
 
     def weight_loss(self):
         pass
