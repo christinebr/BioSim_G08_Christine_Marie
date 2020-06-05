@@ -19,12 +19,10 @@ class TestSingleCell:
         """
         Tests that method age makes all animals get one year older.
         The sum of the age in the test-sett increase with 3 per year.
-
-        Todo: her hadde det vært fint med en get-metode
         """
-        cell_old = deepcopy(self.cell.animals_list)
+        cell_old = deepcopy(self.cell.get_animals())
         self.cell.aging_of_animales()
-        cell_new = self.cell.animals_list
+        cell_new = self.cell.get_animals()
         sum_old_age = 0
         sum_new_age = 0
         for old, older in zip(cell_old, cell_new):

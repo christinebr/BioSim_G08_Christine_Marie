@@ -17,6 +17,7 @@ class SingleCell:
             self.animals_list = []
 
     def get_animals(self):
+        """Just making it 'legal' to get information about the animals."""
         return self.animals_list
 
     def animals_in_cell_eat(self):
