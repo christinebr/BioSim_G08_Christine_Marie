@@ -71,7 +71,7 @@ class TestHerbivores:
         Test that a herbivore dies if it has zero weight
         """
         self.h.weight = 0
-        assert self.h.death() is True
+        assert self.h.death() == 1.0
 
     def test_prob_of_death_when_fitness_is_one(self, initial_herbivore_class):
         """
