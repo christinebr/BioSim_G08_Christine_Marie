@@ -6,7 +6,7 @@ import random
 
 class SingleCell:
     """
-    Keeps control of amount of animals of both species and fodder, and landscape
+    Keeps control of the amount of animals of both species and fodder, and landscape-type.
     """
     f_max = {'W': 0.0, 'D': 0.0, 'L': 800.0, 'H': 300.0}
 
@@ -15,6 +15,9 @@ class SingleCell:
             self.animals_list = animals_list
         else:
             self.animals_list = []
+
+    def get_animals(self):
+        return self.animals_list
 
     def animals_in_cell_eat(self):
         """
@@ -145,3 +148,10 @@ class Highland(SingleCell):
 #
 #     def set_fodder(self, new_fodder):
 #         self.fodder = new_fodder
+
+if __name__ == "__main__":
+    animals = [{'species': 'Herbivore', 'age': 10, 'weight': 40},
+               {'species': 'Herbivore', 'age': 8, 'weight': 29},
+               {'species': 'Herbivore', 'age': 3, 'weight': 10}]
+    cell1 = SingleCell(animals)
+    print(cell1.get_animals())
