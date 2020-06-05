@@ -2,6 +2,7 @@
 import numpy as np
 from .animals import Herbivores, Carnivores, Animal
 import random
+from copy import deepcopy
 
 
 class SingleCell:
@@ -15,6 +16,7 @@ class SingleCell:
             self.animals_list = animals_list
         else:
             self.animals_list = []
+        self.N = len(animals_list)
 
     def get_animals(self):
         """Just making it 'legal' to get information about the animals."""
@@ -31,32 +33,32 @@ class SingleCell:
         pass
 
     def birth(self):
-        """Decides if animales are born and updates the animal_list
+        """Decides if animals are born and updates the animal_list
         """
+        n_before = deepcopy(self.N)
         for animal in self.animals_list:
             w = animal['weight']
             a = animal['age']
             if animal['species'] == 'Herbivore':
                 herbi = Herbivores(weight=w, age=a)
-                prob_birth = herbi.birth()
+                prob_birth = herbi.birth(n_before)
                 birth_weight = herbi.birth_weight()
                 speci = 'Herbivore'
                 if random.random() > prob_birth:
                     new_animal = {'species': speci, 'age': 0, 'weight': birth_weight}
                     self.animals_list.append(new_animal)
-                    herbi.update_weight2(weight_of_newborn=birth_weight)
+                    herbi.update_weight(weight_of_newborn=birth_weight)
                     animal['weight'] = herbi.weight
             else:
                 carni = Carnivores(weight=w, age=a)
-                prob_birth = carni.birth()
+                prob_birth = carni.birth(n_before)
                 birth_weight = carni.birth_weight()
                 speci = 'Carnivore'
                 if random.random() > prob_birth:
                     new_animal = {'species': speci, 'age': 0, 'weight': birth_weight}
                     self.animals_list.append(new_animal)
-                    carni.update_weight2(weight_of_newborn=birth_weight)
+                    carni.update_weight(weight_of_newborn=birth_weight)
                     animal['weight'] = carni.weight
-
 
 
     def migration(self):
@@ -150,9 +152,11 @@ class Highland(SingleCell):
 #     def set_fodder(self, new_fodder):
 #         self.fodder = new_fodder
 
+
 if __name__ == "__main__":
     animals = [{'species': 'Herbivore', 'age': 10, 'weight': 40},
                {'species': 'Herbivore', 'age': 8, 'weight': 29},
                {'species': 'Herbivore', 'age': 3, 'weight': 10}]
     cell1 = SingleCell(animals)
     print(cell1.get_animals())
+    
