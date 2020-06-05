@@ -237,33 +237,85 @@ class Carnivores(Animal):
                'w_half': 4.0, 'phi_weight': 0.4, 'mu': 0.4,
                'gamma': 0.8, 'zeta': 3.5, 'xi': 1.1, 'omega': 0.8,
                'F': 50.0, 'DeltaPhiMax': 10.0}
-    pass
+
+    def __init__(self, weight, age):
+        """ Initialise the carnivore """
+        super().__init__(weight, age)
+
+    def probability_of_killing_herbivore(self, fitness_herbi):
+        """
+
+        Parameters
+        ----------
+        fitness_herbi: [float]
+            the fitness of a herbivore that a carnivore is preying on.
+
+        Returns
+        -------
+        [float] the probability that a carnivore kills the herbivore.
+
+        todo: carnivore weight increases with beta*weight_herbi when it
+              kills the herbivore, where should this happen? in SingleCell?
+              Added a update_weight_after_kill below, is this ok?
+              NB! fitness of carnivore should be re-evaluated each time it
+              kills a herbivore, is this ok when using self.fitness()?
+        """
+        fitness_carni = self.fitness()
+        max_diff_fitness = self._params['DeltaPhiMax']
+        if fitness_carni <= fitness_herbi:
+            return 0.
+        elif 0 < fitness_carni - fitness_herbi < max_diff_fitness:
+            return (fitness_carni - fitness_herbi)/max_diff_fitness
+        else:
+            return 1.
+
+    def update_weight_after_kill(self, weight_herbi):
+        """
+        Updates the weight of a carnivore with the weight of the herbivore
+        killed and eaten time the carnivore-parameter 'beta'.
+
+        Parameters
+        ----------
+        weight_herbi: [float]
+            the weight of the herbivore killed
+        """
+        self.weight += self._params['beta']*weight_herbi
 
 
 if __name__ == "__main__":
-    h1 = Herbivores(weight=40, age=5)
-    print(f"Weight:{h1.weight:17}")
-    print(f"Age:{h1.age:20}")
-    print(f"Fitness:{h1.fitness():20.3f}")
 
-    print(f"Prob of birth:{h1.birth(N=9):10}")
-    print(f"Prob of death:{h1.death():14.3f}\n")
-
-    h2 = Herbivores(weight=60, age=0)
-    print(h2.fitness())
-    h3 = Herbivores(weight=80, age=0)
+    h3 = Herbivores(weight=80, age=16)
     print(h3.fitness())
-    h4 = Herbivores(weight=100, age=0)
-    print(h4.fitness())
-    print(h4.death())
-    h4.update_weight2(amount_fodder_eaten=3)
-    print(h4.get_weight())
-    print(h4.fitness())
-    h4.update_weight2(weight_of_newborn=10)
-    print(h4.get_weight())
-    print(h4.fitness())
     old_param = h3.get_params()
     print(old_param)
     h3.set_params({'w_half': 2.0, 'beta': 0.8})
     new_param = h3.get_params()
     print(new_param)
+
+    herbis = [{'species': 'Herbivore', 'age': 10, 'weight': 40},
+              {'species': 'Herbivore', 'age': 8, 'weight': 29},
+              {'species': 'Herbivore', 'age': 3, 'weight': 15}]
+
+    carnis = [{'species': 'Carnivore', 'age': 10, 'weight': 40},
+              {'species': 'Carnivore', 'age': 8, 'weight': 29},
+              {'species': 'Carnivore', 'age': 3, 'weight': 18}]
+
+    print("HERBIVORES")
+    for herb in herbis:
+        h = Herbivores(weight=herb['weight'], age=herb['age'])
+        print(f"Weight:        {h.weight}")
+        print(f"Age:           {h.age}")
+        print(f"Fitness:       {h.fitness():.3f}")
+        print(f"Prob of birth: {h.birth(num=9)}")
+        print(f"Prob of death: {h.death():.3f}\n")
+
+    print("CARNIVORES")
+    for carb in carnis:
+        c = Carnivores(weight=carb['weight'], age=carb['age'])
+        print(f"Weight:        {c.weight}")
+        print(f"Age:           {c.age}")
+        print(f"Fitness:       {c.fitness():.3f}")
+        print(f"Prob of birth: {c.birth(num=9)}")
+        print(f"Prob of death: {c.death():.3f}\n")
+
+
