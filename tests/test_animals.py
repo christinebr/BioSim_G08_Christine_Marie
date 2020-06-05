@@ -15,12 +15,20 @@ class TestHerbivores:
         """ Test that the class Herbivores creates an instance."""
         assert isinstance(initial_herbivore_class, Herbivores)
 
-    def test_if_raises_keyerror(self):
+    def test_if_raises_keyerror(self, initial_herbivore_class):
         """
         Tests that the Herbivores class raises a KeyError if default parameter names are not used.
         """
         with pytest.raises(KeyError):
             self.h.set_params({'weight': 10, 'a_half': 5.0})
+
+    def test_update_parameters(self):
+        """ Test if parameters is updated correctly"""
+        h1 = Herbivores(weight=20)
+        old_param = h1.get_params()
+        h1.set_params({'w_half': 2.0, 'beta': 0.8})
+        new_param = h1.get_params()
+        assert old_param != new_param
 
     def test_default_value_for_age(self, initial_herbivore_class):
         """Testing default value for age"""

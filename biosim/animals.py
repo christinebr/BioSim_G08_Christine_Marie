@@ -118,11 +118,26 @@ class Herbivores:
             return (self._q(+1, age, self._params['a_half'], self._params['phi_age']))\
                       * (self._q(-1, weight, self._params['w_half'], self._params['phi_weight']))
 
-    def set_params(self):
-        pass
+    def set_params(self, new_params):
+        """
+
+        Parameters
+        ----------
+        new_params: dict
+                New parameter values
+
+        Returns
+        -------
+
+        """
+        for key in new_params:
+            if key not in self._params:
+                raise KeyError(f"Invalid parameter name + {key}")
+            else:
+                self._params[key] = new_params[key]
 
     def get_params(self):
-        pass
+        return self._params
 
     def birth(self, N):
         """
@@ -189,5 +204,10 @@ if __name__ == "__main__":
     h4.update_weight2(weight_of_newborn=10)
     print(h4.get_weight())
     print(h4.fitness())
-    h4.update_weight2(weight_of_newborn=20, amount_fodder_eaten=50)
-    print(h4.get_weight())
+    #h4.update_weight2(weight_of_newborn=20, amount_fodder_eaten=50)
+    #print(h4.get_weight())
+    old_param = h3.get_params()
+    print(old_param)
+    h3.set_params({'w_half': 2.0, 'beta': 0.8})
+    new_param = h3.get_params()
+    print(new_param)
