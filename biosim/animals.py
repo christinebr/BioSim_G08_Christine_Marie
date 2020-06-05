@@ -54,7 +54,9 @@ class Herbivores:
     #         raise ValueError("Age need to be a positive integer")
 
     def update_age(self):
-        """Updating the age by 1 when one year has passed."""
+        """Updating the age by 1 when one year has passed.
+        Todo: Is this nexesary? Seems like we could do everything in SingleCell
+        """
         self.age += 1
 
     # @property
