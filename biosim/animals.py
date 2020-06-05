@@ -46,6 +46,33 @@ class Animal:
     def get_params(cls):
         return cls._params
 
+    # @property
+    # def age(self):
+    #     """A getter-method for age-property."""
+    #     return self._age
+    #
+    # @age.setter
+    # def age(self, new_age):
+    #     """A setter-method for age."""
+    #     if new_age >= 0 and isinstance(new_age, int):
+    #         self._age = new_age
+    #     else:
+    #         raise ValueError("Age need to be a positive integer")
+
+    # @property
+    # def weight(self):
+    #     """A getter-method for weight-property."""
+    #     return self.weight
+
+    # @weight.setter
+    # def weight(self, new_weight):
+    #     """A setter-method for weight."""
+    #     if new_weight >= 0:
+    #         self.weight = new_weight
+    #     else:
+    #         raise ValueError("Weight need to be a positive number")
+
+
     def update_age(self):
         """
         Updating the age by 1 when one year has passed.
@@ -201,32 +228,6 @@ class Herbivores(Animal):
     def __init__(self, weight, age=0):
         """Create a herbivore with age 0"""
         super().__init__(weight, age)
-
-    # @property
-    # def age(self):
-    #     """A getter-method for age-property."""
-    #     return self._age
-    #
-    # @age.setter
-    # def age(self, new_age):
-    #     """A setter-method for age."""
-    #     if new_age >= 0 and isinstance(new_age, int):
-    #         self._age = new_age
-    #     else:
-    #         raise ValueError("Age need to be a positive integer")
-
-    # @property
-    # def weight(self):
-    #     """A getter-method for weight-property."""
-    #     return self.weight
-
-    # @weight.setter
-    # def weight(self, new_weight):
-    #     """A setter-method for weight."""
-    #     if new_weight >= 0:
-    #         self.weight = new_weight
-    #     else:
-    #         raise ValueError("Weight need to be a positive number")
 
 
 class Carnivores(Animal):
