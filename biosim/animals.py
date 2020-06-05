@@ -1,23 +1,10 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 
-# Default parameters for herbivores:
-default_params_herbi = {'w_birth': 8.0, 'sigma_birth': 1.5, 'beta': 0.9,
-                        'eta': 0.05, 'a_half': 40.0, 'phi_age': 0.6,
-                        'w_half': 10.0, 'phi_weight': 0.1, 'mu': 0.25,
-                        'gamma': 0.2, 'zeta': 3.5, 'xi': 1.2, 'omega': 0.4,
-                        'F': 10.0, 'DeltaPhiMax': None}
-
-# Default parameters for carnivores:
-default_params_carni = {'w_birth': 6.0, 'sigma_birth': 1.0, 'beta': 0.75,
-                        'eta': 0.125, 'a_half': 40.0, 'phi_age': 0.3,
-                        'w_half': 4.0, 'phi_weight': 0.4, 'mu': 0.4,
-                        'gamma': 0.8, 'zeta': 3.5, 'xi': 1.1, 'omega': 0.8,
-                        'F': 50.0, 'DeltaPhiMax': 10.0}
-
 
 class Animal:
     """This class will represent an animal."""
+    _params = None
 
     def __init__(self, weight, age=0):
         """Create an animal with age 0"""
@@ -28,10 +15,22 @@ class Animal:
 class Herbivores:
     """This class will represent herbivores."""
 
+    # # Default parameters for herbivores:
+    # _params = {'w_birth': 8.0, 'sigma_birth': 1.5, 'beta': 0.9,
+    #            'eta': 0.05, 'a_half': 40.0, 'phi_age': 0.6,
+    #            'w_half': 10.0, 'phi_weight': 0.1, 'mu': 0.25,
+    #            'gamma': 0.2, 'zeta': 3.5, 'xi': 1.2, 'omega': 0.4,
+    #            'F': 10.0, 'DeltaPhiMax': None}
+
     def __init__(self, weight, age=0):
         """Create a herbivore with age 0"""
         self.weight = weight
         self.age = age
+        self._params = {'w_birth': 8.0, 'sigma_birth': 1.5, 'beta': 0.9,
+                        'eta': 0.05, 'a_half': 40.0, 'phi_age': 0.6,
+                        'w_half': 10.0, 'phi_weight': 0.1, 'mu': 0.25,
+                        'gamma': 0.2, 'zeta': 3.5, 'xi': 1.2, 'omega': 0.4,
+                        'F': 10.0, 'DeltaPhiMax': None}
 
     def get_weight(self):
         return self.weight
@@ -93,15 +92,14 @@ class Herbivores:
         If an animal gives birth, it will loose weight accordingly.
         No animal should give birth and eat at the same time.
         """
-        params = default_params_herbi
         if weight_of_newborn and amount_fodder_eaten:
             raise ValueError('No animal could give birth and eat at the same time')
         elif amount_fodder_eaten:
-            self.weight += params['beta']*amount_fodder_eaten
+            self.weight += self._params['beta']*amount_fodder_eaten
         elif weight_of_newborn:
-            self.weight -= params['xi'] * weight_of_newborn
+            self.weight -= self._params['xi'] * weight_of_newborn
         else:
-            self.weight -= params['eta'] * self.weight
+            self.weight -= self._params['eta'] * self.weight
 
     @staticmethod
     def _q(sign, x, x_half, phi):
@@ -114,13 +112,11 @@ class Herbivores:
         """
         age = self.age
         weight = self.weight
-        params = default_params_herbi
-
         if weight <= 0:
             return 0.
         else:
-            return (self._q(+1, age, params['a_half'], params['phi_age']))\
-                      * (self._q(-1, weight, params['w_half'], params['phi_weight']))
+            return (self._q(+1, age, self._params['a_half'], self._params['phi_age']))\
+                      * (self._q(-1, weight, self._params['w_half'], self._params['phi_weight']))
 
     def set_params(self):
         pass
@@ -137,15 +133,14 @@ class Herbivores:
         If the weight of a herbivore is less than zeta*(w_birth+sigma_birth) -> the probability of
         giving birth is also zero
         """
-        params = default_params_herbi
-        weight_limit = params['zeta']*(params['w_birth']+params['sigma_birth'])
+        weight_limit = self._params['zeta']*(self._params['w_birth']+self._params['sigma_birth'])
         if N == 1:
             return 0
         elif self.weight < weight_limit:
             return 0
         else:
             # Probability of giving birth (maximum value is 1)
-            prob_birth = min(1, params['gamma'] * self.fitness() * (N - 1))
+            prob_birth = min(1, self._params['gamma'] * self.fitness() * (N - 1))
             return prob_birth
 
     def death(self):
@@ -163,6 +158,12 @@ class Herbivores:
 
 class Carnivores:
     """This class will represent carnivores."""
+    # Default parameters for carnivores:
+    _params = {'w_birth': 6.0, 'sigma_birth': 1.0, 'beta': 0.75,
+               'eta': 0.125, 'a_half': 40.0, 'phi_age': 0.3,
+               'w_half': 4.0, 'phi_weight': 0.4, 'mu': 0.4,
+               'gamma': 0.8, 'zeta': 3.5, 'xi': 1.1, 'omega': 0.8,
+               'F': 50.0, 'DeltaPhiMax': 10.0}
     pass
 
 
