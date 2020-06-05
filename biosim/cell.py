@@ -85,3 +85,32 @@ class Highland(SingleCell):
     Represents the highland_landscape.
     """
     pass
+
+# class Lowland:
+#     def __init__(self, fodder_available=0):
+#         self.f_max = 800.0
+#         if fodder_available > self.f_max:
+#             raise ValueError("To much fodder in lowland")
+#         else:
+#             self.fodder = fodder_available
+#
+#     def get_fodder(self):
+#         return self.fodder
+#
+#     def set_fodder(self, new_fodder):
+#         self.fodder = new_fodder
+#
+#
+# class Highland:
+#     def __init__(self, fodder_available=0):
+#         self.f_max = 300.0
+#         if fodder_available > self.f_max:
+#             raise ValueError("To much fodder in highland")
+#         else:
+#             self.fodder = fodder_available
+#
+#     def get_fodder(self):
+#         return self.fodder
+#
+#     def set_fodder(self, new_fodder):
+#         self.fodder = new_fodder
