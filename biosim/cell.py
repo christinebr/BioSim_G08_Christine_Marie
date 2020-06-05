@@ -41,7 +41,7 @@ class SingleCell:
         """Decides if animals are born and updates the animal_list
 
         Todo: Gi inn antall dyr, eller endre på birth i animal og kontroller at mer enn ett dyr her.
-        Grått var et forsøk på å fikse dette, men løsningen tar for lang tid.
+        Grått var et forsøk på å fikse dette, men løsningen tar for lang tid, muliggens uendelig.
         """
 #        n_before = deepcopy(self.N)
         for animal in self.animals_list:
