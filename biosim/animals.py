@@ -74,9 +74,9 @@ class Herbivores:
     #     else:
     #         raise ValueError("Weight need to be a positive number")
 
-    def update_weight(self, delta_weight):
-        """Updating the weight."""
-        self.weight += delta_weight
+#    def update_weight(self, delta_weight):
+#        """Updating the weight."""
+#        self.weight += delta_weight
 
     def update_weight2(self, weight_of_newborn=None, amount_fodder_eaten=None):
         """
@@ -120,7 +120,7 @@ class Herbivores:
 
     def set_params(self, new_params):
         """
-
+        Raises a KeyError if given an invalid parameter name.
         Parameters
         ----------
         new_params: dict
@@ -128,6 +128,7 @@ class Herbivores:
 
         Returns
         -------
+        Nothing
 
         """
         for key in new_params:
@@ -138,6 +139,15 @@ class Herbivores:
 
     def get_params(self):
         return self._params
+
+    def probability_of_migration(self):
+        """
+        Finds the probability of migration based on the animals fitness
+        Returns
+        -------
+        The animals probability of migrating
+        """
+        return self._params['mu'] * self.fitness()
 
     def birth(self, N):
         """
