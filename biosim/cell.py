@@ -4,6 +4,11 @@ from .animals import Herbivores, Carnivores, Animal
 import random
 from copy import deepcopy
 
+"""
+-----------------------
+Todo: Finn ut av importen
+"""
+
 
 class SingleCell:
     """
@@ -34,14 +39,18 @@ class SingleCell:
 
     def birth(self):
         """Decides if animals are born and updates the animal_list
+
+        Todo: Gi inn antall dyr, eller endre på birth i animal og kontroller at mer enn ett dyr her.
+        Grått var et forsøk på å fikse dette, men løsningen tar for lang tid.
         """
-        n_before = deepcopy(self.N)
+#        n_before = deepcopy(self.N)
         for animal in self.animals_list:
             w = animal['weight']
             a = animal['age']
             if animal['species'] == 'Herbivore':
                 herbi = Herbivores(weight=w, age=a)
-                prob_birth = herbi.birth(n_before)
+#                prob_birth = herbi.birth(n_before)
+                prob_birth = herbi.birth()
                 birth_weight = herbi.birth_weight()
                 speci = 'Herbivore'
                 if random.random() > prob_birth:
@@ -51,7 +60,8 @@ class SingleCell:
                     animal['weight'] = herbi.weight
             else:
                 carni = Carnivores(weight=w, age=a)
-                prob_birth = carni.birth(n_before)
+#                prob_birth = carni.birth(n_before)
+                prob_birth = carni.birth()
                 birth_weight = carni.birth_weight()
                 speci = 'Carnivore'
                 if random.random() > prob_birth:
@@ -159,4 +169,5 @@ if __name__ == "__main__":
                {'species': 'Herbivore', 'age': 3, 'weight': 10}]
     cell1 = SingleCell(animals)
     print(cell1.get_animals())
-    
+    cell1.birth()
+    print(cell1.get_animals())
