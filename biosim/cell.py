@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import numpy as np
-from .animals import Herbivores, Carnivores
+from .animals import Herbivores, Carnivores, Animal
 import random
 
 
@@ -23,14 +23,44 @@ class SingleCell:
         """
         pass
 
-    def migration(self):
+    def fodder_update(self):
         pass
 
     def birth(self):
+        """Decides if animales are born and updates the animal_list
+
+        TODO: oppdater vekt
+        """
+        for animal in self.animals_list:
+            w = animal['weight']
+            a = animal['age']
+            if animal['species'] == 'Herbivore':
+                herbi = Herbivores(weight=w, age=a)
+                prob_birth = herbi.birth()
+                birth_weight = herbi.birth_weight()
+                speci = 'Herbivore'
+            else:
+                carni = Carnivores(weight=w, age=a)
+                prob_birth = carni.birth()
+                birth_weight = carni.birth_weight()
+                speci = 'Carnivore'
+
+            if random.random() > prob_birth:
+                new_animal = {'species': speci, 'age': 0, 'weight': birth_weight}
+                self.animals_list.append(new_animal)
+
+
+    def migration(self):
+        pass
+
+    def aging of animales(self):
+        pass
+
+    def weight_loss(self):
         pass
 
     def death(self):
-        """Decides which of the animals that dies and update the animal_list
+        """Decides which of the animals that dies and updates the animal_list
         todo: We think that animal_list = [{'species': 'Herbivore', 'age': 10, 'weight':40},
                                            {'species': 'Herbivore', 'age': 8, 'weight':29},
                                            {'species': 'Carnivore', 'age': 3, 'weight':50}]
@@ -51,12 +81,6 @@ class SingleCell:
                 survived_animals.append(animal)
 
         self.animals_list = survived_animals
-
-    def weight_loss(self):
-        pass
-
-    def fodder_update(self):
-        pass
 
 
 class Water(SingleCell):
