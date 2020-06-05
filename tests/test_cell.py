@@ -44,10 +44,24 @@ class TestSingleCell:
 
     def test_that_mother_looses_weight(self):
         """
-        Tests that the birth method makes the mother loos weight according to the weight of the
-        newborn animal.
+        Tests that the birth method makes the mother loose weight.
+
+        Todo: Hvis mulig kan vi lage en test med mocker/seed (eller statistisk) som tester at
+        vekttapet er riktig.
         """
-        pass
+        old_list_of_animals = deepcopy(self.cell.get_animals())
+        self.cell.birth()
+        new_list_of_animals = self.cell.get_animals()
+        sum_weight_old = 0
+        sum_weight_new = 0
+        for old_animal, new_animal in zip(old_list_of_animals, new_list_of_animals):
+            # zip will use the shortest list, in this case old_list, to decide the lengt of the
+            # zipped list. This way the newborns will not count.
+            sum_weight_old += old_animal['weight']
+            sum_weight_new += new_animal['weight']
+
+        assert sum_weight_new < sum_weight_old
+
 
     def test_that_dead_animals_dissappears(self):
         """
@@ -60,3 +74,4 @@ class TestSingleCell:
         Tests that herbivores only gives birth to herbivores and carnivores only gives birth to
         carnivores.
         """
+        pass
