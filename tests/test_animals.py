@@ -18,10 +18,9 @@ class TestHerbivores:
     def test_if_raises_keyerror(self):
         """
         Tests that the Herbivores class raises a KeyError if default parameter names are not used.
-
-        Todo: Denne skal teste at programmet blir avbrutt hvis man gir inn feil key
         """
-        pass
+        with pytest.raises(KeyError):
+            self.h.set_params({'weight': 10, 'a_half': 5.0})
 
     def test_default_value_for_age(self, initial_herbivore_class):
         """Testing default value for age"""
@@ -33,11 +32,17 @@ class TestHerbivores:
         pass
 
     def test_increase_weight_when_eating(self, initial_herbivore_class):
+        """"
+        Test that a herbivore gain weight when eating an amount of fodder
+        """
         old_weight = self.h.weight
         self.h.update_weight2(amount_fodder_eaten=8)
         assert self.h.weight > old_weight
 
     def test_decrease_weight_not_eating(self, initial_herbivore_class):
+        """
+        Test that a herbivore losses weight "at the end of the year"/haven't eaten
+        """
         old_weight = self.h.weight
         self.h.update_weight2(amount_fodder_eaten=None)
         assert self.h.weight < old_weight
@@ -53,18 +58,30 @@ class TestHerbivores:
         assert self.h.fitness() == 0
 
     def test_death_when_zero_weight(self, initial_herbivore_class):
+        """
+        Test that a herbivore dies if it has zero weight
+        """
         self.h.weight = 0
         assert self.h.death() is True
 
     def test_prob_of_death_when_fitness_is_one(self, initial_herbivore_class):
-        # Age 0 and weight 100 gives fitness 0.999...
+        """
+        Test that probability of death is less than 0.1 when fitness is nearly equal to 1.
+        Age 0 and weight 100 gives fitness 0.999...
+        """
         self.h.weight = 100
         assert self.h.death() < 0.1
 
     def test_no_birth_when_n_is_1(self, initial_herbivore_class):
+        """
+        Check that one animal can't give birth alone
+        """
         assert self.h.birth(N=1) == 0
 
     def test_no_birth_when_small_weight(self, initial_herbivore_class):
+        """
+        Check that an animal can't give birth if it's weight is below the weight limit.
+        """
         assert self.h.birth(N=2) == 0
 
     def test_not_eating_and_feeding_at_once(self, initial_herbivore_class):
