@@ -34,6 +34,7 @@ class SingleCell:
         todo: We think that animal_list = [{'species': 'Herbivore', 'age': 10, 'weight':40},
                                            {'species': 'Herbivore', 'age': 8, 'weight':29},
                                            {'species': 'Carnivore', 'age': 3, 'weight':50}]
+              Is this the right way to think of animal_list??
         """
         survived_animals = []
         for animal in self.animals_list:
