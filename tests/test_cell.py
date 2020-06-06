@@ -12,7 +12,7 @@ class TestSingleCell:
     def initial_cell_class(self):
         animals = [{'species': 'Herbivore', 'age': 10, 'weight': 40},
                    {'species': 'Herbivore', 'age': 8, 'weight': 29},
-                   {'species': 'Herbivore', 'age': 3, 'weight': 60}]
+                   {'species': 'Carnivore', 'age': 3, 'weight': 60}]
         self.cell = SingleCell(animals_list=animals)
         return self.cell
 
@@ -46,8 +46,7 @@ class TestSingleCell:
 
     def test_that_mother_looses_weight(self, initial_cell_class, mocker):
         """
-        Tests that the birth method makes the mother loose weight. Be aware that the expected
-        numbers are for herbivores.
+        Tests that the birth method makes the mother loose weight.
         """
         mocker.patch('random.random', return_value=0)
         mocker.patch('random.gauss', return_value=7)
@@ -62,12 +61,21 @@ class TestSingleCell:
             # zipped list. This way the newborns will not count.
             old_weights.append(old_animal['weight'])
             new_weights.append(new_animal['weight'])
-            weight_of_newborn = random.gauss(8, 1.5)
-            weight_limit = 3.5 * (8 + 1.5)
-            if old_animal['weight'] > weight_limit:
-                correct_weights.append(old_animal['weight'] - 1.2 * weight_of_newborn)
+
+            if old_animal['species'] == 'Herbivore':
+                weight_of_newborn = random.gauss(8, 1.5)
+                weight_limit = 3.5 * (8 + 1.5)
+                if old_animal['weight'] > weight_limit:
+                    correct_weights.append(old_animal['weight'] - 1.2 * weight_of_newborn)
+                else:
+                    correct_weights.append(old_animal['weight'])
             else:
-                correct_weights.append(old_animal['weight'])
+                weight_of_newborn_carn = random.gauss(6, 1.0)
+                weight_limit = 3.5 * (6 + 1.0)
+                if old_animal['weight'] > weight_limit:
+                    correct_weights.append(old_animal['weight'] - 1.1 * weight_of_newborn_carn)
+                else:
+                    correct_weights.append(old_animal['weight'])
 
         assert new_weights == correct_weights
 
