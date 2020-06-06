@@ -10,9 +10,9 @@ class TestSingleCell:
 
     @pytest.fixture()
     def initial_cell_class(self):
-        animals = [{'species': 'Herbivore', 'age': 10, 'weight': 40},
-                   {'species': 'Herbivore', 'age': 8, 'weight': 29},
-                   {'species': 'Carnivore', 'age': 3, 'weight': 60}]
+        animals = [{'species': 'Herbivore', 'age': 10, 'weight': 4},
+                   {'species': 'Herbivore', 'age': 40, 'weight': 11},
+                   {'species': 'Carnivore', 'age': 30, 'weight': 3.5}]
         self.cell = SingleCell(animals_list=animals)
         return self.cell
 
@@ -35,7 +35,7 @@ class TestSingleCell:
         """
         Tests that the birth method assigns a weight to the newborn animal.
         """
-        mocker.patch('random.random', return_value=0)
+        mocker.patch('random.random', return_value=1)
         self.cell.birth()
         nonexsistent_newborns = 0
         for animal in self.cell.animals_list:
