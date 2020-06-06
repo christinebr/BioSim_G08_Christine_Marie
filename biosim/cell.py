@@ -111,7 +111,30 @@ class SingleCell:
             animal['age'] += 1
 
     def weight_loss(self):
-        pass
+        """
+        Makes all the animals loos weight according to their start-weight and the constant eta
+        """
+        for animal in self.animals_list:
+            w = animal['weight']
+            a = animal['age']
+            if animal['species'] == 'Herbivore':
+                herbi = Herbivores(weight=w, age=a)
+                herbi.update_weight()
+                animal['weight'] = herbi.weight
+            else:
+                carni = Carnuivores(weight=w, age=a)
+                carni.update_weight()
+                animal['weight'] = carni.weight
+        
+        # list_herbi, list_carni = self.sort_animals_by_species()
+        # for herbi, carni in zip(list_herbi, list_carni):
+        #     her = Herbivores(weight=herbi['weight'], age=herbi['age'])
+        #     her.update_weight()
+        #     herbi['weight'] = her.weight
+        #
+        #     car = Carnivores(weight=carni['weight'], age=carni['age'])
+        #     car.update_weight()
+        #     carni['weight'] = car.weight
 
     def death(self):
         """Decides which of the animals that dies and updates the animal_list
