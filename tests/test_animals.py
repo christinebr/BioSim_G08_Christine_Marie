@@ -87,13 +87,13 @@ class TestHerbivores:
         """
         Check that one animal can't give birth alone
         """
-        assert self.h.birth(num=1) == 0
+        assert self.h.birth(num=1)[0] == 0
 
     def test_no_birth_when_small_weight(self, initial_herbivore_class):
         """
         Check that an animal can't give birth if it's weight is below the weight limit.
         """
-        assert self.h.birth(num=2) == 0
+        assert self.h.birth(num=2)[0] == 0
 
     def test_not_eating_and_feeding_at_once(self, initial_herbivore_class):
         """

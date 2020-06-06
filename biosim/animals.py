@@ -171,15 +171,20 @@ class Animal:
         Returns
         -------
         [float] the probability that an animal will give birth.
+        [float] Weight of the newborn
         """
         weight_limit = self._params['zeta'] * (self._params['w_birth']
                                                + self._params['sigma_birth'])
         if num == 1:
-            return 0.
+            return 0., 0.
         elif self.weight < weight_limit:
-            return 0.
+            return 0., 0.
         else:
-            return min(1, self._params['gamma'] * self.fitness() * (num - 1))
+            birth_weight_newborn = self.birth_weight()
+            if self.weight <= birth_weight_newborn:
+                return 0., 0.
+            else:
+                return min(1, self._params['gamma'] * self.fitness() * (num - 1)), birth_weight_newborn
 
     def birth_weight(self):
         """
