@@ -17,6 +17,40 @@ class SingleCell:
         else:
             self.animals_list = []
 
+    @classmethod
+    def set_params(cls, new_params):
+        """
+        Set parameters for class.
+        Raises a KeyError if given an invalid parameter name, invalid key used
+        in the dictionary.
+        Raises a ValueError if given invalid value for key.
+
+        todo: change 800.0 and 300.0 with parameters that we can change the value off
+
+        Parameters
+        ----------
+        new_params: [dict]
+            Dictionary with new parameter values
+        """
+        for key in new_params:
+            if key not in cls.f_max:
+                raise KeyError(f"Invalid parameter name + {key}")
+            elif key == 'W':
+                raise ValueError("There is no food in water-cells")
+            elif key == 'D':
+                raise ValueError("There is no food in dessert-cells")
+            else:
+                if key == 'L' and new_params[key] <= 800.0:
+                    cls.f_max[key] = new_params[key]
+                elif key == 'H' and new_params[key] <= 300.0:
+                    cls.f_max[key] = new_params[key]
+                else:
+                    raise ValueError("To much fodder placed in cell")
+
+    @classmethod
+    def get_params(cls):
+        return cls.f_max
+
     def get_animals(self):
         """Just making it 'legal' to get information about the animals."""
         return self.animals_list
@@ -164,6 +198,8 @@ class Water(SingleCell):
     """
     Represents the water-landscape.
     """
+    def __init__(self, animals_list):
+        super().__init__(animals_list)
     pass
 
 
@@ -171,6 +207,8 @@ class Desert(SingleCell):
     """
     Represents the desert-landscape.
     """
+    def __init__(self, animals_list):
+        super().__init__(animals_list)
     pass
 
 
@@ -178,6 +216,8 @@ class Lowland(SingleCell):
     """
     Represents the lowland-landscape.
     """
+    def __init__(self, animals_list):
+        super().__init__(animals_list)
     pass
 
 
@@ -185,6 +225,8 @@ class Highland(SingleCell):
     """
     Represents the highland_landscape.
     """
+    def __init__(self, animals_list):
+        super().__init__(animals_list)
     pass
 
 # class Lowland:
