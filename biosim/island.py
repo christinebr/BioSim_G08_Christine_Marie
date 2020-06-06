@@ -27,8 +27,18 @@ class TheIsland:
         """
         pass
 
-    def all_animals_eat(self):
+    def all_animals_eat(self, herbis, carnis, landscape):
         """
+        Params
+        ------
+        herbis: [list]
+            list of dictionaries containing location of a cell and the
+            population of herbivores in that cell
+        carnis: [list]
+            list of dictionaries containing location of a cell and the
+            population of carnivores in that cell
+        landscape: [narray]
+            numpy array of the landscape of the island
         todo: are we supposed to use this kind of list?
                 ini_herbs = [{'loc': (10, 10),
                               'pop': [{'species': 'Herbivore',
@@ -36,16 +46,69 @@ class TheIsland:
                                        'weight': 20}
                                       for _ in range(150)]}]
                 ini_carns = [{'loc': (10, 10),
-                              'pop': [{'species': 'Carnivore',
-                                       'age': 5,
-                                       'weight': 20}
-                                      for _ in range(40)]}]
+                              'pop': [ {'species': 'Carnivore',
+                                        'age': 5,
+                                        'weight': 20}
+                                       for _ in range(40) ] }]
+              thinking of landscape as:
+                  ll = np.array([['W','W','W','W'],
+                                 ['W','L','L','W'],
+                                 ['W','H','H','W'],
+                                 ['W','L','L','W'],
+                                 ['W','W','W','W']])
+
         """
+        # All herbivores on the island eat
+        for dictionary in herbis:
+            row, col = dictionary['loc']  # getting the location of the cell
+            landscape_type = landscape[row, col]  # the landscape in the cell
+            if landscape_type == 'L':
+                low = Lowland(animals_list=dictionary['pop'], f_max=800.0)
+                # don't put in 800.0 directly here?
+                low.animals_eat()  # animals eat -> use Cell-method directly?
+            elif landscape_type == 'H':
+                high = Highland(animals_list=dictionary['pop'], f_max=300.0)
+                # don't put in 300.0 directly here?
+                high.animals_eat()  # animals eat -> use Cell-method directly?
 
-        pass
+        # All carnivores on the island eat
+        for dictionary in carnis:
+            row, col = dictionary['loc']  # getting the location of the cell
+            landscape_type = landscape[row, col]  # the landscape in the cell
+            if landscape_type == 'L':
+                low = Lowland(animals_list=dictionary['pop'], f_max=800.0)
+                # don't put in 800.0 directly here?
+                low.animals_eat()  # animals eat -> use Cell-method directly?
+            elif landscape_type == 'H':
+                high = Highland(animals_list=dictionary['pop'], f_max=300.0)
+                # don't put in 300.0 directly here?
+                high.animals_eat()  # animals eat -> use Cell-method directly?
 
-    def animals_procreate(self):
-        pass
+
+    def animals_procreate(self, herbis, carnis):
+        """
+        Loops trough populated cells and animals in all cells have the change to procreate
+        Parameters
+        ----------
+        herbis
+        carnis
+
+        todo: carnis and herbis have same structure as described in the method above
+
+        Returns
+        -------
+
+        """
+        for dictionary in herbis:
+            cell = SingleCell(animals_list=dictionary['pop'])
+            updated_pop_list = cell.birth()
+            dictionary['pop'] = updated_pop_list
+
+        for dictionary in carnis:
+            cell = SingleCell(animals_list=dictionary['pop'])
+            updated_pop_list = cell.birth()
+            dictionary['pop'] = updated_pop_list
+
 
 
     def migration(self):
@@ -54,17 +117,41 @@ class TheIsland:
         Returns
         -------
 
+        todo: think that we should make list of choices like moving = ['L', 'R', 'T', 'B']
+              for left, right, top and bottom, must use random.choice to pick a random, and use
+              method form cell to get the probability for migration
+
         """
         pass
 
-    def all_animals_age(self):
-        pass
+    def all_animals_age(self, herbis, carnis):
 
-    def all_animals_losses_weight(self):
-        pass
+        for dictionary in herbis:
+            cell = SingleCell(animals_list=herbis)
+            cell.aging_of_animals()
 
-    def animals_die(self):
-        pass
+        for dictionary in carnis:
+            cell = SingleCell(animals_list=herbis)
+            cell.aging_of_animals()
+
+    def all_animals_losses_weight(self, herbis, carnis):
+        for dictionary in herbis:
+            cell = SingleCell(animals_list=herbis)
+            cell.weight_loss_end_of_year()
+
+        for dictionary in carnis:
+            cell = SingleCell(animals_list=herbis)
+            cell.weight_loss_end_of_year()
+
+    def animals_die(self, herbis, carnis):
+        for dictionary in herbis:
+            cell = SingleCell(animals_list=herbis)
+            cell.death()
+
+        for dictionary in carnis:
+            cell = SingleCell(animals_list=herbis)
+            cell.death()
+
 
     def annual_cycle(self):
         """
@@ -80,12 +167,12 @@ class TheIsland:
         -------
         Updates the list of animals for the two species at the end of the year.
         """
-        self.all_animals_eat()
-        self.animals_procreate()
+        self.all_animals_eat(herbis, carnis)
+        self.animals_procreate(herbis, carnis)
         # self.migration()
-        self.all_animals_age()
-        self.all_animals_losses_weight()
-        self.animals_die()
+        self.all_animals_age(herbis, carnis)
+        self.all_animals_losses_weight(herbis, carnis)
+        self.animals_die(herbis, carnis)
         
 if __name__ == "__main__":
     # Simplest island possible
