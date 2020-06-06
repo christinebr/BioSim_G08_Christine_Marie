@@ -83,12 +83,32 @@ class TheIsland:
                 high = Highland(animals_list=dictionary['pop'], f_max=300.0)
                 # don't put in 300.0 directly here?
                 high.animals_eat()  # animals eat -> use Cell-method directly?
+
+
+    def animals_procreate(self, herbis, carnis):
         """
+        Loops trough populated cells and animals in all cells have the change to procreate
+        Parameters
+        ----------
+        herbis
+        carnis
 
-        pass
+        todo: carnis and herbis have same structure as described in the method above
 
-    def animals_procreate(self):
-        pass
+        Returns
+        -------
+
+        """
+        for dictionary in herbis:
+            cell = SingleCell(animals_list=dictionary['pop'])
+            updated_pop_list = cell.birth()
+            dictionary['pop'] = updated_pop_list
+
+        for dictionary in carnis:
+            cell = SingleCell(animals_list=dictionary['pop'])
+            updated_pop_list = cell.birth()
+            dictionary['pop'] = updated_pop_list
+
 
 
     def migration(self):
@@ -96,6 +116,10 @@ class TheIsland:
         Makes migration happen, updates amount of animals in each cell
         Returns
         -------
+
+        todo: think that we should make list of choices like moving = ['L', 'R', 'T', 'B']
+              for left, right, top and bottom, must use random.choice to pick a random, and use
+              method form cell to get the probability for migration
 
         """
         pass
