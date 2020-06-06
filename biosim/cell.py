@@ -10,6 +10,9 @@ class SingleCell:
     f_max = {'W': 0.0, 'D': 0.0, 'L': 800.0, 'H': 300.0}
 
     def __init__(self, animals_list=None):
+        """
+        todo: should we split the animal_list into one list for herbivores and one for carnivores
+        """
         if animals_list:
             self.animals_list = animals_list
         else:

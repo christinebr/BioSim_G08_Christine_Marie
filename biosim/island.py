@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import numpy as np
+from biosim.cell import SingleCell, Highland, Lowland
 
 class TheIsland:
     """
@@ -26,6 +27,27 @@ class TheIsland:
         """
         pass
 
+    def all_animals_eat(self):
+        """
+        todo: are we supposed to use this kind of list?
+                ini_herbs = [{'loc': (10, 10),
+                              'pop': [{'species': 'Herbivore',
+                                       'age': 5,
+                                       'weight': 20}
+                                      for _ in range(150)]}]
+                ini_carns = [{'loc': (10, 10),
+                              'pop': [{'species': 'Carnivore',
+                                       'age': 5,
+                                       'weight': 20}
+                                      for _ in range(40)]}]
+        """
+
+        pass
+
+    def animals_procreate(self):
+        pass
+
+
     def migration(self):
         """
         Makes migration happen, updates amount of animals in each cell
@@ -33,6 +55,15 @@ class TheIsland:
         -------
 
         """
+        pass
+
+    def all_animals_age(self):
+        pass
+
+    def all_animals_losses_weight(self):
+        pass
+
+    def animals_die(self):
         pass
 
     def annual_cycle(self):
@@ -49,4 +80,24 @@ class TheIsland:
         -------
         Updates the list of animals for the two species at the end of the year.
         """
+        self.all_animals_eat()
+        self.animals_procreate()
+        # self.migration()
+        self.all_animals_age()
+        self.all_animals_losses_weight()
+        self.animals_die()
         
+if __name__ == "__main__":
+    # Simplest island possible
+    l = np.array([['W', 'W', 'W'], ['W', 'L', 'W'], ['W', 'W', 'W']])
+
+    # A big but small island (only Lowland and Highland)
+    ll = np.array([['W','W','W','W'],['W','L','L','W'], ['W','H','H','W'],['W','L','L','W'], ['W','W','W','W']])
+
+    # landscape in cell 1,1:
+    l[1,1]
+
+    # only testing
+    for r in l[1:-1]:
+        for c in r[1:-1]:
+            print(c)
