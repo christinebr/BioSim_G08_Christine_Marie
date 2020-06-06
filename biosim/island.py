@@ -27,8 +27,18 @@ class TheIsland:
         """
         pass
 
-    def all_animals_eat(self):
+    def all_animals_eat(self, herbis, carnis, landscape):
         """
+        Params
+        ------
+        herbis: [list]
+            list of dictionaries containing location of a cell and the
+            population of herbivores in that cell
+        carnis: [list]
+            list of dictionaries containing location of a cell and the
+            population of carnivores in that cell
+        landscape: [narray]
+            numpy array of the landscape of the island
         todo: are we supposed to use this kind of list?
                 ini_herbs = [{'loc': (10, 10),
                               'pop': [{'species': 'Herbivore',
@@ -36,10 +46,43 @@ class TheIsland:
                                        'weight': 20}
                                       for _ in range(150)]}]
                 ini_carns = [{'loc': (10, 10),
-                              'pop': [{'species': 'Carnivore',
-                                       'age': 5,
-                                       'weight': 20}
-                                      for _ in range(40)]}]
+                              'pop': [ {'species': 'Carnivore',
+                                        'age': 5,
+                                        'weight': 20}
+                                       for _ in range(40) ] }]
+              thinking of landscape as:
+                  ll = np.array([['W','W','W','W'],
+                                 ['W','L','L','W'],
+                                 ['W','H','H','W'],
+                                 ['W','L','L','W'],
+                                 ['W','W','W','W']])
+
+        """
+        # All herbivores on the island eat
+        for dictionary in herbis:
+            row, col = dictionary['loc']  # getting the location of the cell
+            landscape_type = landscape[row, col]  # the landscape in the cell
+            if landscape_type == 'L':
+                low = Lowland(animals_list=dictionary['pop'], f_max=800.0)
+                # don't put in 800.0 directly here?
+                low.animals_eat()  # animals eat -> use Cell-method directly?
+            elif landscape_type == 'H':
+                high = Highland(animals_list=dictionary['pop'], f_max=300.0)
+                # don't put in 300.0 directly here?
+                high.animals_eat()  # animals eat -> use Cell-method directly?
+
+        # All carnivores on the island eat
+        for dictionary in carnis:
+            row, col = dictionary['loc']  # getting the location of the cell
+            landscape_type = landscape[row, col]  # the landscape in the cell
+            if landscape_type == 'L':
+                low = Lowland(animals_list=dictionary['pop'], f_max=800.0)
+                # don't put in 800.0 directly here?
+                low.animals_eat()  # animals eat -> use Cell-method directly?
+            elif landscape_type == 'H':
+                high = Highland(animals_list=dictionary['pop'], f_max=300.0)
+                # don't put in 300.0 directly here?
+                high.animals_eat()  # animals eat -> use Cell-method directly?
         """
 
         pass
