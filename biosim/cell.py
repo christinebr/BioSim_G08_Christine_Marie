@@ -199,7 +199,8 @@ class SingleCell:
                 carni = Carnivores(weight=w, age=a)
                 prob_death = carni.death()
 
-            if random.random() < prob_death:
+            if random.random() > prob_death:
+                # Testing if the animal survives, not if it dies. That's why we use > instead of <
                 survived_animals.append(animal)
 
         self.animals_list = survived_animals
