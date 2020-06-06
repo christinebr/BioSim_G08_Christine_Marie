@@ -1,13 +1,8 @@
 # -*- coding: utf-8 -*-
 import numpy as np
-from .animals import Herbivores, Carnivores, Animal
+from biosim.animals import Herbivores, Carnivores, Animal
 import random
 from copy import deepcopy
-
-"""
------------------------
-Todo: Finn ut av importen
-"""
 
 
 class SingleCell:
@@ -44,32 +39,50 @@ class SingleCell:
         Grått var et forsøk på å fikse dette, men løsningen tar for lang tid, muliggens uendelig.
         """
 #        n_before = deepcopy(self.N)
+
+        num_herbi = 0
+        num_carni = 0
+        for animal in self.animals_list:
+            if animal['species'] == 'Herbivore':
+                num_herbi += 1
+            else:
+                num_carni += 1
+
+        newborn_animals = []
         for animal in self.animals_list:
             w = animal['weight']
             a = animal['age']
             if animal['species'] == 'Herbivore':
-                herbi = Herbivores(weight=w, age=a)
-#                prob_birth = herbi.birth(n_before)
-                prob_birth = herbi.birth()
-                birth_weight = herbi.birth_weight()
+                herbi = Herbivores(weight=w, age=a)  # make herbivore (mother)
+                prob_birth = herbi.birth(num_herbi)  # probability of giving birth for mother
+                birth_weight = herbi.birth_weight()  # weight of newborn
                 speci = 'Herbivore'
-                if random.random() > prob_birth:
+                if random.random() > prob_birth:  # check if herbivore gives birth
                     new_animal = {'species': speci, 'age': 0, 'weight': birth_weight}
-                    self.animals_list.append(new_animal)
+                    newborn_animals.append(new_animal)  # add newborn to list of newborns
+
+                    # update weight of herbivore (mother)
                     herbi.update_weight(weight_of_newborn=birth_weight)
+
+                    # update weight of herbivore (mother) in animal list
                     animal['weight'] = herbi.weight
             else:
-                carni = Carnivores(weight=w, age=a)
-#                prob_birth = carni.birth(n_before)
-                prob_birth = carni.birth()
-                birth_weight = carni.birth_weight()
+                carni = Carnivores(weight=w, age=a)  # make carnivore (mother)
+                prob_birth = carni.birth(num_carni)  # probability of giving birth for mother
+                birth_weight = carni.birth_weight()  # weight of newborn
                 speci = 'Carnivore'
-                if random.random() > prob_birth:
+                if random.random() > prob_birth:  # check if carnivore gives birth
                     new_animal = {'species': speci, 'age': 0, 'weight': birth_weight}
-                    self.animals_list.append(new_animal)
+                    self.animals_list.append(new_animal)  # add newborn to list of newborns
+
+                    # update weight of carnivore (mother)
                     carni.update_weight(weight_of_newborn=birth_weight)
+
+                    # update weight of carnivore (mother) in animal list
                     animal['weight'] = carni.weight
 
+        # Adds the newborn animals to the list of animals
+        self.animals_list.extend(newborn_animals)
 
     def migration(self):
         pass
