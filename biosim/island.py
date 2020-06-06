@@ -167,12 +167,12 @@ class TheIsland:
         -------
         Updates the list of animals for the two species at the end of the year.
         """
-        self.all_animals_eat()
-        self.animals_procreate()
+        self.all_animals_eat(herbis, carnis)
+        self.animals_procreate(herbis, carnis)
         # self.migration()
-        self.all_animals_age()
-        self.all_animals_losses_weight()
-        self.animals_die()
+        self.all_animals_age(herbis, carnis)
+        self.all_animals_losses_weight(herbis, carnis)
+        self.animals_die(herbis, carnis)
         
 if __name__ == "__main__":
     # Simplest island possible
