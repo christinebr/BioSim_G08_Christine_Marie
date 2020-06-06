@@ -3,6 +3,7 @@
 from biosim.cell import SingleCell
 import pytest
 from copy import deepcopy
+import random
 
 
 class TestSingleCell:
@@ -18,7 +19,7 @@ class TestSingleCell:
     def test_that_all_animals_age(self, initial_cell_class):
         """
         Tests that method age makes all animals get one year older.
-        The sum of the age in the test-sett increase with 3 per year.
+        The sum of the age in the test-sett increases with 3 per year.
         """
         cell_old = deepcopy(self.cell.get_animals())
         self.cell.aging_of_animals()
@@ -28,14 +29,13 @@ class TestSingleCell:
         for old, older in zip(cell_old, cell_new):
             sum_old_age += old['age']
             sum_new_age += older['age']
-        assert sum_old_age + 3 == sum_new_age
+        assert sum_old_age + len(self.cell.animals_list) == sum_new_age
 
-    def test_that_newborns_weights_something(self, initial_cell_class):
+    def test_that_newborns_weights_something(self, initial_cell_class, mocker):
         """
         Tests that the birth method assigns a weight to the newborn animal.
-
-        Todo: make sure the sett of animals wil give birth so at least one animal
         """
+        mocker.patch('random.random', return_value=0)
         self.cell.birth()
         nonexsistent_newborns = 0
         for animal in self.cell.animals_list:
@@ -44,26 +44,32 @@ class TestSingleCell:
 
         assert nonexsistent_newborns == 0
 
-    def test_that_mother_looses_weight(self, initial_cell_class):
+    def test_that_mother_looses_weight(self, initial_cell_class, mocker):
         """
-        Tests that the birth method makes the mother loose weight.
-
-        Todo: Hvis mulig kan vi lage en test med mocker/seed (eller statistisk) som tester at
-        vekttapet er riktig. Also make sure there are actually some newborn(s).
+        Tests that the birth method makes the mother loose weight. Be aware that the expected
+        numbers are for herbivores.
         """
+        mocker.patch('random.random', return_value=0)
+        mocker.patch('random.gauss', return_value=7)
         old_list_of_animals = deepcopy(self.cell.get_animals())
         self.cell.birth()
         new_list_of_animals = self.cell.get_animals()
-        sum_weight_old = 0
-        sum_weight_new = 0
+        old_weights = []
+        new_weights = []
+        correct_weights = []
         for old_animal, new_animal in zip(old_list_of_animals, new_list_of_animals):
-            # zip will use the shortest list, in this case old_list, to decide the lengt of the
+            # zip will use the shortest list, in this case old_list, to decide the length of the
             # zipped list. This way the newborns will not count.
-            sum_weight_old += old_animal['weight']
-            sum_weight_new += new_animal['weight']
+            old_weights.append(old_animal['weight'])
+            new_weights.append(new_animal['weight'])
+            weight_of_newborn = random.gauss(8, 1.5)
+            weight_limit = 3.5 * (8 + 1.5)
+            if old_animal['weight'] > weight_limit:
+                correct_weights.append(old_animal['weight'] - 1.2 * weight_of_newborn)
+            else:
+                correct_weights.append(old_animal['weight'])
 
-        assert sum_weight_new < sum_weight_old
-
+        assert new_weights == correct_weights
 
     def test_that_dead_animals_dissappears(self):
         """
