@@ -30,21 +30,21 @@ class TestSingleCell:
             sum_new_age += older['age']
         assert sum_old_age + 3 == sum_new_age
 
-    def test_that_newborns_weights_somehting(self, initial_cell_class):
+    def test_that_newborns_weights_something(self, initial_cell_class):
         """
         Tests that the birth method assigns a weight to the newborn animal.
 
         Todo: make sure the sett of animals wil give birth so at least one animal
         """
-        cellt = self.cell.birth()
+        self.cell.birth()
         nonexsistent_newborns = 0
-        for animal in cellt:
+        for animal in self.cell.animals_list:
             if animal['age'] == 0 and animal['weight'] <= 0:
                 nonexsistent_newborns += 1
 
         assert nonexsistent_newborns == 0
 
-    def test_that_mother_looses_weight(self):
+    def test_that_mother_looses_weight(self, initial_cell_class):
         """
         Tests that the birth method makes the mother loose weight.
 
