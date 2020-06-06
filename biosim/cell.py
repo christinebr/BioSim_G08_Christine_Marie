@@ -175,6 +175,8 @@ class Water(SingleCell):
     """
     Represents the water-landscape.
     """
+    def __init__(self, animals_list):
+        super().__init__(animals_list)
     pass
 
 
@@ -182,6 +184,8 @@ class Desert(SingleCell):
     """
     Represents the desert-landscape.
     """
+    def __init__(self, animals_list):
+        super().__init__(animals_list)
     pass
 
 
@@ -189,6 +193,8 @@ class Lowland(SingleCell):
     """
     Represents the lowland-landscape.
     """
+    def __init__(self, animals_list):
+        super().__init__(animals_list)
     pass
 
 
@@ -196,6 +202,8 @@ class Highland(SingleCell):
     """
     Represents the highland_landscape.
     """
+    def __init__(self, animals_list):
+        super().__init__(animals_list)
     pass
 
 # class Lowland:
