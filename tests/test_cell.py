@@ -33,6 +33,8 @@ class TestSingleCell:
     def test_that_newborns_weights_somehting(self, initial_cell_class):
         """
         Tests that the birth method assigns a weight to the newborn animal.
+
+        Todo: make sure the sett of animals wil give birth so at least one animal
         """
         cellt = self.cell.birth()
         nonexsistent_newborns = 0
@@ -47,7 +49,7 @@ class TestSingleCell:
         Tests that the birth method makes the mother loose weight.
 
         Todo: Hvis mulig kan vi lage en test med mocker/seed (eller statistisk) som tester at
-        vekttapet er riktig.
+        vekttapet er riktig. Also make sure there are actually some newborn(s).
         """
         old_list_of_animals = deepcopy(self.cell.get_animals())
         self.cell.birth()
