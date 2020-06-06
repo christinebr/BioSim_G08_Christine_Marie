@@ -21,7 +21,6 @@ class SingleCell:
             self.animals_list = animals_list
         else:
             self.animals_list = []
-        self.N = len(animals_list)
 
     def get_animals(self):
         """Just making it 'legal' to get information about the animals."""
