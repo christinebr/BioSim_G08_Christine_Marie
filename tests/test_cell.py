@@ -10,7 +10,7 @@ class TestSingleCell:
 
     @pytest.fixture()
     def initial_cell_class(self):
-        animals = [{'species': 'Herbivore', 'age': 10, 'weight': 2+},
+        animals = [{'species': 'Herbivore', 'age': 10, 'weight': 20},
                    {'species': 'Herbivore', 'age': 40, 'weight': 16},
                    {'species': 'Carnivore', 'age': 30, 'weight': 3.5}]
         self.cell = SingleCell(animals_list=animals)
@@ -79,11 +79,12 @@ class TestSingleCell:
 
         assert new_weights == correct_weights
 
-    def test_that_dead_animals_disappears(self, initial_cell_class, mocker):
+    def test_no_zombies(self, initial_cell_class, mocker):
         """
         Tests that dead animals does not continue to exist (no zombies welcome on this island).
 
         The first test checks that an animal of weight zero disappears.
+        The second test checks that when all animals dies, all of them disappears.
 
         Todo: Make more tests on this
         """
@@ -98,6 +99,11 @@ class TestSingleCell:
         print(new_list_of_animals)
 
         assert len(old_list_of_animals) != len(new_list_of_animals)
+
+        mocker.patch('random.random', return_value=0)
+        self.cell.death()
+        list_of_animals = self.cell.get_animals()
+        assert len(list_of_animals) == 0
 
 
 
