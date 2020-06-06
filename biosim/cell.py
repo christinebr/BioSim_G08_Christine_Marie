@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
-import numpy as np
-from biosim.animals import Herbivores, Carnivores, Animal
+from biosim.animals import Herbivores, Carnivores
 import random
-from copy import deepcopy
 
 
 class SingleCell:
