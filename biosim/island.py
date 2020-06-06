@@ -124,14 +124,34 @@ class TheIsland:
         """
         pass
 
-    def all_animals_age(self):
-        pass
+    def all_animals_age(self, herbis, carnis):
 
-    def all_animals_losses_weight(self):
-        pass
+        for dictionary in herbis:
+            cell = SingleCell(animals_list=herbis)
+            cell.aging_of_animals()
 
-    def animals_die(self):
-        pass
+        for dictionary in carnis:
+            cell = SingleCell(animals_list=herbis)
+            cell.aging_of_animals()
+
+    def all_animals_losses_weight(self, herbis, carnis):
+        for dictionary in herbis:
+            cell = SingleCell(animals_list=herbis)
+            cell.weight_loss_end_of_year()
+
+        for dictionary in carnis:
+            cell = SingleCell(animals_list=herbis)
+            cell.weight_loss_end_of_year()
+
+    def animals_die(self, herbis, carnis):
+        for dictionary in herbis:
+            cell = SingleCell(animals_list=herbis)
+            cell.death()
+
+        for dictionary in carnis:
+            cell = SingleCell(animals_list=herbis)
+            cell.death()
+
 
     def annual_cycle(self):
         """
