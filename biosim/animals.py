@@ -312,6 +312,7 @@ if __name__ == "__main__":
         h = Herbivores(weight=herb['weight'], age=herb['age'])
         print(f"Weight:        {h.weight}")
         print(f"Age:           {h.age}")
+        print(f"Fodder:        {h.get_params()['F']}")
         print(f"Fitness:       {h.fitness():.3f}")
         print(f"Prob of birth: {h.birth(num=9)}")
         print(f"Prob of death: {h.death():.3f}\n")
@@ -324,6 +325,7 @@ if __name__ == "__main__":
         print(f"Fitness:       {c.fitness():.3f}")
         print(f"Prob of birth: {c.birth(num=9)}")
         print(f"Prob of death: {c.death():.3f}\n")
+
 
 
 

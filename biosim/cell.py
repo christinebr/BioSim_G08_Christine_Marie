@@ -71,31 +71,40 @@ class SingleCell:
 
         return herbi_list, carni_list
 
-    def animals_in_cell_eat(self):
+    def animals_in_cell_eat(self, start_value_fodder):
         """
         shuffles the animals, loops through all the animals in self.animal_list
         call the function animal.update_weight()
+
+        todo: add eating for carnivores
+
         """
+        herbis, carnis = self.sort_animals_by_species()
 
+        # Herbivore eats
+        random.shuffle(herbis)  # Shuffles the herbivore, they eat in random order
+        fodder_in_cell = start_value_fodder
+        for herbi in herbis:
+            h = Herbivores(weight=herbi['weight'], age=herbi['age'])
+            fodder = h.get_params()['F']
+            if fodder <= fodder_in_cell:
+                h.update_weight(amount_fodder_eaten=fodder)
+                herbi['weight'] = h.weight
+                fodder_in_cell -= fodder
+            elif fodder_in_cell > 0:
+                h.update_weight(amount_fodder_eaten=fodder_in_cell)
+                herbi['weight'] = h.weight
+                fodder_in_cell = 0
 
-        pass
-
-    def fodder_update(self):
-        pass
+        # Carnivores eats
+        # ...
+        self.animals_list = herbis + carnis
 
     def birth(self):
-        """Decides if animals are born and updates the animal_list
-
-        Todo: Gi inn antall dyr, eller endre på birth i animal og kontroller at mer enn ett dyr her.
-        Grått var et forsøk på å fikse dette, men løsningen tar for lang tid, muliggens uendelig.
         """
-        # num_herbi = 0
-        # num_carni = 0
-        # for animal in self.animals_list:
-        #     if animal['species'] == 'Herbivore':
-        #         num_herbi += 1
-        #     else:
-        #         num_carni += 1
+        Decides if animals are born and updates the animal_list
+        """
+
         herbis, carnis = self.sort_animals_by_species()
         num_herbi = len(herbis)
         num_carni = len(carnis)
@@ -139,14 +148,14 @@ class SingleCell:
     def migration(self):
         pass
 
-    def aging_of_animales(self):
+    def aging_of_animals(self):
         """Makes sure animals ages"""
         for animal in self.animals_list:
             animal['age'] += 1
 
-    def weight_loss(self):
+    def weight_loss_end_of_year(self):
         """
-        Makes all the animals loos weight according to their start-weight and the constant eta
+        Makes all the animals looses weight according to their start-weight and the constant eta
         """
         for animal in self.animals_list:
             w = animal['weight']
@@ -156,19 +165,20 @@ class SingleCell:
                 herbi.update_weight()
                 animal['weight'] = herbi.weight
             else:
-                carni = Carnuivores(weight=w, age=a)
+                carni = Carnivores(weight=w, age=a)
                 carni.update_weight()
                 animal['weight'] = carni.weight
         
         # list_herbi, list_carni = self.sort_animals_by_species()
-        # for herbi, carni in zip(list_herbi, list_carni):
+        # for herbi in list_herbi:
         #     her = Herbivores(weight=herbi['weight'], age=herbi['age'])
         #     her.update_weight()
         #     herbi['weight'] = her.weight
-        #
+        # for carni in list_carni:
         #     car = Carnivores(weight=carni['weight'], age=carni['age'])
         #     car.update_weight()
         #     carni['weight'] = car.weight
+        #
 
     def death(self):
         """Decides which of the animals that dies and updates the animal_list
@@ -200,7 +210,6 @@ class Water(SingleCell):
     """
     def __init__(self, animals_list):
         super().__init__(animals_list)
-    pass
 
 
 class Desert(SingleCell):
@@ -209,54 +218,30 @@ class Desert(SingleCell):
     """
     def __init__(self, animals_list):
         super().__init__(animals_list)
-    pass
 
 
 class Lowland(SingleCell):
     """
     Represents the lowland-landscape.
     """
-    def __init__(self, animals_list):
+    def __init__(self, animals_list, f_max=800.0):
         super().__init__(animals_list)
-    pass
+        self.f_max = f_max
+
+    def animals_eat(self):
+        self.animals_in_cell_eat(start_value_fodder=self.f_max)
 
 
 class Highland(SingleCell):
     """
     Represents the highland_landscape.
     """
-    def __init__(self, animals_list):
+    def __init__(self, animals_list, f_max=300.0):
         super().__init__(animals_list)
-    pass
+        self.f_max = f_max
 
-# class Lowland:
-#     def __init__(self, fodder_available=0):
-#         self.f_max = 800.0
-#         if fodder_available > self.f_max:
-#             raise ValueError("To much fodder in lowland")
-#         else:
-#             self.fodder = fodder_available
-#
-#     def get_fodder(self):
-#         return self.fodder
-#
-#     def set_fodder(self, new_fodder):
-#         self.fodder = new_fodder
-#
-#
-# class Highland:
-#     def __init__(self, fodder_available=0):
-#         self.f_max = 300.0
-#         if fodder_available > self.f_max:
-#             raise ValueError("To much fodder in highland")
-#         else:
-#             self.fodder = fodder_available
-#
-#     def get_fodder(self):
-#         return self.fodder
-#
-#     def set_fodder(self, new_fodder):
-#         self.fodder = new_fodder
+    def animals_eat(self):
+        self.animals_in_cell_eat(start_value_fodder=self.f_max)
 
 
 if __name__ == "__main__":
@@ -269,3 +254,13 @@ if __name__ == "__main__":
     cell1.birth()
     print(f"Number of animals after birth: {len(cell1.get_animals())}")
     print(cell1.get_animals())
+
+    c = SingleCell(animals)
+    print(c.sort_animals_by_species())
+
+    high = Highland(animals)
+    print(f"Before eating")
+    print(high.get_animals())
+    high.animals_eat()
+    print(f"After eating")
+    print(high.get_animals())

@@ -21,7 +21,7 @@ class TestSingleCell:
         The sum of the age in the test-sett increase with 3 per year.
         """
         cell_old = deepcopy(self.cell.get_animals())
-        self.cell.aging_of_animales()
+        self.cell.aging_of_animals()
         cell_new = self.cell.get_animals()
         sum_old_age = 0
         sum_new_age = 0
