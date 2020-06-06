@@ -72,10 +72,10 @@ class SingleCell:
             a = animal['age']
             if animal['species'] == 'Herbivore':
                 herbi = Herbivores(weight=w, age=a)  # make herbivore (mother)
-                prob_birth = herbi.birth(num_herbi)  # probability of giving birth for mother
-                birth_weight = herbi.birth_weight()  # weight of newborn
+                prob_birth, birth_weight = herbi.birth(num_herbi)
+                # probability of giving birth for mother and weight of newborn
                 speci = 'Herbivore'
-                if random.random() > prob_birth:  # check if herbivore gives birth
+                if random.random() < prob_birth:  # check if herbivore gives birth
                     new_animal = {'species': speci, 'age': 0, 'weight': birth_weight}
                     newborn_animals.append(new_animal)  # add newborn to list of newborns
 
@@ -86,10 +86,10 @@ class SingleCell:
                     animal['weight'] = herbi.weight
             else:
                 carni = Carnivores(weight=w, age=a)  # make carnivore (mother)
-                prob_birth = carni.birth(num_carni)  # probability of giving birth for mother
-                birth_weight = carni.birth_weight()  # weight of newborn
+                prob_birth, birth_weight = carni.birth(num_carni)
+                # probability of giving birth for mother and weight of newborn
                 speci = 'Carnivore'
-                if random.random() > prob_birth:  # check if carnivore gives birth
+                if random.random() < prob_birth:  # check if carnivore gives birth
                     new_animal = {'species': speci, 'age': 0, 'weight': birth_weight}
                     self.animals_list.append(new_animal)  # add newborn to list of newborns
 
@@ -131,7 +131,7 @@ class SingleCell:
                 carni = Carnivores(weight=w, age=a)
                 prob_death = carni.death()
 
-            if random.random() > prob_death:
+            if random.random() < prob_death:
                 survived_animals.append(animal)
 
         self.animals_list = survived_animals
@@ -197,7 +197,7 @@ class Highland(SingleCell):
 if __name__ == "__main__":
     animals = [{'species': 'Herbivore', 'age': 10, 'weight': 40},
                {'species': 'Herbivore', 'age': 8, 'weight': 29},
-               {'species': 'Herbivore', 'age': 3, 'weight': 10}]
+               {'species': 'Herbivore', 'age': 3, 'weight': 50}]
     cell1 = SingleCell(animals)
     print(f"Number of animals: {len(cell1.get_animals())}")
     print(cell1.get_animals())

@@ -11,7 +11,7 @@ class TestSingleCell:
     def initial_cell_class(self):
         animals = [{'species': 'Herbivore', 'age': 10, 'weight': 40},
                    {'species': 'Herbivore', 'age': 8, 'weight': 29},
-                   {'species': 'Herbivore', 'age': 3, 'weight': 10}]
+                   {'species': 'Herbivore', 'age': 3, 'weight': 60}]
         self.cell = SingleCell(animals_list=animals)
         return self.cell
 
