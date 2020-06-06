@@ -217,7 +217,7 @@ class Animal:
             return 1.0  # the animal is dead
         else:
             # Probability of death:
-            return self.weight*(1-self.fitness())
+            return self.weight * (1 - self.fitness())
 
 
 class Herbivores(Animal):
@@ -299,14 +299,14 @@ if __name__ == "__main__":
     print(new_param)
 
     herbis = [{'species': 'Herbivore', 'age': 10, 'weight': 10},
-              {'species': 'Herbivore', 'age': 8, 'weight': 9},
-              {'species': 'Herbivore', 'age': 40, 'weight': 5},
-              {'species': 'Herbivore', 'age': 35, 'weight': 12}]
+              {'species': 'Herbivore', 'age': 8, 'weight': 5},
+              {'species': 'Herbivore', 'age': 40, 'weight': 9},
+              {'species': 'Herbivore', 'age': 35, 'weight': 15}]
 
     carnis = [{'species': 'Carnivore', 'age': 43, 'weight': 4},
               {'species': 'Carnivore', 'age': 30, 'weight': 5},
               {'species': 'Carnivore', 'age': 3, 'weight': 3},
-              {'species': 'Carnivore', 'age': 23, 'weight': 2}]
+              {'species': 'Carnivore', 'age': 23, 'weight': 6}]
 
     print("HERBIVORES")
     for herb in herbis:

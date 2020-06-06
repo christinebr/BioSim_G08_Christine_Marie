@@ -11,7 +11,7 @@ class TestSingleCell:
     @pytest.fixture()
     def initial_cell_class(self):
         animals = [{'species': 'Herbivore', 'age': 10, 'weight': 4},
-                   {'species': 'Herbivore', 'age': 40, 'weight': 11},
+                   {'species': 'Herbivore', 'age': 40, 'weight': 16},
                    {'species': 'Carnivore', 'age': 30, 'weight': 3.5}]
         self.cell = SingleCell(animals_list=animals)
         return self.cell
@@ -86,6 +86,7 @@ class TestSingleCell:
         The first test checks that an animal of weight zero disappears.
 
         Todo: Se kommentar i kode, noe er galt i death, for mange dyr dør
+            Also make more tests on this
         """
         mocker.patch('random.random', return_value=1)
         old_list_of_animals = deepcopy(self.cell.get_animals())
@@ -98,6 +99,7 @@ class TestSingleCell:
         print(new_list_of_animals)
 
         assert len(old_list_of_animals) != len(new_list_of_animals)
+
 
 
     def test_that_newborn_same_speci_as_parent(self):
