@@ -21,11 +21,29 @@ class SingleCell:
         """Just making it 'legal' to get information about the animals."""
         return self.animals_list
 
+    def sort_animals_by_species(self):
+        """
+        Sorting the animals in herbivores and carnivores in two lists
+        Returns
+        -------
+        [list] herbivore and carnivore list
+        """
+        herbi_list, carni_list = [], []
+        for animal in self.animals_list:
+            if animal['species'] == 'Herbivore':
+                herbi_list.append(animal)
+            else:
+                carni_list.append(animal)
+
+        return herbi_list, carni_list
+
     def animals_in_cell_eat(self):
         """
         shuffles the animals, loops through all the animals in self.animal_list
         call the function animal.update_weight()
         """
+
+
         pass
 
     def fodder_update(self):
@@ -37,15 +55,16 @@ class SingleCell:
         Todo: Gi inn antall dyr, eller endre på birth i animal og kontroller at mer enn ett dyr her.
         Grått var et forsøk på å fikse dette, men løsningen tar for lang tid, muliggens uendelig.
         """
-#        n_before = deepcopy(self.N)
-
-        num_herbi = 0
-        num_carni = 0
-        for animal in self.animals_list:
-            if animal['species'] == 'Herbivore':
-                num_herbi += 1
-            else:
-                num_carni += 1
+        # num_herbi = 0
+        # num_carni = 0
+        # for animal in self.animals_list:
+        #     if animal['species'] == 'Herbivore':
+        #         num_herbi += 1
+        #     else:
+        #         num_carni += 1
+        herbis, carnis = self.sort_animals_by_species()
+        num_herbi = len(herbis)
+        num_carni = len(carnis)
 
         newborn_animals = []
         for animal in self.animals_list:
@@ -180,6 +199,8 @@ if __name__ == "__main__":
                {'species': 'Herbivore', 'age': 8, 'weight': 29},
                {'species': 'Herbivore', 'age': 3, 'weight': 10}]
     cell1 = SingleCell(animals)
+    print(f"Number of animals: {len(cell1.get_animals())}")
     print(cell1.get_animals())
     cell1.birth()
+    print(f"Number of animals after birth: {len(cell1.get_animals())}")
     print(cell1.get_animals())

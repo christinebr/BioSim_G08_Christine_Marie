@@ -295,7 +295,8 @@ if __name__ == "__main__":
 
     herbis = [{'species': 'Herbivore', 'age': 10, 'weight': 40},
               {'species': 'Herbivore', 'age': 8, 'weight': 29},
-              {'species': 'Herbivore', 'age': 3, 'weight': 15}]
+              {'species': 'Herbivore', 'age': 3, 'weight': 15},
+              {'species': 'Herbivore', 'age': 3, 'weight': 10}]
 
     carnis = [{'species': 'Carnivore', 'age': 10, 'weight': 40},
               {'species': 'Carnivore', 'age': 8, 'weight': 29},
@@ -318,5 +319,6 @@ if __name__ == "__main__":
         print(f"Fitness:       {c.fitness():.3f}")
         print(f"Prob of birth: {c.birth(num=9)}")
         print(f"Prob of death: {c.death():.3f}\n")
+
 
 
