@@ -244,7 +244,7 @@ class Carnivores(Animal):
                'gamma': 0.8, 'zeta': 3.5, 'xi': 1.1, 'omega': 0.8,
                'F': 50.0, 'DeltaPhiMax': 10.0}
 
-    def __init__(self, weight, age):
+    def __init__(self, weight, age=0):
         """ Initialise the carnivore """
         super().__init__(weight, age)
 
@@ -305,7 +305,8 @@ if __name__ == "__main__":
 
     carnis = [{'species': 'Carnivore', 'age': 10, 'weight': 40},
               {'species': 'Carnivore', 'age': 8, 'weight': 29},
-              {'species': 'Carnivore', 'age': 3, 'weight': 18}]
+              {'species': 'Carnivore', 'age': 3, 'weight': 18},
+              {'species': 'Carnivore', 'age': 2, 'weight': 10}]
 
     print("HERBIVORES")
     for herb in herbis:

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-
-from biosim.animals import Herbivores
+# from pytest_mock import mocker
+from biosim.animals import Herbivores, Carnivores
 import pytest
 from copy import deepcopy
 
@@ -31,7 +31,7 @@ class TestHerbivores:
         new_param = h1.get_params()
         assert old_param != new_param
 #        assert old_param['beta'] == pytest.approx(new_param['beta'])
- #       assert old_param['w_half'] == pytest.approx(new_param['w_half'])
+#        assert old_param['w_half'] == pytest.approx(new_param['w_half'])
 
     def test_default_value_for_age(self, initial_herbivore_class):
         """Testing default value for age"""
@@ -110,3 +110,29 @@ class TestHerbivores:
         h.update_weight(amount_fodder_eaten=50)
         fitness2 = h.fitness()
         assert fitness1 != fitness2
+
+
+class TestCarnivores:
+    @pytest.fixture()
+    def initial_carnivore_class(self):
+        """
+        todo: are not using this per now
+        """
+        self.c = Carnivores(weight=20, )
+        return self.c
+
+    def test_prob_kill_0_when_large_herbi_fitness(self):
+        carni = Carnivores(weight=10, age=2)   # fitness 0.917
+        prob_kill = carni.probability_of_killing_herbivore(fitness_herbi=0.999)
+        assert prob_kill == 0
+
+    def test_prob_kill_between_0_and_1(self):
+        carni = Carnivores(weight=10, age=2)   # fitness 0.917
+        prob_kill = carni.probability_of_killing_herbivore(fitness_herbi=0.5)
+        assert 0 <= prob_kill <= 1
+
+    def test_prob_kill_1_otherwise(self):
+        carni = Carnivores(weight=10, age=2)  # fitness 0.917
+        carni.set_params({'DeltaPhiMax': 0.3})
+        prob_kill = carni.probability_of_killing_herbivore(fitness_herbi=0.5)
+        assert prob_kill == 1
