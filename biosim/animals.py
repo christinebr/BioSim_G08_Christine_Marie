@@ -298,15 +298,15 @@ if __name__ == "__main__":
     new_param = h3.get_params()
     print(new_param)
 
-    herbis = [{'species': 'Herbivore', 'age': 10, 'weight': 40},
-              {'species': 'Herbivore', 'age': 8, 'weight': 29},
-              {'species': 'Herbivore', 'age': 3, 'weight': 15},
-              {'species': 'Herbivore', 'age': 3, 'weight': 10}]
+    herbis = [{'species': 'Herbivore', 'age': 10, 'weight': 10},
+              {'species': 'Herbivore', 'age': 8, 'weight': 9},
+              {'species': 'Herbivore', 'age': 40, 'weight': 5},
+              {'species': 'Herbivore', 'age': 35, 'weight': 12}]
 
-    carnis = [{'species': 'Carnivore', 'age': 10, 'weight': 40},
-              {'species': 'Carnivore', 'age': 8, 'weight': 29},
-              {'species': 'Carnivore', 'age': 3, 'weight': 18},
-              {'species': 'Carnivore', 'age': 2, 'weight': 10}]
+    carnis = [{'species': 'Carnivore', 'age': 43, 'weight': 4},
+              {'species': 'Carnivore', 'age': 30, 'weight': 5},
+              {'species': 'Carnivore', 'age': 3, 'weight': 3},
+              {'species': 'Carnivore', 'age': 23, 'weight': 2}]
 
     print("HERBIVORES")
     for herb in herbis:
