@@ -79,15 +79,36 @@ class TestSingleCell:
 
         assert new_weights == correct_weights
 
-    def test_that_dead_animals_dissappears(self):
+    def test_that_dead_animals_disappears(self, initial_cell_class, mocker):
         """
-        Tests that dead animals does not continue to exist.
+        Tests that dead animals does not continue to exist (no zombies welcome on this island).
+
+        The first test checks that an animal of weight zero disappears.
+
+        Todo: Se kommentar i kode, noe er galt i death, for mange dyr dør
         """
-        pass
+        mocker.patch('random.random', return_value=1)
+        old_list_of_animals = deepcopy(self.cell.get_animals())
+        self.cell.get_animals()[1]['weight'] = 0
+        self.cell.death()
+        new_list_of_animals = self.cell.get_animals()
+
+        # sjekk
+        print(old_list_of_animals)
+        print(new_list_of_animals)
+
+        assert len(old_list_of_animals) != len(new_list_of_animals)
+
 
     def test_that_newborn_same_speci_as_parent(self):
         """
         Tests that herbivores only gives birth to herbivores and carnivores only gives birth to
         carnivores.
+        """
+        pass
+
+    def test_probability_death_below_1(self):
+        """
+        Tests that probability of death is never more than 1.
         """
         pass
