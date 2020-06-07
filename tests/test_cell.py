@@ -88,6 +88,7 @@ class TestSingleCell:
         The second test checks that when all animals dies, all of them disappears.
 
         Todo: Make more tests on this
+            Test that herbivores eaten by a carnivore does not survive
         """
         mocker.patch('random.random', return_value=1)
         old_list_of_animals = deepcopy(self.cell.get_animals())
@@ -105,5 +106,17 @@ class TestSingleCell:
         """
         Tests that herbivores only gives birth to herbivores and carnivores only gives birth to
         carnivores.
+        """
+        pass
+
+    def test_only_carnivores_eat_meat(self, initial_cell_class):
+        """
+        Test that only carnivores kill and eat other animals.
+        """
+        pass
+
+    def test_no_cannibalism(self, initial_cell_class):
+        """
+        Test that carnivores only kill and eat herbivores.
         """
         pass
