@@ -47,7 +47,7 @@ class TestingTheIsland:
 
     def test_give_params(self, initial_island):
         """
-        Check that it's possible to give in new parameters
+        Check that it's possible to create new parameters.
         """
         pass
 

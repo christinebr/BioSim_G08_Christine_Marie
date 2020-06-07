@@ -39,8 +39,20 @@ class TestHerbivores:
         h = Herbivores(age=3, weight=20)
         assert h.age != 0
 
-    def test_age_setter_cant_be_negative(self):
-        pass
+    def test_age_not_negative(self):
+        """
+        Check that the class raises a ValueError if age becomes negative
+        """
+        with pytest.raises(ValueError):
+            Herbivores(age=-1, weight=20)
+
+    def test_weight_not_negative(self):
+        """
+        Check that the class raises a ValueError if weight becomes negative
+        """
+        with pytest.raises(ValueError):
+            Herbivores(age=3, weight=-20)
+
 
     def test_increase_weight_when_eating(self, initial_herbivore_class):
         """"
@@ -112,6 +124,16 @@ class TestHerbivores:
         assert fitness1 != fitness2
 
 
+    def test_probability_death_below_1(self):
+        """
+        Tests that probability of death is never more than 1.
+        
+        Todo: This test has to get better
+        """
+        h = Herbivores(age=1000, weight=100)
+        prob_death = h.death()
+        assert prob_death <= 1
+
 class TestCarnivores:
     @pytest.fixture()
     def initial_carnivore_class(self):
@@ -136,11 +158,3 @@ class TestCarnivores:
         carni.set_params({'DeltaPhiMax': 0.3})
         prob_kill = carni.probability_of_killing_herbivore(fitness_herbi=0.5)
         assert prob_kill == 1
-
-    def test_probability_death_below_1(self):
-        """
-        Tests that probability of death is never more than 1.
-
-        Todo: move this to tests for animals
-        """
-        pass
