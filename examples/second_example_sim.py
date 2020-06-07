@@ -37,28 +37,29 @@ if __name__ == '__main__':
     isl = TheIsland(landscape_of_cells=landscape, herbis=ini_herbs)
     print(isl.herbis)
     plt.figure()
-    cell = 1
-    for year in range(20):
-        num_start_of_year = len(isl.herbis[cell]['pop'])
-        isl.all_animals_eat(landscape)
-        isl.animals_procreate()
-        num_after_birth = len(isl.herbis[cell]['pop'])
-        # migration
-        isl.all_animals_age()
-        isl.all_animals_losses_weight()
-        isl.animals_die()
-        num_end_of_year = len(isl.herbis[cell]['pop'])
-        print(year, num_start_of_year, num_after_birth, num_end_of_year)
-        tot_weight = 0
-        for herb in isl.herbis[cell]['pop']:
-            tot_weight += herb['weight']
-        avg_weight = tot_weight/len(isl.herbis[cell]['pop'])
-        print(avg_weight)
-        plt.plot(year, avg_weight, '*')
-        print(isl.herbis)
-        # Plotting
-        plt.plot(year, num_end_of_year, '.')
-    plt.show()
+    cells = [0, 1]
+    for cell in cells:
+        for year in range(20):
+            num_start_of_year = len(isl.herbis[cell]['pop'])
+            isl.all_animals_eat(landscape)
+            isl.animals_procreate()
+            num_after_birth = len(isl.herbis[cell]['pop'])
+            # migration
+            isl.all_animals_age()
+            isl.all_animals_losses_weight()
+            isl.animals_die()
+            num_end_of_year = len(isl.herbis[cell]['pop'])
+            print(year, num_start_of_year, num_after_birth, num_end_of_year)
+            tot_weight = 0
+            for herb in isl.herbis[cell]['pop']:
+                tot_weight += herb['weight']
+            avg_weight = tot_weight/len(isl.herbis[cell]['pop'])
+            print(avg_weight)
+            plt.plot(year, avg_weight, '*')
+            print(isl.herbis)
+            # Plotting
+            plt.plot(year, num_end_of_year, '.')
+        plt.show()
 
     ini_carns = [{'loc': (1, 1),
                   'pop': [{'species': 'Carnivore',

@@ -54,7 +54,9 @@ class TheIsland:
         carnis
         """
         # Check conditions for geograpy of island
-        test_if_island_legal(landscape_of_cells)
+        # test_if_island_legal(landscape_of_cells)
+        # It works, but in first_example_sim.py and second_example_sim we have given
+        # in a np.array, so...
         self.landscapes = landscape_of_cells
         self.row, self.colon = landscape_of_cells.shape[0], landscape_of_cells.shape[1]
 
