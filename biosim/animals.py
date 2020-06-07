@@ -16,7 +16,7 @@ class Animal:
         age: [int]
             the age of an animal, default value is zero (the age at birth)
         """
-        self.weight = weight
+        self.weight = round(weight, 2)
         self.age = age
 
     @classmethod
@@ -72,7 +72,6 @@ class Animal:
     #     else:
     #         raise ValueError("Weight need to be a positive number")
 
-
     def update_age(self):
         """
         Updating the age by 1 when one year has passed.
@@ -108,11 +107,11 @@ class Animal:
         if weight_of_newborn and amount_fodder_eaten:
             raise ValueError('No animal could give birth and eat at the same time')
         elif amount_fodder_eaten:
-            self.weight += self._params['beta']*amount_fodder_eaten
+            self.weight += round(self._params['beta']*amount_fodder_eaten, 2)
         elif weight_of_newborn:
-            self.weight -= self._params['xi'] * weight_of_newborn
+            self.weight -= round(self._params['xi'] * weight_of_newborn, 2)
         else:
-            self.weight -= self._params['eta'] * self.weight
+            self.weight -= round(self._params['eta'] * self.weight, 2)
 
     @staticmethod
     def _q(sign, x, x_half, phi):
@@ -184,7 +183,7 @@ class Animal:
             if self.weight <= birth_weight_newborn:
                 return 0., 0.
             else:
-                return min(1, self._params['gamma'] * self.fitness() * (num - 1)), birth_weight_newborn
+                return min(1, self._params['gamma'] * self.fitness() * (num - 1)), round(birth_weight_newborn, 2)
 
     def birth_weight(self):
         """
@@ -195,8 +194,8 @@ class Animal:
         -------
         [float] The weight of a newborn
         """
-        return random.gauss(self._params['w_birth'],
-                            self._params['sigma_birth'])
+        return round(random.gauss(self._params['w_birth'],
+                                   self._params['sigma_birth']), 2)
 
     def death(self):
         """
@@ -286,7 +285,7 @@ class Carnivores(Animal):
         weight_herbi: [float]
             the weight of the herbivore killed
         """
-        self.weight += self._params['beta']*weight_herbi
+        self.weight += round(self._params['beta']*weight_herbi, 2)
 
 
 if __name__ == "__main__":
