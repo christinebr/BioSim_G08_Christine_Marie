@@ -146,7 +146,7 @@ class SingleCell:
 
         # Adds the newborn animals to the list of animals
         self.animals_list.extend(newborn_animals)
-        return self.get_animals
+        return self.animals_list
 
     def migration(self):
         pass
