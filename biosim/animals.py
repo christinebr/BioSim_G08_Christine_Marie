@@ -223,8 +223,7 @@ class Animal:
             return 1.0  # the animal is dead
         else:
             # Probability of death:
-            return self.weight * (1 - self.fitness()) / 100
-            # Dividing by 100 to go from % til float
+            return self._params['omega'] * (1 - self.fitness())
 
 
 class Herbivores(Animal):
