@@ -136,3 +136,11 @@ class TestCarnivores:
         carni.set_params({'DeltaPhiMax': 0.3})
         prob_kill = carni.probability_of_killing_herbivore(fitness_herbi=0.5)
         assert prob_kill == 1
+
+    def test_probability_death_below_1(self):
+        """
+        Tests that probability of death is never more than 1.
+
+        Todo: move this to tests for animals
+        """
+        pass

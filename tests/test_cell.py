@@ -83,7 +83,8 @@ class TestSingleCell:
         """
         Tests that dead animals does not continue to exist (no zombies welcome on this island).
 
-        The first test checks that an animal of weight zero disappears.
+        The first test checks that an animal of weight zero disappears. Also checks that the two
+            animals that are supposed to survive actually does so.
         The second test checks that when all animals dies, all of them disappears.
 
         Todo: Make more tests on this
@@ -93,7 +94,6 @@ class TestSingleCell:
         self.cell.get_animals()[1]['weight'] = 0
         self.cell.death()
         new_list_of_animals = self.cell.get_animals()
-
         assert len(new_list_of_animals) == len(old_list_of_animals) - 1
 
         mocker.patch('random.random', return_value=0)
@@ -105,11 +105,5 @@ class TestSingleCell:
         """
         Tests that herbivores only gives birth to herbivores and carnivores only gives birth to
         carnivores.
-        """
-        pass
-
-    def test_probability_death_below_1(self):
-        """
-        Tests that probability of death is never more than 1.
         """
         pass
