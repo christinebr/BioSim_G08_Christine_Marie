@@ -16,8 +16,15 @@ class Animal:
         age: [int]
             the age of an animal, default value is zero (the age at birth)
         """
-        self.weight = round(weight, 2)
-        self.age = age
+        if weight < 0:
+            raise ValueError("Weight can't be negative")
+        else:
+            self.weight = round(weight, 2)
+
+        if age < 0:
+            raise ValueError("Age can't be negative")
+        else:
+            self.age = age
 
     @classmethod
     def set_params(cls, new_params):
