@@ -98,7 +98,8 @@ class SingleCell:
                 fodder_in_cell = 0
 
         # Carnivores eats
-        # ...
+        # for carni in c
+
         self.animals_list = herbis + carnis
         return self.animals_list
 
@@ -106,7 +107,6 @@ class SingleCell:
         """
         Decides if animals are born and updates the animal_list
         """
-
         herbis, carnis = self.sort_animals_by_species()
         num_herbi = len(herbis)
         num_carni = len(carnis)

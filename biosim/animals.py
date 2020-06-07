@@ -202,7 +202,7 @@ class Animal:
         [float] The weight of a newborn
         """
         return round(random.gauss(self._params['w_birth'],
-                                   self._params['sigma_birth']), 2)
+                                  self._params['sigma_birth']), 2)
 
     def death(self):
         """
@@ -306,13 +306,13 @@ if __name__ == "__main__":
     print(new_param)
 
     herbis = [{'species': 'Herbivore', 'age': 10, 'weight': 15},
-              {'species': 'Herbivore', 'age': 8, 'weight': 5},
+              {'species': 'Herbivore', 'age': 8, 'weight': 20},
               {'species': 'Herbivore', 'age': 40, 'weight': 10},
               {'species': 'Herbivore', 'age': 35, 'weight': 30}]
 
-    carnis = [{'species': 'Carnivore', 'age': 43, 'weight': 6},
-              {'species': 'Carnivore', 'age': 30, 'weight': 8},
-              {'species': 'Carnivore', 'age': 3, 'weight': 3},
+    carnis = [{'species': 'Carnivore', 'age': 43, 'weight': 29},
+              {'species': 'Carnivore', 'age': 30, 'weight': 23},
+              {'species': 'Carnivore', 'age': 3, 'weight': 11},
               {'species': 'Carnivore', 'age': 23, 'weight': 12}]
 
     print("HERBIVORES")
@@ -333,7 +333,3 @@ if __name__ == "__main__":
         print(f"Fitness:       {c.fitness():.3f}")
         print(f"Prob of birth: {c.birth(num=9)}")
         print(f"Prob of death: {c.death():.3f}\n")
-
-
-
-
