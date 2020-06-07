@@ -191,7 +191,7 @@ class TheIsland:
         self.animals_die()
         
 if __name__ == "__main__":
-    ini_herbs = [{'loc': (10, 10),
+    ini_herbs = [{'loc': (1, 1),
                   'pop': [{'species': 'Herbivore',
                            'age': 5,
                            'weight': 20}
@@ -204,7 +204,8 @@ if __name__ == "__main__":
     # Simplest island possible
     l = np.array([['W', 'W', 'W'], ['W', 'L', 'W'], ['W', 'W', 'W']])
     i = TheIsland(landscape_of_cells=l, herbis=ini_herbs)
-    i.all_animals_eat()
+    i.all_animals_eat(l)
+    print(i.herbis)
 
 
     # A big but small island (only Lowland and Highland)
