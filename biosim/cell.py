@@ -100,6 +100,7 @@ class SingleCell:
         # Carnivores eats
         # ...
         self.animals_list = herbis + carnis
+        return self.animals_list
 
     def birth(self):
         """
@@ -145,6 +146,7 @@ class SingleCell:
 
         # Adds the newborn animals to the list of animals
         self.animals_list.extend(newborn_animals)
+        return self.get_animals
 
     def migration(self):
         pass
@@ -153,6 +155,7 @@ class SingleCell:
         """Makes sure animals ages"""
         for animal in self.animals_list:
             animal['age'] += 1
+        return self.animals_list
 
     def weight_loss_end_of_year(self):
         """
@@ -169,6 +172,8 @@ class SingleCell:
                 carni = Carnivores(weight=w, age=a)
                 carni.update_weight()
                 animal['weight'] = carni.weight
+
+        return self.animals_list
         
         # list_herbi, list_carni = self.sort_animals_by_species()
         # for herbi in list_herbi:
@@ -204,6 +209,7 @@ class SingleCell:
                 survived_animals.append(animal)
 
         self.animals_list = survived_animals
+        return self.animals_list
 
 
 class Water(SingleCell):
@@ -231,7 +237,7 @@ class Lowland(SingleCell):
         self.f_max = f_max
 
     def animals_eat(self):
-        self.animals_in_cell_eat(start_value_fodder=self.f_max)
+        return self.animals_in_cell_eat(start_value_fodder=self.f_max)
 
 
 class Highland(SingleCell):
@@ -243,7 +249,7 @@ class Highland(SingleCell):
         self.f_max = f_max
 
     def animals_eat(self):
-        self.animals_in_cell_eat(start_value_fodder=self.f_max)
+        return self.animals_in_cell_eat(start_value_fodder=self.f_max)
 
 
 if __name__ == "__main__":

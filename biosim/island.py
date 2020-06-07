@@ -2,6 +2,7 @@
 import numpy as np
 from biosim.cell import SingleCell, Highland, Lowland
 
+
 class TheIsland:
     """
     Keeps control of the island.
@@ -9,9 +10,25 @@ class TheIsland:
     Takes a matrix with the landscape types of each cell.
     """
 
-    def __init__(self, landscape_of_cells):
+    def __init__(self, landscape_of_cells, herbis=None, carnis=None):
+        """
+
+        Parameters
+        ----------
+        landscape_of_cells
+        herbis
+        carnis
+        """
         self.landscapes = landscape_of_cells
         self.row, self.colon = landscape_of_cells.shape[0], landscape_of_cells.shape[1]
+        if herbis:
+            self.herbis = herbis
+        else:
+            self.herbis = []
+        if carnis:
+            self.carnis = carnis
+        else:
+            self.carnis = []
 
     def test_if_island_legal(self):
         """
@@ -27,7 +44,7 @@ class TheIsland:
         """
         pass
 
-    def all_animals_eat(self, herbis, carnis, landscape):
+    def all_animals_eat(self, landscape):
         """
         Params
         ------
@@ -59,7 +76,7 @@ class TheIsland:
 
         """
         # All herbivores on the island eat
-        for dictionary in herbis:
+        for dictionary in self.herbis:
             row, col = dictionary['loc']  # getting the location of the cell
             landscape_type = landscape[row, col]  # the landscape in the cell
             if landscape_type == 'L':
@@ -72,7 +89,7 @@ class TheIsland:
                 high.animals_eat()  # animals eat -> use Cell-method directly?
 
         # All carnivores on the island eat
-        for dictionary in carnis:
+        for dictionary in self.carnis:
             row, col = dictionary['loc']  # getting the location of the cell
             landscape_type = landscape[row, col]  # the landscape in the cell
             if landscape_type == 'L':
@@ -84,8 +101,7 @@ class TheIsland:
                 # don't put in 300.0 directly here?
                 high.animals_eat()  # animals eat -> use Cell-method directly?
 
-
-    def animals_procreate(self, herbis, carnis):
+    def animals_procreate(self):
         """
         Loops trough populated cells and animals in all cells have the change to procreate
         Parameters
@@ -99,12 +115,12 @@ class TheIsland:
         -------
 
         """
-        for dictionary in herbis:
+        for dictionary in self.herbis:
             cell = SingleCell(animals_list=dictionary['pop'])
             updated_pop_list = cell.birth()
             dictionary['pop'] = updated_pop_list
 
-        for dictionary in carnis:
+        for dictionary in self.carnis:
             cell = SingleCell(animals_list=dictionary['pop'])
             updated_pop_list = cell.birth()
             dictionary['pop'] = updated_pop_list
@@ -124,32 +140,32 @@ class TheIsland:
         """
         pass
 
-    def all_animals_age(self, herbis, carnis):
+    def all_animals_age(self):
 
-        for dictionary in herbis:
-            cell = SingleCell(animals_list=herbis)
+        for dictionary in self.herbis:
+            cell = SingleCell(animals_list=dictionary['pop'])
             cell.aging_of_animals()
 
-        for dictionary in carnis:
-            cell = SingleCell(animals_list=herbis)
+        for dictionary in self.carnis:
+            cell = SingleCell(animals_list=dictionary['pop'])
             cell.aging_of_animals()
 
-    def all_animals_losses_weight(self, herbis, carnis):
-        for dictionary in herbis:
-            cell = SingleCell(animals_list=herbis)
+    def all_animals_losses_weight(self):
+        for dictionary in self.herbis:
+            cell = SingleCell(animals_list=dictionary['pop'])
             cell.weight_loss_end_of_year()
 
-        for dictionary in carnis:
-            cell = SingleCell(animals_list=herbis)
+        for dictionary in self.carnis:
+            cell = SingleCell(animals_list=dictionary['pop'])
             cell.weight_loss_end_of_year()
 
-    def animals_die(self, herbis, carnis):
-        for dictionary in herbis:
-            cell = SingleCell(animals_list=herbis)
+    def animals_die(self):
+        for dictionary in self.herbis:
+            cell = SingleCell(animals_list=dictionary['pop'])
             cell.death()
 
-        for dictionary in carnis:
-            cell = SingleCell(animals_list=herbis)
+        for dictionary in self.carnis:
+            cell = SingleCell(animals_list=dictionary['pop'])
             cell.death()
 
 
@@ -167,19 +183,36 @@ class TheIsland:
         -------
         Updates the list of animals for the two species at the end of the year.
         """
-        self.all_animals_eat(herbis, carnis)
-        self.animals_procreate(herbis, carnis)
+        self.all_animals_eat(landscape=self.landscapes)
+        self.animals_procreate()
         # self.migration()
-        self.all_animals_age(herbis, carnis)
-        self.all_animals_losses_weight(herbis, carnis)
-        self.animals_die(herbis, carnis)
+        self.all_animals_age()
+        self.all_animals_losses_weight()
+        self.animals_die()
         
 if __name__ == "__main__":
+    ini_herbs = [{'loc': (10, 10),
+                  'pop': [{'species': 'Herbivore',
+                           'age': 5,
+                           'weight': 20}
+                          for _ in range(10)]}]
+    ini_carns = [{'loc': (10, 10),
+                  'pop': [{'species': 'Carnivore',
+                           'age': 5,
+                           'weight': 20}
+                          for _ in range(40)]}]
     # Simplest island possible
     l = np.array([['W', 'W', 'W'], ['W', 'L', 'W'], ['W', 'W', 'W']])
+    i = TheIsland(landscape_of_cells=l, herbis=ini_herbs)
+    i.all_animals_eat()
+
 
     # A big but small island (only Lowland and Highland)
-    ll = np.array([['W','W','W','W'],['W','L','L','W'], ['W','H','H','W'],['W','L','L','W'], ['W','W','W','W']])
+    ll = np.array([['W','W','W','W'],
+                   ['W','L','L','W'],
+                   ['W','H','H','W'],
+                   ['W','L','L','W'],
+                   ['W','W','W','W']])
 
     # landscape in cell 1,1:
     l[1,1]
