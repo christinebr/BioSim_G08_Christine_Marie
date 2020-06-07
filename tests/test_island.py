@@ -33,6 +33,8 @@ class TestingTheIsland:
     def test_that_number_of_animals_is_updated(self, initial_island):
         """
         Tests that number of animals before the year starts is updated by the end of the year.
+        todo: must make sure that animals are born?
+              or just check that age/weight have been updated?
         """
         pass
 

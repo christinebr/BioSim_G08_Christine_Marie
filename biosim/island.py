@@ -1,6 +1,40 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 from biosim.cell import SingleCell, Highland, Lowland
+import textwrap
+
+
+def test_if_island_legal(geogr):
+    """
+    Test if the island follows the specifications.
+    The string tha specify the island must only contain legal letters, i.e. L, H, W and D
+    All the outermost cells must be of the water type.
+
+    Returns
+    -------
+    Raises ValueError if any of the specifications is violated.
+
+    Todo: This might be better to do in the __init__ section, and/or in biosim
+    """
+    geogr = textwrap.dedent(geogr)
+    geogr_split = geogr.split('\n')
+    len_first_line = len(geogr_split[0])
+    for line in geogr_split:
+        if len(line) != len_first_line:
+            raise ValueError("All lines must have same length")
+
+    for top, bottom in zip(geogr_split[0], geogr_split[-1]):
+        if top != 'W' or bottom != 'W':
+            raise ValueError("North and south of island is not only water")
+
+    for line in geogr_split:
+        if line[0] != 'W' or line[-1] != 'W':
+            raise ValueError("West or east side of island is not only water")
+
+    for line in geogr_split:
+        for element in line:
+            if element not in ['W', 'D', 'L', 'H']:
+                raise ValueError("Forbidden character, only 'W', 'D', 'L' and 'H' allowed")
 
 
 class TheIsland:
@@ -19,30 +53,20 @@ class TheIsland:
         herbis
         carnis
         """
+        # Check conditions for geograpy of island
+        test_if_island_legal(landscape_of_cells)
         self.landscapes = landscape_of_cells
         self.row, self.colon = landscape_of_cells.shape[0], landscape_of_cells.shape[1]
+
         if herbis:
             self.herbis = herbis
         else:
             self.herbis = []
+
         if carnis:
             self.carnis = carnis
         else:
             self.carnis = []
-
-    def test_if_island_legal(self):
-        """
-        Test if the island follows the specifications.
-        The string tha specify the island must only contain legal letters, i.e. L, H, W and D
-        All the outermost cells must be of the water type.
-
-        Returns
-        -------
-        Raises ValueError if any of the specifications is violated.
-
-        Todo: This might be better to do in the __init__ section, and/or in biosim
-        """
-        pass
 
     def all_animals_eat(self, landscape):
         """
