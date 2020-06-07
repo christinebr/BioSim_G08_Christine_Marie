@@ -149,7 +149,47 @@ class SingleCell:
         return self.animals_list
 
     def migration(self):
-        pass
+        """
+        Check if animals stay in cell or migrate to an other cell
+
+        Returns
+        -------
+        herbi_stay: [list]
+            list of herbivores that stay in the cell
+        herbi_move: [list]
+            list of herbivores that moves out of the cell
+        carni_stay: [list]
+            list of carnivores that stay in the cell
+        carni_move: [list]
+            list of carnivores that moves out of the cell
+
+        """
+        herbis, carnis = self.sort_animals_by_species()
+        # Herbivore migrate
+        herbi_stay = []
+        herbi_move = []
+        for herbi in herbis:
+            h = Herbivores(weight=herbi['weight'], age=herbi['age'])
+            prob_migrate = h.probability_of_migration()
+            if random.random() < prob_migrate:  # check if herbivore migrate
+                herbi_move.append(herbi)
+            else:
+                herbi_stay.append(herbi)
+
+        # Carnivore migrate
+        carni_stay = []
+        carni_move = []
+        for carni in carnis:
+            c = Carnivores(weight=carni['weight'], age=carni['age'])
+            prob_migrate = c.probability_of_migration()
+            if random.random() < prob_migrate:  # check if carnivore migrate
+                carni_move.append(carni)
+            else:
+                carni_stay.append(carni)
+
+        self.animals_list = herbi_stay + carni_stay
+
+        return herbi_stay, herbi_move, carni_stay, carni_move
 
     def aging_of_animals(self):
         """Makes sure animals ages"""
@@ -263,8 +303,8 @@ if __name__ == "__main__":
     print(f"Number of animals after birth: {len(cell1.get_animals())}")
     print(cell1.get_animals())
 
-    c = SingleCell(animals)
-    print(c.sort_animals_by_species())
+    cell2 = SingleCell(animals)
+    print(cell2.sort_animals_by_species())
 
     high = Highland(animals)
     print(f"Before eating")
