@@ -148,24 +148,20 @@ class TestSingleCell:
         list_of_animals = self.cell.herbi_list + self.cell.carni_list
         assert len(list_of_animals) == 0
 
-        # mocker.patch('random.random', return_value=1)
-        # old_list_of_animals = deepcopy(self.cell.get_animals())
-        # self.cell.get_animals()[1]['weight'] = 0
-        # self.cell.death()
-        # new_list_of_animals = self.cell.get_animals()
-        # assert len(new_list_of_animals) == len(old_list_of_animals) - 1
-        #
-        # mocker.patch('random.random', return_value=0)
-        # self.cell.death()
-        # list_of_animals = self.cell.get_animals()
-        # assert len(list_of_animals) == 0
-
-    def test_that_newborn_same_speci_as_parent(self):
+    def test_that_newborn_same_speci_as_parent(self,initial_cell_class, mocker):
         """
         Tests that herbivores only gives birth to herbivores and carnivores only gives birth to
         carnivores.
         """
-        pass
+        mocker.patch('random.random', return_value=0)
+        mocker.patch('random.gauss', return_value=7)
+        self.cell.birth()
+        mutants = 0
+        for herbi in self.cell.herbi_list:
+            pass
+
+        assert 0 == 1
+
 
     def test_only_carnivores_eat_meat(self, initial_cell_class):
         """
@@ -175,11 +171,23 @@ class TestSingleCell:
 
     def test_no_cannibalism(self, initial_cell_class):
         """
-        Test that carnivores only kill and eat herbivores.
+        Test that carnivores only kill and eat herbivores. Does this by checking that
+        the number of carnivores are the same after killing as before.
         """
-        pass
+        carni_before = len(self.cell.carni_list)
+        self.cell.animals_in_cell_eat()
+        carni_after = len(self.cell.carni_list)
+        assert carni_before == carni_after
 
     def possible_no_animals(self):
         """
         Checking that there wil be no problems if noe animals are given into the class.
         """
+        pass
+
+    def test_sorting_correct(self, initial_cell_class):
+        """
+        Checks that the sorting of animals_list gives lists with the correct numbers of
+        herbivores and carnivores.
+        """
+        assert len(self.cell.herbi_list + self.cell.carni_list) == 6
