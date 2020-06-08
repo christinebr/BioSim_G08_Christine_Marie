@@ -4,6 +4,7 @@ from biosim.cell import SingleCell
 import pytest
 from copy import deepcopy
 import random
+from itertools import zip_longest
 
 
 class TestSingleCell:
@@ -41,8 +42,8 @@ class TestSingleCell:
         mocker.patch('random.random', return_value=1)
         self.cell.birth()
         nonexsistent_newborns = 0
-        for animal in self.cell.animals_list:
-            if animal['age'] == 0 and animal['weight'] <= 0:
+        for animal in self.cell.herbi_list + self.cell.carni_list:
+            if animal.age == 0 and animal.weight <= 0:
                 nonexsistent_newborns += 1
 
         assert nonexsistent_newborns == 0
@@ -53,34 +54,71 @@ class TestSingleCell:
         """
         mocker.patch('random.random', return_value=0)
         mocker.patch('random.gauss', return_value=7)
-        old_list_of_animals = deepcopy(self.cell.get_animals())
+        # Starts with finding what the weight of the mother should be after giving birth
+        correct_weights = []
+        weight_limit_herbi = 3.5 * (8 + 1.5)
+        weight_new_herbi = random.gauss(8, 1.5)
+        weight_limit_carni = 3.5 * (6 + 1.)
+        weight_new_carni = random.gauss(6, 1.)
+        for herbi in self.cell.herbi_list:
+            if herbi.weight > weight_limit_herbi:
+                correct_weights.append(herbi.weight - 1.2 * weight_new_herbi)
+            else:
+                correct_weights.append(herbi.weight)
+
+        for carni in self.cell.carni_list:
+            if carni.weight > weight_limit_carni:
+                correct_weights.append(carni.weight - 1.1 * weight_new_carni)
+            else:
+                correct_weights.append(carni.weight)
+
+        # Then find the old weights and the new weights
+        old_list_of_animals = self.cell.herbi_list + self.cell.carni_list
         self.cell.birth()
-        new_list_of_animals = self.cell.get_animals()
+        new_list_of_animals = self.cell.herbi_list + self.cell.carni_list
+        new_list_parents = []
+        for animal in new_list_of_animals:
+            if animal.weight != weight_new_herbi or animal.weight != weight_new_carni:
+                new_list_parents.append(animal)
+
         old_weights = []
         new_weights = []
-        correct_weights = []
-        for old_animal, new_animal in zip(old_list_of_animals, new_list_of_animals):
-            # zip will use the shortest list, in this case old_list, to decide the length of the
-            # zipped list. This way the newborns will not count.
-            old_weights.append(old_animal['weight'])
-            new_weights.append(new_animal['weight'])
-
-            if old_animal['species'] == 'Herbivore':
-                weight_of_newborn = random.gauss(8, 1.5)
-                weight_limit = 3.5 * (8 + 1.5)
-                if old_animal['weight'] > weight_limit:
-                    correct_weights.append(old_animal['weight'] - 1.2 * weight_of_newborn)
-                else:
-                    correct_weights.append(old_animal['weight'])
-            else:
-                weight_of_newborn_carn = random.gauss(6, 1.0)
-                weight_limit = 3.5 * (6 + 1.0)
-                if old_animal['weight'] > weight_limit:
-                    correct_weights.append(old_animal['weight'] - 1.1 * weight_of_newborn_carn)
-                else:
-                    correct_weights.append(old_animal['weight'])
+        for old_animal, new_animal in zip(old_list_of_animals, new_list_parents):
+            old_weights.append(old_animal.weight)
+            new_weights.append(new_animal.weight)
 
         assert new_weights == correct_weights
+
+        # mocker.patch('random.random', return_value=0)
+        # mocker.patch('random.gauss', return_value=7)
+        # old_list_of_animals = deepcopy(self.cell.animals_list)
+        # self.cell.birth()
+        # new_list_of_animals = self.cell.animals_list
+        # old_weights = []
+        # new_weights = []
+        # correct_weights = []
+        # for old_animal, new_animal in zip(old_list_of_animals, new_list_of_animals):
+        #     # zip will use the shortest list, in this case old_list, to decide the length of the
+        #     # zipped list. This way the newborns will not count.
+        #     old_weights.append(old_animal['weight'])
+        #     new_weights.append(new_animal['weight'])
+        #
+        #     if old_animal['species'] == 'Herbivore':
+        #         weight_of_newborn = random.gauss(8, 1.5)
+        #         weight_limit = 3.5 * (8 + 1.5)
+        #         if old_animal['weight'] > weight_limit:
+        #             correct_weights.append(old_animal['weight'] - 1.2 * weight_of_newborn)
+        #         else:
+        #             correct_weights.append(old_animal['weight'])
+        #     else:
+        #         weight_of_newborn_carn = random.gauss(6, 1.0)
+        #         weight_limit = 3.5 * (6 + 1.0)
+        #         if old_animal['weight'] > weight_limit:
+        #             correct_weights.append(old_animal['weight'] - 1.1 * weight_of_newborn_carn)
+        #         else:
+        #             correct_weights.append(old_animal['weight'])
+        #
+        # assert new_weights == correct_weights
 
     def test_no_zombies(self, initial_cell_class, mocker):
         """
@@ -123,3 +161,8 @@ class TestSingleCell:
         Test that carnivores only kill and eat herbivores.
         """
         pass
+
+    def possible_no_animals(self):
+        """
+        Checking that there wil be no problems if noe animals are given into the class.
+        """
