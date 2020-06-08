@@ -232,13 +232,31 @@ class TheIsland:
         -------
         Updates the list of animals for the two species at the end of the year.
         """
-        self.all_animals_eat(landscape=self.landscapes)
+        self.all_animals_eat()
         self.animals_procreate()
         # self.migration()
         self.all_animals_age()
         self.all_animals_losses_weight()
         self.animals_die()
-        
+
+    def add_more_animals_on_island(self, new_animals):
+        """
+        Parameters
+        ----------
+        new_animals: list of dict ->
+                    [{'loc': (2, 2), 'pop': [{'species': 'Herbivore', 'age': 5, 'weight': 25}, ... ]
+        """
+        for place in new_animals:
+            x, y = place['loc']
+            landscape_type = self.landscape[x-1][y-1]
+            if landscape_type == 'W':
+                # island_cells[x-1, y-1] = Water(animals_list=None)
+                raise ValueError("Animals can't stay in water")
+            else:
+                self.island_cells[x-1][y-1].add_new_animals_to_cell(place['pop'])
+                # add new animals to cell
+
+
 if __name__ == "__main__":
     ini_herbs = [{'loc': (2, 2),
                   'pop': [{'species': 'Herbivore',
@@ -251,9 +269,9 @@ if __name__ == "__main__":
                 WLW
                 WWW"""
     isl = TheIsland(landscape_of_cells=land, animals_on_island=ini_herbs)
-    print(isl.landscape)
+    print("Original landscape given in:\n", isl.landscape)
     isl.sort_animals_by_cell()
-    print(isl.island_cells)
+    print("Landscape used in TheIsland-class\n", isl.island_cells)
     print("Weight of one herbivore:", isl.island_cells[1][1].herbi_list[0].weight)
     isl.all_animals_eat()
     print("Weight of one herbivore:", isl.island_cells[1][1].herbi_list[0].weight)
@@ -275,28 +293,29 @@ if __name__ == "__main__":
     print("Animals in cell after death:", len(isl.island_cells[1][1].herbi_list))
 
     # Start of year:
-    print("\nWeight of one herbivore:", isl.island_cells[1][1].herbi_list[0].weight)
+    print("\nBEFORE ANNUAL CYCLE")
+    print("Weight of one herbivore:", isl.island_cells[1][1].herbi_list[0].weight)
     print("Animals in cell:", len(isl.island_cells[1][1].herbi_list))
     print("Age of one herbivore:", isl.island_cells[1][1].herbi_list[0].age)
 
     isl.annual_cycle()
-
-    print("\nWeight of one herbivore:", isl.island_cells[1][1].herbi_list[0].weight)
+    print("\nAFTER ANNUAL CYCLE")
+    print("Weight of one herbivore:", isl.island_cells[1][1].herbi_list[0].weight)
     print("Animals in cell:", len(isl.island_cells[1][1].herbi_list))
     print("Age of one herbivore:", isl.island_cells[1][1].herbi_list[0].age)
 
+    new = [{'loc': (2, 2),
+            'pop':[{'species': 'Herbivore', 'age': 10, 'weight': 10},
+                   {'species': 'Herbivore', 'age': 8, 'weight': 25},
+                   {'species': 'Herbivore', 'age': 5, 'weight': 15},
+                   {'species': 'Carnivore', 'age': 6, 'weight': 10},
+                   {'species': 'Carnivore', 'age': 3, 'weight': 8},
+                   {'species': 'Carnivore', 'age': 43, 'weight': 8}]
+            }
+           ]
 
-    # # A big but small island (only Lowland and Highland)
-    # ll = np.array([['W','W','W','W'],
-    #                ['W','L','L','W'],
-    #                ['W','H','H','W'],
-    #                ['W','L','L','W'],
-    #                ['W','W','W','W']])
-    #
-    # # landscape in cell 1,1:
-    # l[1,1]
-    #
-    # # only testing
-    # for r in l[1:-1]:
-    #     for c in r[1:-1]:
-    #         print(c)
+    print("\nAnimals in cell before:",
+          len(isl.island_cells[1][1].herbi_list+isl.island_cells[1][1].carni_list))
+    isl.add_more_animals_on_island(new_animals=new)
+    print("Animals in cell after:",
+          len(isl.island_cells[1][1].herbi_list+isl.island_cells[1][1].carni_list))
