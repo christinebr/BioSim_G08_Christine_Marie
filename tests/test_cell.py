@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from biosim.cell import SingleCell, Lowland
+from biosim.cell import SingleCell, Lowland, Desert
 import pytest
 import random
 
@@ -199,6 +199,13 @@ class TestLowland:
         carni_after = len(self.low.carni_list)
         assert carni_before == carni_after
 
+    def test_herbivores_eaten(self, initial_lowland):
+        """Tests that carnivores eat herbivores"""
+        herbi_before = len(self.low.herbi_list)
+        self.low.animals_in_cell_eat()
+        herbi_after = len(self.low.herbi_list)
+        assert herbi_before > herbi_after
+
     def test_weight_gain_eat(self, initial_lowland):
         """Check that animals weights more after eating. First finds the sum of weight of
         herbivores and carnivores before eating, then the weight of both after eating.
@@ -223,14 +230,30 @@ class TestLowland:
         assert sum_weight_herbi_before < sum_weight_herbi_after
         assert sum_weight_carni_before < sum_weight_carni_after
 
+class TestDesert:
 
+    @pytest.fixture()
+    def initial_desert(self):
+        animals = [{'species': 'Herbivore', 'age': 10, 'weight': 15},
+                   {'species': 'Herbivore', 'age': 40, 'weight': 20},
+                   {'species': 'Herbivore', 'age': 2, 'weight': 8},
+                   {'species': 'Carnivore', 'age': 30, 'weight': 8},
+                   {'species': 'Carnivore', 'age': 5, 'weight': 3.5},
+                   {'species': 'Carnivore', 'age': 37, 'weight': 5.7}
+                   ]
+        self.desert = Desert(animals_list=animals)
+        return self.desert
 
-    def test_only_carnivores_eat_meat(self, initial_lowland):
+    def test_only_carnivores_kill(self, initial_desert):
         """
-        Test that only carnivores kill and eat other animals.
+        Test that only carnivores kill and eat other animals. Does so by checking that
+        only carnivores gain weight after eating in the desert.
         """
-        pass
-
-    def test_herbivores_eaten(self, initial_lowland):
-        """Tests that carnivores eat herbivores"""
-        pass
+        herbi_before = len(self.desert.herbi_list)
+        self.desert.animals_in_cell_eat()
+        herbi_after = len(self.desert.herbi_list)
+        carni_before = len(self.desert.carni_list)
+        self.desert.animals_in_cell_eat()
+        carni_after = len(self.desert.carni_list)
+        assert carni_before > carni_after
+        assert herbi_before == herbi_after
