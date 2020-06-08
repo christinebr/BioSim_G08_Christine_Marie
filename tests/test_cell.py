@@ -19,17 +19,42 @@ class TestSingleCell:
     def test_that_all_animals_age(self, initial_cell_class):
         """
         Tests that method age makes all animals get one year older.
-        The sum of the age in the test-sett increases with 3 per year.
+        The sum of the age in the test-sett increases with a number equal to the number of
+        animals every year.
         """
-        cell_old = deepcopy(self.cell.get_animals())
-        self.cell.aging_of_animals()
-        cell_new = self.cell.get_animals()
+        animals_list = self.cell.herbi_list + self.cell.carni_list
         sum_old_age = 0
+        for animal in animals_list:
+            sum_old_age += animal.age
+            print(animal.age)
+
+        self.cell.aging_of_animals()
         sum_new_age = 0
-        for old, older in zip(cell_old, cell_new):
-            sum_old_age += old['age']
-            sum_new_age += older['age']
+        for animal in animals_list:
+            sum_new_age += animal.age
+            print(animal.age)
+
         assert sum_old_age + len(self.cell.animals_list) == sum_new_age
+
+        # cell_old = deepcopy(self.cell.herbi_list + self.cell.carni_list)
+        # self.cell.aging_of_animals()
+        # cell_new = self.cell.herbi_list + self.cell.carni_list
+        # sum_old_age = 0
+        # sum_new_age = 0
+        # for old, older in zip(cell_old, cell_new):
+        #     sum_old_age += old.age
+        #     sum_new_age += older.age
+        # assert sum_old_age + len(self.cell.animals_list) == sum_new_age
+        #
+        # cell_old = deepcopy(self.cell.get_animals())
+        # self.cell.aging_of_animals()
+        # cell_new = self.cell.get_animals()
+        # sum_old_age = 0
+        # sum_new_age = 0
+        # for old, older in zip(cell_old, cell_new):
+        #     sum_old_age += old['age']
+        #     sum_new_age += older['age']
+        # assert sum_old_age + len(self.cell.animals_list) == sum_new_age
 
     def test_that_newborns_weights_something(self, initial_cell_class, mocker):
         """
