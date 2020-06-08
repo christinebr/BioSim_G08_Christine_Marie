@@ -22,9 +22,9 @@ class SingleCell:
         Sorting the animals in lists of herbivores and carnivores.
         """
         for animal in self.animals_list:
-            if animal['species'] == 'Herbivores':
+            if animal['species'] == 'Herbivore':
                 self.herbi_list.append(Herbivores(age=animal['age'], weight=animal['weight']))
-            if animal['species'] == 'Carnivores':
+            if animal['species'] == 'Carnivore':
                 self.carni_list.append(Carnivores(age=animal['age'], weight=animal['weight']))
 
     @classmethod
@@ -235,21 +235,27 @@ if __name__ == "__main__":
                {'species': 'Herbivore', 'age': 3, 'weight': 50}]
     cell1 = SingleCell(animals)
     cell1.sort_animals_by_species()
-    print(f"Number of animals: {len(cell1.get_animals())}")
-    print(cell1.get_animals())
-    cell1.birth()
-    print(f"Number of animals after birth: {len(cell1.get_animals())}")
-    print(cell1.get_animals())
+    print(cell1.herbi_list[2].age)
+    cell1.aging_of_animals()
+    print(cell1.herbi_list[2].age)
 
-    cell2 = SingleCell(animals)
-    print(cell2.sort_animals_by_species())
-
-    high = Highland(animals)
-    print(f"After dying")
-    print(high.get_animals())
-    print(f"Before eating")
-    print(high.get_animals())
-    high.animals_eat()
-    print(f"After eating")
-    print(high.get_animals())
-    high.death()
+    # cell1 = SingleCell(animals)
+    # cell1.sort_animals_by_species()
+    # print(f"Number of animals: {len(cell1.get_animals())}")
+    # print(cell1.get_animals())
+    # cell1.birth()
+    # print(f"Number of animals after birth: {len(cell1.get_animals())}")
+    # print(cell1.get_animals())
+    #
+    # cell2 = SingleCell(animals)
+    # print(cell2.sort_animals_by_species())
+    #
+    # high = Highland(animals)
+    # print(f"After dying")
+    # print(high.get_animals())
+    # print(f"Before eating")
+    # print(high.get_animals())
+    # high.animals_eat()
+    # print(f"After eating")
+    # print(high.get_animals())
+    # high.death()
