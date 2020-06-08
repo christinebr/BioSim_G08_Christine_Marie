@@ -145,17 +145,20 @@ class TheIsland:
         -------
 
         """
-        for dictionary in self.herbis:
-            cell = SingleCell(animals_list=dictionary['pop'])
-            updated_pop_list = cell.birth()
-            dictionary['pop'] = updated_pop_list
+        for row in self.island_cells:
+            for cell in row:
+                if cell:  # nothing happens in water cell
+                    cell.birth()
 
-        for dictionary in self.carnis:
-            cell = SingleCell(animals_list=dictionary['pop'])
-            updated_pop_list = cell.birth()
-            dictionary['pop'] = updated_pop_list
-
-
+        # for dictionary in self.herbis:
+        #     cell = SingleCell(animals_list=dictionary['pop'])
+        #     updated_pop_list = cell.birth()
+        #     dictionary['pop'] = updated_pop_list
+        #
+        # for dictionary in self.carnis:
+        #     cell = SingleCell(animals_list=dictionary['pop'])
+        #     updated_pop_list = cell.birth()
+        #     dictionary['pop'] = updated_pop_list
 
     def migration(self):
         """
