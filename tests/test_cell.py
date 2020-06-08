@@ -13,7 +13,11 @@ class TestSingleCell:
     def initial_cell_class(self):
         animals = [{'species': 'Herbivore', 'age': 10, 'weight': 15},
                    {'species': 'Herbivore', 'age': 40, 'weight': 20},
-                   {'species': 'Carnivore', 'age': 30, 'weight': 3.5}]
+                   {'species': 'Herbivore', 'age': 2, 'weight': 8},
+                   {'species': 'Carnivore', 'age': 30, 'weight': 8},
+                   {'species': 'Carnivore', 'age': 5, 'weight': 3.5},
+                   {'species': 'Carnivore', 'age': 37, 'weight': 5.7}
+                   ]
         self.cell = SingleCell(animals_list=animals)
         return self.cell
 
@@ -132,16 +136,29 @@ class TestSingleCell:
             Test that herbivores eaten by a carnivore does not survive
         """
         mocker.patch('random.random', return_value=1)
-        old_list_of_animals = deepcopy(self.cell.get_animals())
-        self.cell.get_animals()[1]['weight'] = 0
+        old_list_of_animals = self.cell.herbi_list + self.cell.carni_list
+        self.cell.herbi_list[1].weight = 0
+        self.cell.carni_list[2].weight = 0
         self.cell.death()
-        new_list_of_animals = self.cell.get_animals()
-        assert len(new_list_of_animals) == len(old_list_of_animals) - 1
+        new_list_of_animals = self.cell.herbi_list + self.cell.carni_list
+        assert len(new_list_of_animals) == len(old_list_of_animals) - 2
 
         mocker.patch('random.random', return_value=0)
         self.cell.death()
-        list_of_animals = self.cell.get_animals()
+        list_of_animals = self.cell.herbi_list + self.cell.carni_list
         assert len(list_of_animals) == 0
+
+        # mocker.patch('random.random', return_value=1)
+        # old_list_of_animals = deepcopy(self.cell.get_animals())
+        # self.cell.get_animals()[1]['weight'] = 0
+        # self.cell.death()
+        # new_list_of_animals = self.cell.get_animals()
+        # assert len(new_list_of_animals) == len(old_list_of_animals) - 1
+        #
+        # mocker.patch('random.random', return_value=0)
+        # self.cell.death()
+        # list_of_animals = self.cell.get_animals()
+        # assert len(list_of_animals) == 0
 
     def test_that_newborn_same_speci_as_parent(self):
         """
