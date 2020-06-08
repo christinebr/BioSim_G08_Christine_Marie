@@ -199,15 +199,16 @@ class TestLowland:
         carni_after = len(self.low.carni_list)
         assert carni_before == carni_after
 
-    def test_herbivores_eaten(self, initial_lowland):
+    def test_herbivores_eaten(self, initial_lowland, mock):
         """Tests that carnivores eat herbivores"""
+        mocker.patch('random.random', return_value=1)
         herbi_before = len(self.low.herbi_list)
         self.low.animals_in_cell_eat()
         herbi_after = len(self.low.herbi_list)
         assert herbi_before > herbi_after
 
-    def test_weight_gain_eat(self, initial_lowland):
-        """Check that animals weights more after eating. First finds the sum of weight of
+    def test_weight_gain_eat(self, initial_lowland, mocker):
+        """Check that animals weights more after eating. First find the average of weight of
         herbivores and carnivores before eating, then the weight of both after eating.
         The first test checks that herbivores gain weight. The second test checks that
         carnivores gain weight. Thus both species must be able to eat for the test to pass.
@@ -215,20 +216,26 @@ class TestLowland:
         sum_weight_herbi_before = 0
         for herbi in self.low.herbi_list:
             sum_weight_herbi_before += herbi.weight
+        av_herbi_before = sum_weight_herbi_before/len(self.low.herbi_list)
+
         sum_weight_carni_before = 0
         for carni in self.low.carni_list:
             sum_weight_carni_before += carni.weight
+        av_carni_before = sum_weight_carni_before/len(self.low.carni_list)
 
+        mocker.patch('random.random', return_value=1)
         self.low.animals_in_cell_eat()
         sum_weight_herbi_after = 0
         for herbi in self.low.herbi_list:
             sum_weight_herbi_after += herbi.weight
+        av_herbi_after = sum_weight_herbi_after/len(self.low.herbi_list)
         sum_weight_carni_after = 0
         for carni in self.low.carni_list:
             sum_weight_carni_after += carni.weight
+        av_carni_after = sum_weight_carni_after/len(self.low.carni_list)
 
-        assert sum_weight_herbi_before < sum_weight_herbi_after
-        assert sum_weight_carni_before < sum_weight_carni_after
+        assert av_herbi_before < av_herbi_after
+        assert av_carni_before < av_carni_after
 
 class TestDesert:
 
@@ -243,6 +250,19 @@ class TestDesert:
                    ]
         self.desert = Desert(animals_list=animals)
         return self.desert
+
+    def test_no_herbs(self, initial_desert, mocker):
+        """Tests that herbivores can't find food in the desert."""
+        sum_weight_before = 0
+        for herbi in self.desert.herbi_list:
+            sum_weight_before += herbi.weight
+
+        mocker.patch('random.random', return_value=0) #Makes sure no herbis are killed
+        self.desert.animals_in_cell_eat()
+        sum_weight_after = 0
+        for herbi in self.desert.herbi_list:
+            sum_weight_after += herbi.weight
+        assert sum_weight_before == sum_weight_after
 
     def test_only_carnivores_kill(self, initial_desert):
         """
