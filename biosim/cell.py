@@ -14,8 +14,10 @@ class SingleCell:
             self.animals_list = animals_list
         else:
             self.animals_list = []
+
         self.carni_list = []
         self.herbi_list = []
+        self.sort_animals_by_species()
 
     def sort_animals_by_species(self):
         """
@@ -51,7 +53,9 @@ class SingleCell:
         return cls._params
 
     def get_animals(self):
-        """Just making it 'legal' to get information about the animals."""
+        """Just making it 'legal' to get information about the animals.
+        todo: remove this, shuold not be needed
+        """
         return self.animals_list
 
     def animals_in_cell_eat(self):
@@ -62,8 +66,6 @@ class SingleCell:
         todo: add eating for carnivores
 
         """
-        # self.sort_animals_by_species()
-
         # Herbivore eats
         random.shuffle(self.herbi_list)  # Shuffles the herbivore, they eat in random order
         fodder_in_cell = self._params['f_max']
@@ -84,7 +86,6 @@ class SingleCell:
         """
         Decides if animals are born and updates the animal_list
         """
-#        self.sort_animals_by_species()
         num_herbi = len(self.herbi_list)
         num_carni = len(self.carni_list)
 
@@ -128,7 +129,6 @@ class SingleCell:
             list of carnivores that moves out of the cell
 
         """
-#        self.sort_animals_by_species()
         # Herbivore migrate
         herbi_stay = []
         herbi_move = []
@@ -233,13 +233,8 @@ if __name__ == "__main__":
                {'species': 'Carnivore', 'age': 6, 'weight': 10},
                {'species': 'Carnivore', 'age': 3, 'weight': 8},
                {'species': 'Carnivore', 'age': 43, 'weight': 8}]
-    cell1 = SingleCell(animals)
-    cell1.sort_animals_by_species()
-    print(cell1.herbi_list)
-    print(cell1.herbi_list + cell1.carni_list)
 
     low = Lowland(animals_list=animals)
-    low.sort_animals_by_species()
 
     w_before = [ani.weight for ani in (low.herbi_list+low.carni_list)]
     print("Weight before eating:", w_before)
