@@ -1,40 +1,7 @@
 # -*- coding: utf-8 -*-
 import numpy as np
-from biosim.cell import SingleCell, Highland, Lowland
+from biosim.cell import SingleCell, Highland, Lowland, Water, Desert
 import textwrap
-
-
-def test_if_island_legal(geogr):
-    """
-    Test if the island follows the specifications.
-    The string tha specify the island must only contain legal letters, i.e. L, H, W and D
-    All the outermost cells must be of the water type.
-
-    Returns
-    -------
-    Raises ValueError if any of the specifications is violated.
-
-    Todo: This might be better to do in the __init__ section, and/or in biosim
-    """
-    geogr = textwrap.dedent(geogr)
-    geogr_split = geogr.split('\n')
-    len_first_line = len(geogr_split[0])
-    for line in geogr_split:
-        if len(line) != len_first_line:
-            raise ValueError("All lines must have same length")
-
-    for top, bottom in zip(geogr_split[0], geogr_split[-1]):
-        if top != 'W' or bottom != 'W':
-            raise ValueError("North and south of island is not only water")
-
-    for line in geogr_split:
-        if line[0] != 'W' or line[-1] != 'W':
-            raise ValueError("West or east side of island is not only water")
-
-    for line in geogr_split:
-        for element in line:
-            if element not in ['W', 'D', 'L', 'H']:
-                raise ValueError("Forbidden character, only 'W', 'D', 'L' and 'H' allowed")
 
 
 class TheIsland:
@@ -44,31 +11,80 @@ class TheIsland:
     Takes a matrix with the landscape types of each cell.
     """
 
-    def __init__(self, landscape_of_cells, herbis=None, carnis=None):
-        """
+    def __init__(self, landscape_of_cells, animals_on_island=None):
+        # Check conditions for geography of island
+        self.test_if_island_legal(landscape_of_cells)
+        # Turn into numpy array
+        self.landscape = self.landscape_to_array(land=landscape_of_cells)
+        self.row, self.colon = self.landscape.shape[0], self.landscape.shape[1]
 
-        Parameters
-        ----------
-        landscape_of_cells
-        herbis
-        carnis
-        """
-        # Check conditions for geograpy of island
-        # test_if_island_legal(landscape_of_cells)
-        # It works, but in first_example_sim.py and second_example_sim we have given
-        # in a np.array, so...
-        self.landscapes = landscape_of_cells
-        self.row, self.colon = landscape_of_cells.shape[0], landscape_of_cells.shape[1]
+        self.island_cells = np.zeros((self.row, self.colon))
 
-        if herbis:
-            self.herbis = herbis
+        if animals_on_island:
+            self.animals_on_island = animals_on_island
         else:
-            self.herbis = []
+            self.animals_on_island = []
 
-        if carnis:
-            self.carnis = carnis
-        else:
-            self.carnis = []
+    @staticmethod
+    def test_if_island_legal(geogr):
+        """
+        Test if the island follows the specifications.
+        The string tha specify the island must only contain legal letters, i.e. L, H, W and D
+        All the outermost cells must be of the water type.
+
+        Returns
+        -------
+        Raises ValueError if any of the specifications is violated.
+
+        Todo: This might be better to do in the __init__ section, and/or in biosim
+        """
+        geogr = textwrap.dedent(geogr)
+        geogr_split = geogr.split('\n')
+        len_first_line = len(geogr_split[0])
+        for line in geogr_split:
+            if len(line) != len_first_line:
+                raise ValueError("All lines must have same length")
+
+        for top, bottom in zip(geogr_split[0], geogr_split[-1]):
+            if top != 'W' or bottom != 'W':
+                raise ValueError("North and south of island is not only water")
+
+        for line in geogr_split:
+            if line[0] != 'W' or line[-1] != 'W':
+                raise ValueError("West or east side of island is not only water")
+
+        for line in geogr_split:
+            for element in line:
+                if element not in ['W', 'D', 'L', 'H']:
+                    raise ValueError("Forbidden character, only 'W', 'D', 'L' and 'H' allowed")
+
+    @staticmethod
+    def landscape_to_array(land):
+        """
+        Takes in a multiline string and turns it into a np.array
+        """
+        land = textwrap.dedent(land)
+        land_split = land.split('\n')
+        land_array = [list(line) for line in land_split]
+        return np.array(land_array)
+
+    def sort_animals_by_cell(self):
+        """
+        Sorting animals by location on the island
+        """
+        island_cells = np.zeros((self.row, self.colon))
+        for place in self.animals_on_island:
+            x, y = place['loc']
+            landscape_type = self.landscape[x-1, y-1]
+            if landscape_type == 'W':
+                # island_cells[x-1, y-1] = Water(animals_list=None)
+                raise ValueError("Animals can't stay in water")
+            if landscape_type == 'D':
+                island_cells[x-1, y-1] = Desert(animals_list=place['pop'])
+            if landscape_type == 'L':
+                island_cells[x-1, y-1] = Lowland(animals_list=place['pop'])
+            if landscape_type == 'H':
+                island_cells[x-1, y-1] = Highland(animals_list=place['pop'])
 
     def all_animals_eat(self, landscape):
         """
