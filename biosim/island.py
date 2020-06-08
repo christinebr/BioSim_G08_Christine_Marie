@@ -232,13 +232,31 @@ class TheIsland:
         -------
         Updates the list of animals for the two species at the end of the year.
         """
-        self.all_animals_eat(landscape=self.landscapes)
+        self.all_animals_eat()
         self.animals_procreate()
         # self.migration()
         self.all_animals_age()
         self.all_animals_losses_weight()
         self.animals_die()
-        
+
+    def add_more_animals_on_island(self, new_animals):
+        """
+        Parameters
+        ----------
+        new_animals: list of dict ->
+                    [{'loc': (2, 2), 'pop': [{'species': 'Herbivore', 'age': 5, 'weight': 25}, ... ]
+        """
+        for place in new_animals:
+            x, y = place['loc']
+            landscape_type = self.landscape[x-1][y-1]
+            if landscape_type == 'W':
+                # island_cells[x-1, y-1] = Water(animals_list=None)
+                raise ValueError("Animals can't stay in water")
+            else:
+                self.island_cells[x-1][y-1].add_new_animals_to_cell(place['pop'])
+                # add new animals to cell
+
+
 if __name__ == "__main__":
     ini_herbs = [{'loc': (2, 2),
                   'pop': [{'species': 'Herbivore',
