@@ -213,9 +213,6 @@ class Lowland(SingleCell):
     def __init__(self, animals_list):
         super().__init__(animals_list)
 
-    def animals_eat(self):
-        return self.animals_in_cell_eat()
-
 
 class Highland(SingleCell):
     _params = {'f_max': 300.0}
@@ -230,49 +227,45 @@ class Highland(SingleCell):
 
 
 if __name__ == "__main__":
-    animals = [{'species': 'Herbivore', 'age': 10, 'weight': 40},
-               {'species': 'Herbivore', 'age': 8, 'weight': 29},
-               {'species': 'Carnivore', 'age': 3, 'weight': 50}]
+    animals = [{'species': 'Herbivore', 'age': 10, 'weight': 10},
+               {'species': 'Herbivore', 'age': 8, 'weight': 25},
+               {'species': 'Herbivore', 'age': 5, 'weight': 15},
+               {'species': 'Carnivore', 'age': 6, 'weight': 10},
+               {'species': 'Carnivore', 'age': 3, 'weight': 8},
+               {'species': 'Carnivore', 'age': 43, 'weight': 8}]
     cell1 = SingleCell(animals)
     cell1.sort_animals_by_species()
     print(cell1.herbi_list)
-    print(cell1.herbi_list[1].age)
-    cell1.aging_of_animals()
-    print(cell1.herbi_list[1].age)
-
     print(cell1.herbi_list + cell1.carni_list)
 
-    new = 0
-    for herbi in cell1.herbi_list + cell1.carni_list:
-        print(herbi.age)
-        new += herbi.age
-    print(new)
+    low = Lowland(animals_list=animals)
+    low.sort_animals_by_species()
 
-    cell1.aging_of_animals()
+    w_before = [ani.weight for ani in (low.herbi_list+low.carni_list)]
+    print("Weight before eating:", w_before)
+    # Eating
+    low.animals_in_cell_eat()
+    w_after = [ani.weight for ani in (low.herbi_list+low.carni_list)]
+    print("Weight after eating:", w_after)
 
-    new = 0
-    for herbi in cell1.herbi_list + cell1.carni_list:
-        print(herbi.age)
-        new += herbi.age
-    print(new)
+    print("Number of animals before birth:", len(low.herbi_list + low.carni_list))
+    low.birth()
+    print("Number of animals after birth:", len(low.herbi_list + low.carni_list))
 
-    # cell1 = SingleCell(animals)
-    # cell1.sort_animals_by_species()
-    # print(f"Number of animals: {len(cell1.get_animals())}")
-    # print(cell1.get_animals())
-    # cell1.birth()
-    # print(f"Number of animals after birth: {len(cell1.get_animals())}")
-    # print(cell1.get_animals())
-    #
-    # cell2 = SingleCell(animals)
-    # print(cell2.sort_animals_by_species())
-    #
-    # high = Highland(animals)
-    # print(f"After dying")
-    # print(high.get_animals())
-    # print(f"Before eating")
-    # print(high.get_animals())
-    # high.animals_eat()
-    # print(f"After eating")
-    # print(high.get_animals())
-    # high.death()
+    a_before = [ani.age for ani in (low.herbi_list+low.carni_list)]
+    print("Age before:", a_before)
+    # Animals aging
+    low.aging_of_animals()
+    a_after = [ani.age for ani in (low.herbi_list + low.carni_list)]
+    print("Age after:", a_after)
+
+    w_before = [ani.weight for ani in (low.herbi_list+low.carni_list)]
+    print("Weight before loss:", w_before)
+    low.weight_loss_end_of_year()
+    w_after = [ani.weight for ani in (low.herbi_list+low.carni_list)]
+    print("Weight after loss:", w_after)
+
+    print("Number of animals before death:", len(low.herbi_list + low.carni_list))
+    low.death()
+    print("Number of animals after death:", len(low.herbi_list + low.carni_list))
+
