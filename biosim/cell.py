@@ -65,13 +65,32 @@ class SingleCell:
         """
         return self.animals_list
 
+    def sort_animals_after_fitness(self):
+        """
+        Sorting the animals after fitness
+            - herbivores are sorted from lowest to highest fitness
+            - carnivores are sorted from highest to lowest fitness
+        """
+        # Sorting the herbivores after fitness
+        # fining the fitness of each herbi and placing them in a list
+        fitness_herbi = [herbi.fitness() for herbi in self.herbi_list]
+        # sorting the self.herbi_list after the fitness_herbi
+        # the first element is the herbi with lowest fitness
+        sorted_herbis = [herb for _, herb in sorted(zip(fitness_herbi, self.herbi_list))]
+
+        # Sorting the carnivores after fitness
+        # fining the fitness of each herbi and placing them in a list
+        fitness_carni = [carni.fitness() for carni in self.carni_list]
+        # sorting the self.carni_list after the fitness_carni
+        # the first element is the carni with the highest fitness
+        sorted_carnis = [carn for _, carn in sorted(zip(fitness_carni, self.carni_list),
+                                                    reverse=True)]
+        return sorted_herbis, sorted_carnis
+
     def animals_in_cell_eat(self):
         """
         shuffles the animals, loops through all the animals in self.animal_list
         call the function animal.update_weight()
-
-        todo: add eating for carnivores
-
         """
         # Herbivore eats
         random.shuffle(self.herbi_list)  # Shuffles the herbivore, they eat in random order
@@ -86,8 +105,19 @@ class SingleCell:
                 fodder_in_cell = 0
 
         # Carnivores eats
-        # for carni in c
+        sorted_herbi, sorted_carni = self.sort_animals_after_fitness()
+        for carni in sorted_carni:  # first carni has the highest fitness
+            not_killed_herbis = []
+            for herbi in sorted_herbi:  # first herbi has the lowest fitness
+                prob_kill = carni.probability_of_killing_herbivore(fitness_herbi=herbi.fitness())
+                if random.random() < prob_kill:  # carni kills herbi
+                    carni.update_weight_after_kill(weight_herbi=herbi.weight)
+                else:
+                    not_killed_herbis.append(herbi)
+            sorted_herbi = not_killed_herbis
 
+        self.herbi_list = sorted_herbi  # the herbis remaining are the not_killed_herbis
+        self.carni_list = sorted_carni  # the carnis after eating
 
     def birth(self):
         """
@@ -156,7 +186,12 @@ class SingleCell:
             else:
                 carni_stay.append(carni)
 
-        return herbi_stay, herbi_move, carni_stay, carni_move
+        # Animals staying in the cell
+        self.herbi_list = herbi_stay
+        self.carni_list = carni_stay
+
+        # Returning the animals which want to migrate
+        return herbi_move, carni_move
 
     def aging_of_animals(self):
         """Makes sure animals ages"""
@@ -193,6 +228,7 @@ class SingleCell:
 
         self.herbi_list = survived_herbis
         self.carni_list = survived_carnis
+
 
 class Water(SingleCell):
     _params = {'f_max': 0.0}
@@ -234,12 +270,12 @@ class Highland(SingleCell):
 
 
 if __name__ == "__main__":
-    animals = [{'species': 'Herbivore', 'age': 10, 'weight': 10},
+    animals = [{'species': 'Herbivore', 'age': 1, 'weight': 5},
                {'species': 'Herbivore', 'age': 8, 'weight': 25},
                {'species': 'Herbivore', 'age': 5, 'weight': 15},
-               {'species': 'Carnivore', 'age': 6, 'weight': 10},
+               {'species': 'Carnivore', 'age': 6, 'weight': 15},
                {'species': 'Carnivore', 'age': 3, 'weight': 8},
-               {'species': 'Carnivore', 'age': 43, 'weight': 8}]
+               {'species': 'Carnivore', 'age': 23, 'weight': 12}]
 
     low = Lowland(animals_list=animals)
 
