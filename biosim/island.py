@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import numpy as np
-from biosim.cell import SingleCell, Highland, Lowland, Water, Desert
+from biosim.cell import SingleCell, Highland, Lowland, Desert  # , Water
 import textwrap
 
 
@@ -16,9 +16,9 @@ class TheIsland:
         self.test_if_island_legal(landscape_of_cells)
         # Turn into numpy array
         self.landscape = self.landscape_to_array(land=landscape_of_cells)
-        self.row, self.colon = self.landscape.shape[0], self.landscape.shape[1]
+        self.row, self.colon = len(self.landscape), len(self.landscape[0])
 
-        self.island_cells = np.zeros((self.row, self.colon))
+        self.island_cells = []
 
         if animals_on_island:
             self.animals_on_island = animals_on_island
@@ -65,28 +65,28 @@ class TheIsland:
         """
         land = textwrap.dedent(land)
         land_split = land.split('\n')
-        land_array = [list(line) for line in land_split]
-        return np.array(land_array)
+        return [list(line) for line in land_split]
 
     def sort_animals_by_cell(self):
         """
         Sorting animals by location on the island
         """
-        island_cells = np.zeros((self.row, self.colon))
+        self.island_cells = [[[] for _ in range(self.colon)] for _ in range(self.row)]
+
         for place in self.animals_on_island:
             x, y = place['loc']
-            landscape_type = self.landscape[x-1, y-1]
+            landscape_type = self.landscape[x-1][y-1]
             if landscape_type == 'W':
                 # island_cells[x-1, y-1] = Water(animals_list=None)
                 raise ValueError("Animals can't stay in water")
             if landscape_type == 'D':
-                island_cells[x-1, y-1] = Desert(animals_list=place['pop'])
+                self.island_cells[x-1][y-1] = Desert(animals_list=place['pop'])
             if landscape_type == 'L':
-                island_cells[x-1, y-1] = Lowland(animals_list=place['pop'])
+                self.island_cells[x-1][y-1] = Lowland(animals_list=place['pop'])
             if landscape_type == 'H':
-                island_cells[x-1, y-1] = Highland(animals_list=place['pop'])
+                self.island_cells[x-1][y-1] = Highland(animals_list=place['pop'])
 
-    def all_animals_eat(self, landscape):
+    def all_animals_eat(self):
         """
         Params
         ------
@@ -98,50 +98,38 @@ class TheIsland:
             population of carnivores in that cell
         landscape: [narray]
             numpy array of the landscape of the island
-        todo: are we supposed to use this kind of list?
-                ini_herbs = [{'loc': (10, 10),
-                              'pop': [{'species': 'Herbivore',
-                                       'age': 5,
-                                       'weight': 20}
-                                      for _ in range(150)]}]
-                ini_carns = [{'loc': (10, 10),
-                              'pop': [ {'species': 'Carnivore',
-                                        'age': 5,
-                                        'weight': 20}
-                                       for _ in range(40) ] }]
-              thinking of landscape as:
-                  ll = np.array([['W','W','W','W'],
-                                 ['W','L','L','W'],
-                                 ['W','H','H','W'],
-                                 ['W','L','L','W'],
-                                 ['W','W','W','W']])
 
         """
-        # All herbivores on the island eat
-        for dictionary in self.herbis:
-            row, col = dictionary['loc']  # getting the location of the cell
-            landscape_type = landscape[row, col]  # the landscape in the cell
-            if landscape_type == 'L':
-                low = Lowland(animals_list=dictionary['pop'], f_max=800.0)
-                # don't put in 800.0 directly here?
-                low.animals_eat()  # animals eat -> use Cell-method directly?
-            elif landscape_type == 'H':
-                high = Highland(animals_list=dictionary['pop'], f_max=300.0)
-                # don't put in 300.0 directly here?
-                high.animals_eat()  # animals eat -> use Cell-method directly?
+        for row in self.island_cells:
+            for cell in row:
+                if cell:  # if cell = [] it is a water cell, no animals eat
+                    cell.animals_in_cell_eat()
 
-        # All carnivores on the island eat
-        for dictionary in self.carnis:
-            row, col = dictionary['loc']  # getting the location of the cell
-            landscape_type = landscape[row, col]  # the landscape in the cell
-            if landscape_type == 'L':
-                low = Lowland(animals_list=dictionary['pop'], f_max=800.0)
-                # don't put in 800.0 directly here?
-                low.animals_eat()  # animals eat -> use Cell-method directly?
-            elif landscape_type == 'H':
-                high = Highland(animals_list=dictionary['pop'], f_max=300.0)
-                # don't put in 300.0 directly here?
-                high.animals_eat()  # animals eat -> use Cell-method directly?
+        # # All herbivores on the island eat
+        # for dictionary in self.herbis:
+        #     row, col = dictionary['loc']  # getting the location of the cell
+        #     landscape_type = landscape[row, col]  # the landscape in the cell
+        #     if landscape_type == 'L':
+        #         low = Lowland(animals_list=dictionary['pop'], f_max=800.0)
+        #         # don't put in 800.0 directly here?
+        #         low.animals_eat()  # animals eat -> use Cell-method directly?
+        #     elif landscape_type == 'H':
+        #         high = Highland(animals_list=dictionary['pop'], f_max=300.0)
+        #         # don't put in 300.0 directly here?
+        #         high.animals_eat()  # animals eat -> use Cell-method directly?
+        #
+        # # All carnivores on the island eat
+        # for dictionary in self.carnis:
+        #     row, col = dictionary['loc']  # getting the location of the cell
+        #     landscape_type = landscape[row, col]  # the landscape in the cell
+        #     if landscape_type == 'L':
+        #         low = Lowland(animals_list=dictionary['pop'], f_max=800.0)
+        #         # don't put in 800.0 directly here?
+        #         low.animals_eat()  # animals eat -> use Cell-method directly?
+        #     elif landscape_type == 'H':
+        #         high = Highland(animals_list=dictionary['pop'], f_max=300.0)
+        #         # don't put in 300.0 directly here?
+        #         high.animals_eat()  # animals eat -> use Cell-method directly?
 
     def animals_procreate(self):
         """
