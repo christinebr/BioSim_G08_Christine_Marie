@@ -232,12 +232,29 @@ class Highland(SingleCell):
 if __name__ == "__main__":
     animals = [{'species': 'Herbivore', 'age': 10, 'weight': 40},
                {'species': 'Herbivore', 'age': 8, 'weight': 29},
-               {'species': 'Herbivore', 'age': 3, 'weight': 50}]
+               {'species': 'Carnivore', 'age': 3, 'weight': 50}]
     cell1 = SingleCell(animals)
     cell1.sort_animals_by_species()
-    print(cell1.herbi_list[2].age)
+    print(cell1.herbi_list)
+    print(cell1.herbi_list[1].age)
     cell1.aging_of_animals()
-    print(cell1.herbi_list[2].age)
+    print(cell1.herbi_list[1].age)
+
+    print(cell1.herbi_list + cell1.carni_list)
+
+    new = 0
+    for herbi in cell1.herbi_list + cell1.carni_list:
+        print(herbi.age)
+        new += herbi.age
+    print(new)
+
+    cell1.aging_of_animals()
+
+    new = 0
+    for herbi in cell1.herbi_list + cell1.carni_list:
+        print(herbi.age)
+        new += herbi.age
+    print(new)
 
     # cell1 = SingleCell(animals)
     # cell1.sort_animals_by_species()
