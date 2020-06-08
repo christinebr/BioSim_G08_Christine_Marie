@@ -204,7 +204,7 @@ class Animal:
         return round(random.gauss(self._params['w_birth'],
                                   self._params['sigma_birth']), 2)
 
-    def death(self):
+    def probability_death(self):
         """
         The probability of death for an animal lies between 0 and 1
             - If the animals weight is zero, the probability of death is 1
