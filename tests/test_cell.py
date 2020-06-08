@@ -179,11 +179,17 @@ class TestSingleCell:
         carni_after = len(self.cell.carni_list)
         assert carni_before == carni_after
 
+    def test_herbivores_eaten(self, initial_cell_class):
+        """Tests that carnivores eat herbivores"""
+        pass
+
     def possible_no_animals(self):
         """
-        Checking that there wil be no problems if noe animals are given into the class.
+        Checking that there wil be no problems if no animals are given into the class.
         """
-        pass
+        animals = []
+        cellt = SingleCell(animals_list=animals)
+        assert len(cellt.herbi_list + cellt.carni_list) == 0
 
     def test_sorting_correct(self, initial_cell_class):
         """
