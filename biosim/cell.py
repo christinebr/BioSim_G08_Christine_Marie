@@ -17,6 +17,25 @@ class SingleCell:
             self.animals_list = animals_list
         else:
             self.animals_list = []
+        self.carni_list = []
+        self.herbi_list = []
+
+    def sort_animals_by_species(self, list_of_dicts):
+        """
+        Sorting the animals in lists of herbivores and carnivores.
+        Parameters
+        ----------
+        list_of_dicts:
+                [{'species': 'Herbivore', 'age': 10, 'weight':40},
+                 {'species': 'Herbivore', 'age': 8, 'weight':29},
+                 {'species': 'Carnivore', 'age': 3, 'weight':50}]
+        """
+        for animal in list_of_dicts:
+            if animal['species'] == 'Herbivores':
+                self.herbi_list.append(Herbivores(age=animal['weight'], weight=animal['weight'],))
+            if animal['species'] == 'Carnivores':
+                self.carni_list.append(Carnivores(age=animal['weight'], weight=animal['weight'],))
+
 
     @classmethod
     def set_params(cls, new_params):
@@ -44,22 +63,6 @@ class SingleCell:
     def get_animals(self):
         """Just making it 'legal' to get information about the animals."""
         return self.animals_list
-
-    def sort_animals_by_species(self):
-        """
-        Sorting the animals in herbivores and carnivores in two lists
-        Returns
-        -------
-        [list] herbivore and carnivore list
-        """
-        herbi_list, carni_list = [], []
-        for animal in self.animals_list:
-            if animal['species'] == 'Herbivore':
-                herbi_list.append(animal)
-            else:
-                carni_list.append(animal)
-
-        return herbi_list, carni_list
 
     def animals_in_cell_eat(self):
         """
@@ -298,8 +301,11 @@ if __name__ == "__main__":
     print(cell2.sort_animals_by_species())
 
     high = Highland(animals)
+    print(f"After dying")
+    print(high.get_animals())
     print(f"Before eating")
     print(high.get_animals())
     high.animals_eat()
     print(f"After eating")
     print(high.get_animals())
+    high.death()
