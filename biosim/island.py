@@ -174,33 +174,49 @@ class TheIsland:
         pass
 
     def all_animals_age(self):
-
-        for dictionary in self.herbis:
-            cell = SingleCell(animals_list=dictionary['pop'])
-            cell.aging_of_animals()
-
-        for dictionary in self.carnis:
-            cell = SingleCell(animals_list=dictionary['pop'])
-            cell.aging_of_animals()
+        """
+        Animals in each cell age
+        """
+        for row in self.island_cells:
+            for cell in row:
+                if cell:  # nothing happens in water cell
+                    cell.aging_of_animals()
+        # for dictionary in self.herbis:
+        #     cell = SingleCell(animals_list=dictionary['pop'])
+        #     cell.aging_of_animals()
+        #
+        # for dictionary in self.carnis:
+        #     cell = SingleCell(animals_list=dictionary['pop'])
+        #     cell.aging_of_animals()
 
     def all_animals_losses_weight(self):
-        for dictionary in self.herbis:
-            cell = SingleCell(animals_list=dictionary['pop'])
-            cell.weight_loss_end_of_year()
-
-        for dictionary in self.carnis:
-            cell = SingleCell(animals_list=dictionary['pop'])
-            cell.weight_loss_end_of_year()
+        """
+        Animals in each cell losses weight (end of year)
+        """
+        for row in self.island_cells:
+            for cell in row:
+                if cell:  # nothing happens in water cell
+                    cell.weight_loss_end_of_year()
+        # for dictionary in self.herbis:
+        #     cell = SingleCell(animals_list=dictionary['pop'])
+        #     cell.weight_loss_end_of_year()
+        #
+        # for dictionary in self.carnis:
+        #     cell = SingleCell(animals_list=dictionary['pop'])
+        #     cell.weight_loss_end_of_year()
 
     def animals_die(self):
-        for dictionary in self.herbis:
-            cell = SingleCell(animals_list=dictionary['pop'])
-            dictionary['pop'] = cell.death()
-
-        for dictionary in self.carnis:
-            cell = SingleCell(animals_list=dictionary['pop'])
-            dictionary['pop'] = cell.death()
-
+        for row in self.island_cells:
+            for cell in row:
+                if cell:  # nothing happens in water cell
+                    cell.death()
+        # for dictionary in self.herbis:
+        #     cell = SingleCell(animals_list=dictionary['pop'])
+        #     dictionary['pop'] = cell.death()
+        #
+        # for dictionary in self.carnis:
+        #     cell = SingleCell(animals_list=dictionary['pop'])
+        #     dictionary['pop'] = cell.death()
 
     def annual_cycle(self):
         """
