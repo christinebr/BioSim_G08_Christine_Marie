@@ -188,11 +188,11 @@ class TheIsland:
     def animals_die(self):
         for dictionary in self.herbis:
             cell = SingleCell(animals_list=dictionary['pop'])
-            cell.death()
+            dictionary['pop'] = cell.death()
 
         for dictionary in self.carnis:
             cell = SingleCell(animals_list=dictionary['pop'])
-            cell.death()
+            dictionary['pop'] = cell.death()
 
 
     def annual_cycle(self):
