@@ -252,7 +252,10 @@ class TestDesert:
         return self.desert
 
     def test_no_herbs(self, initial_desert, mocker):
-        """Tests that herbivores can't find food in the desert."""
+        """Tests that herbivores can't find food in the desert.
+
+        Todo: sjekk hvorfor dette ikke virker
+        """
         sum_weight_before = 0
         for herbi in self.desert.herbi_list:
             sum_weight_before += herbi.weight
@@ -268,6 +271,9 @@ class TestDesert:
         """
         Test that only carnivores kill and eat other animals. Does so by checking that
         only carnivores gain weight after eating in the desert.
+
+        Todo: Gjør om denne så den sjeker at carnis vekt øker og antall kjøtt konstant
+            mens antall veg synker
         """
         herbi_before = len(self.desert.herbi_list)
         self.desert.animals_in_cell_eat()
