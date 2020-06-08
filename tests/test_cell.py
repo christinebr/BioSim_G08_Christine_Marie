@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from biosim.cell import SingleCell
+from biosim.cell import SingleCell, Lowland
 import pytest
-from copy import deepcopy
 import random
-from itertools import zip_longest
 
 
 class TestSingleCell:
@@ -162,27 +160,6 @@ class TestSingleCell:
 
         assert 0 == 1
 
-
-    def test_only_carnivores_eat_meat(self, initial_cell_class):
-        """
-        Test that only carnivores kill and eat other animals.
-        """
-        pass
-
-    def test_no_cannibalism(self, initial_cell_class):
-        """
-        Test that carnivores only kill and eat herbivores. Does this by checking that
-        the number of carnivores are the same after killing as before.
-        """
-        carni_before = len(self.cell.carni_list)
-        self.cell.animals_in_cell_eat()
-        carni_after = len(self.cell.carni_list)
-        assert carni_before == carni_after
-
-    def test_herbivores_eaten(self, initial_cell_class):
-        """Tests that carnivores eat herbivores"""
-        pass
-
     def possible_no_animals(self):
         """
         Checking that there wil be no problems if no animals are given into the class.
@@ -197,3 +174,63 @@ class TestSingleCell:
         herbivores and carnivores.
         """
         assert len(self.cell.herbi_list + self.cell.carni_list) == 6
+
+class TestLowland:
+
+    @pytest.fixture()
+    def initial_lowland(self):
+        animals = [{'species': 'Herbivore', 'age': 10, 'weight': 15},
+                   {'species': 'Herbivore', 'age': 40, 'weight': 20},
+                   {'species': 'Herbivore', 'age': 2, 'weight': 8},
+                   {'species': 'Carnivore', 'age': 30, 'weight': 8},
+                   {'species': 'Carnivore', 'age': 5, 'weight': 3.5},
+                   {'species': 'Carnivore', 'age': 37, 'weight': 5.7}
+                   ]
+        self.low = Lowland(animals_list=animals)
+        return self.low
+
+    def test_no_cannibalism(self, initial_lowland):
+        """
+        Test that carnivores only kill and eat herbivores. Does this by checking that
+        the number of carnivores are the same after killing as before.
+        """
+        carni_before = len(self.low.carni_list)
+        self.low.animals_in_cell_eat()
+        carni_after = len(self.low.carni_list)
+        assert carni_before == carni_after
+
+    def test_weight_gain_eat(self, initial_lowland):
+        """Check that animals weights more after eating. First finds the sum of weight of
+        herbivores and carnivores before eating, then the weight of both after eating.
+        The first test checks that herbivores gain weight. The second test checks that
+        carnivores gain weight. Thus both species must be able to eat for the test to pass.
+        """
+        sum_weight_herbi_before = 0
+        for herbi in self.low.herbi_list:
+            sum_weight_herbi_before += herbi.weight
+        sum_weight_carni_before = 0
+        for carni in self.low.carni_list:
+            sum_weight_carni_before += carni.weight
+
+        self.low.animals_in_cell_eat()
+        sum_weight_herbi_after = 0
+        for herbi in self.low.herbi_list:
+            sum_weight_herbi_after += herbi.weight
+        sum_weight_carni_after = 0
+        for carni in self.low.carni_list:
+            sum_weight_carni_after += carni.weight
+
+        assert sum_weight_herbi_before < sum_weight_herbi_after
+        assert sum_weight_carni_before < sum_weight_carni_after
+
+
+
+    def test_only_carnivores_eat_meat(self, initial_lowland):
+        """
+        Test that only carnivores kill and eat other animals.
+        """
+        pass
+
+    def test_herbivores_eaten(self, initial_lowland):
+        """Tests that carnivores eat herbivores"""
+        pass
