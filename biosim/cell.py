@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from biosim.animals import Herbivores, Carnivores
 import random
-
+from operator import itemgetter, attrgetter
 
 class SingleCell:
     """
@@ -81,17 +81,20 @@ class SingleCell:
         # Sorting the herbivores after fitness
         # fining the fitness of each herbi and placing them in a list
         fitness_herbi = [herbi.fitness() for herbi in self.herbi_list]
-        # sorting the self.herbi_list after the fitness_herbi
         # the first element is the herbi with lowest fitness
-        sorted_herbis = [herb for _, herb in sorted(zip(fitness_herbi, self.herbi_list))]
+        zip_fitness_herbis = zip(fitness_herbi, self.herbi_list)
+        sorted_herbi_after_fitness = sorted(zip_fitness_herbis, key=itemgetter(0))
+        sorted_herbis = [herb for _, herb in sorted_herbi_after_fitness]
 
         # Sorting the carnivores after fitness
         # fining the fitness of each herbi and placing them in a list
         fitness_carni = [carni.fitness() for carni in self.carni_list]
         # sorting the self.carni_list after the fitness_carni
         # the first element is the carni with the highest fitness
-        sorted_carnis = [carn for _, carn in sorted(zip(fitness_carni, self.carni_list),
-                                                    reverse=True)]
+        zip_fitness_carnis = zip(fitness_carni, self.carni_list)
+        sorted_carni_after_fitness = sorted(zip_fitness_carnis, key=itemgetter(0), reverse=True)
+        sorted_carnis = [carn for _, carn in sorted_carni_after_fitness]
+
         return sorted_herbis, sorted_carnis
 
     def animals_in_cell_eat(self):

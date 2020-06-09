@@ -15,9 +15,10 @@ No migration
 
 if __name__ == '__main__':
     # Simplest island possible
-    landscape = np.array([['W', 'W', 'W'],
-                          ['W', 'L', 'W'],
-                          ['W', 'W', 'W']])
+    landscape = """\
+                    WWW
+                    WLW
+                    WWW"""
 
     # Initial herbivores on island (only in one cell -> 'L')
     ini_herbs = [{'loc': (1, 1),
@@ -26,8 +27,8 @@ if __name__ == '__main__':
                   }]
 
     # Initialize the island
-    isl = TheIsland(landscape_of_cells=landscape, herbis=ini_herbs)
-    print(isl.herbis)
+    isl = TheIsland(landscape_of_cells=landscape, animals_on_island=ini_herbs)
+    print(isl.island_cells)
     plt.figure()
     for year in range(20):
         num_start_of_year = len(isl.herbis[0]['pop'])
