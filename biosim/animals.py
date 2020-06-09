@@ -204,7 +204,7 @@ class Animal:
         return round(random.gauss(self._params['w_birth'],
                                   self._params['sigma_birth']), 2)
 
-    def death(self):
+    def probability_death(self):
         """
         The probability of death for an animal lies between 0 and 1
             - If the animals weight is zero, the probability of death is 1
@@ -223,8 +223,7 @@ class Animal:
             return 1.0  # the animal is dead
         else:
             # Probability of death:
-            return self.weight * (1 - self.fitness()) / 100
-            # Dividing by 100 to go from % til float
+            return self._params['omega'] * (1 - self.fitness())
 
 
 class Herbivores(Animal):
@@ -257,7 +256,6 @@ class Carnivores(Animal):
 
     def probability_of_killing_herbivore(self, fitness_herbi):
         """
-
         Parameters
         ----------
         fitness_herbi: [float]
@@ -266,19 +264,12 @@ class Carnivores(Animal):
         Returns
         -------
         [float] the probability that a carnivore kills the herbivore.
-
-        todo: carnivore weight increases with beta*weight_herbi when it
-              kills the herbivore, where should this happen? in SingleCell?
-              Added a update_weight_after_kill below, is this ok?
-              NB! fitness of carnivore should be re-evaluated each time it
-              kills a herbivore, is this ok when using self.fitness()?
         """
         fitness_carni = self.fitness()
-        max_diff_fitness = self._params['DeltaPhiMax']
         if fitness_carni <= fitness_herbi:
             return 0.
-        elif 0 < fitness_carni - fitness_herbi < max_diff_fitness:
-            return (fitness_carni - fitness_herbi)/max_diff_fitness
+        elif 0 < fitness_carni - fitness_herbi < self._params['DeltaPhiMax']:
+            return (fitness_carni - fitness_herbi)/self._params['DeltaPhiMax']
         else:
             return 1.
 
@@ -307,13 +298,13 @@ if __name__ == "__main__":
 
     herbis = [{'species': 'Herbivore', 'age': 10, 'weight': 15},
               {'species': 'Herbivore', 'age': 8, 'weight': 20},
-              {'species': 'Herbivore', 'age': 40, 'weight': 10},
+              {'species': 'Herbivore', 'age': 1, 'weight': 5},
               {'species': 'Herbivore', 'age': 35, 'weight': 30}]
 
     carnis = [{'species': 'Carnivore', 'age': 43, 'weight': 29},
               {'species': 'Carnivore', 'age': 30, 'weight': 23},
-              {'species': 'Carnivore', 'age': 3, 'weight': 11},
-              {'species': 'Carnivore', 'age': 23, 'weight': 12}]
+              {'species': 'Carnivore', 'age': 3, 'weight': 30},
+              {'species': 'Carnivore', 'age': 1, 'weight': 12}]
 
     print("HERBIVORES")
     for herb in herbis:
@@ -323,7 +314,7 @@ if __name__ == "__main__":
         print(f"Fodder:        {h.get_params()['F']}")
         print(f"Fitness:       {h.fitness():.3f}")
         print(f"Prob of birth: {h.birth(num=9)}")
-        print(f"Prob of death: {h.death():.3f}\n")
+        print(f"Prob of death: {h.probability_death():.3f}\n")
 
     print("CARNIVORES")
     for carb in carnis:
@@ -332,4 +323,4 @@ if __name__ == "__main__":
         print(f"Age:           {c.age}")
         print(f"Fitness:       {c.fitness():.3f}")
         print(f"Prob of birth: {c.birth(num=9)}")
-        print(f"Prob of death: {c.death():.3f}\n")
+        print(f"Prob of death: {c.probability_death():.3f}\n")
