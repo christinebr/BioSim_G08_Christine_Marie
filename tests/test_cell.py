@@ -189,6 +189,20 @@ class TestSingleCell:
         """
         assert len(self.cell.herbi_list + self.cell.carni_list) == 6
 
+    def test_sorting_equal_fitness(self):
+        """
+        Check that the sorting method for fitness can handle animals with equal fitness
+        """
+        animals = [{'species': 'Herbivore', 'age': 10, 'weight': 40},
+                   {'species': 'Herbivore', 'age': 10, 'weight': 40},
+                   {'species': 'Carnivore', 'age': 10, 'weight': 40},
+                   {'species': 'Carnivore', 'age': 10, 'weight': 40}
+                   ]
+        cellt = SingleCell(animals_list=animals)
+        cellt.sort_animals_after_fitness()
+        assert cellt.herbi_list + cellt.carni_list == cellt.animals_list
+
+
 class TestLowland:
 
     @pytest.fixture()
