@@ -199,8 +199,9 @@ class TestSingleCell:
                    {'species': 'Carnivore', 'age': 10, 'weight': 40}
                    ]
         cellt = SingleCell(animals_list=animals)
-        cellt.sort_animals_after_fitness()
-        assert cellt.herbi_list + cellt.carni_list == cellt.animals_list
+        sorted_herbi, sorted_carni = cellt.sort_animals_after_fitness()
+        assert cellt.herbi_list == sorted_herbi
+        assert cellt.carni_list == sorted_carni
 
 
 class TestLowland:
