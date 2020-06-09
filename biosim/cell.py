@@ -30,11 +30,18 @@ class SingleCell:
                 self.carni_list.append(Carnivores(age=animal['age'], weight=animal['weight']))
 
     def add_new_animals_to_cell(self, new_animals):
+        # if new_animals:
+        #     animals = new_animals
+        # else:
+        #     animals = self.animals_list
+
         for animal in new_animals:
             if animal['species'] == 'Herbivore':
                 self.herbi_list.append(Herbivores(age=animal['age'], weight=animal['weight']))
             if animal['species'] == 'Carnivore':
                 self.carni_list.append(Carnivores(age=animal['age'], weight=animal['weight']))
+
+        # self.animals_list = self.herbi_list + self.carni_list
 
     @classmethod
     def set_params(cls, new_params):
@@ -131,7 +138,8 @@ class SingleCell:
             prob_birth, birth_weight = herbi.birth(num_herbi)
             # probability of giving birth for mother and weight of newborn
             if random.random() < prob_birth:  # check if herbivore gives birth
-                newborn_herbi.append(Herbivores(age=0, weight=birth_weight))  # add newborn to list of newborns
+                newborn_herbi.append(Herbivores(age=0, weight=birth_weight))
+                # add newborn to list of newborns
 
                 # update weight of herbivore (mother)
                 herbi.update_weight(weight_of_newborn=birth_weight)
@@ -141,7 +149,8 @@ class SingleCell:
             prob_birth, birth_weight = carni.birth(num_carni)
             # probability of giving birth for mother and weight of newborn
             if random.random() < prob_birth:  # check if herbivore gives birth
-                newborn_carni.append(Carnivores(age=0, weight=birth_weight))  # add newborn to list of newborns
+                newborn_carni.append(Carnivores(age=0, weight=birth_weight))
+                # add newborn to list of newborns
 
                 # update weight of herbivore (mother)
                 carni.update_weight(weight_of_newborn=birth_weight)

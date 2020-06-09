@@ -303,8 +303,8 @@ if __name__ == "__main__":
 
     carnis = [{'species': 'Carnivore', 'age': 43, 'weight': 29},
               {'species': 'Carnivore', 'age': 30, 'weight': 23},
-              {'species': 'Carnivore', 'age': 3, 'weight': 11},
-              {'species': 'Carnivore', 'age': 23, 'weight': 12}]
+              {'species': 'Carnivore', 'age': 3, 'weight': 30},
+              {'species': 'Carnivore', 'age': 1, 'weight': 12}]
 
     print("HERBIVORES")
     for herb in herbis:
