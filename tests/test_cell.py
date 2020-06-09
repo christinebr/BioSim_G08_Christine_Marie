@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from biosim.cell import SingleCell, Lowland, Desert
+from biosim.animals import Herbivores, Carnivores
 import pytest
 import random
 
@@ -9,12 +10,12 @@ class TestSingleCell:
 
     @pytest.fixture()
     def initial_cell_class(self):
-        animals = [{'species': 'Herbivore', 'age': 10, 'weight': 15},
+        animals = [{'species': 'Herbivore', 'age': 10, 'weight': 40},
                    {'species': 'Herbivore', 'age': 40, 'weight': 20},
                    {'species': 'Herbivore', 'age': 2, 'weight': 8},
-                   {'species': 'Carnivore', 'age': 30, 'weight': 8},
-                   {'species': 'Carnivore', 'age': 5, 'weight': 3.5},
-                   {'species': 'Carnivore', 'age': 37, 'weight': 5.7}
+                   {'species': 'Carnivore', 'age': 30, 'weight': 20},
+                   {'species': 'Carnivore', 'age': 3, 'weight': 25},
+                   {'species': 'Carnivore', 'age': 37, 'weight': 3.5}
                    ]
         self.cell = SingleCell(animals_list=animals)
         return self.cell
@@ -37,11 +38,24 @@ class TestSingleCell:
 
         assert sum_old + len(self.cell.herbi_list + self.cell.carni_list) == sum_new
 
+    def test_that_give_birth(self, initial_cell_class, mocker):
+        """
+        Tests that the birth-method makes more animals, both among herbivores and carnivores.
+        """
+        mocker.patch('random.random', return_value=0)
+        herbis_before = len(self.cell.herbi_list)
+        carnis_before = len(self.cell.carni_list)
+        self.cell.birth()
+        herbis_after = len(self.cell.herbi_list)
+        carnis_after = len(self.cell.carni_list)
+        assert herbis_before < herbis_after
+        assert carnis_before < carnis_after
+
     def test_that_newborns_weights_something(self, initial_cell_class, mocker):
         """
         Tests that the birth method assigns a weight to the newborn animal.
         """
-        mocker.patch('random.random', return_value=1)
+        mocker.patch('random.random', return_value=0)
         self.cell.birth()
         nonexsistent_newborns = 0
         for animal in self.cell.herbi_list + self.cell.carni_list:
@@ -89,7 +103,7 @@ class TestSingleCell:
             old_weights.append(old_animal.weight)
             new_weights.append(new_animal.weight)
 
-        assert new_weights == correct_weights
+        assert pytest.approx(new_weights) == correct_weights
 
         # mocker.patch('random.random', return_value=0)
         # mocker.patch('random.gauss', return_value=7)
@@ -129,9 +143,6 @@ class TestSingleCell:
         The first test checks that an animal of weight zero disappears. Also checks that the two
             animals that are supposed to survive actually does so.
         The second test checks that when all animals dies, all of them disappears.
-
-        Todo: Make more tests on this
-            Test that herbivores eaten by a carnivore does not survive
         """
         mocker.patch('random.random', return_value=1)
         old_list_of_animals = self.cell.herbi_list + self.cell.carni_list
@@ -148,17 +159,20 @@ class TestSingleCell:
 
     def test_that_newborn_same_speci_as_parent(self,initial_cell_class, mocker):
         """
-        Tests that herbivores only gives birth to herbivores and carnivores only gives birth to
-        carnivores.
+        Tests that herbivores only gives birth to herbivores and carnivores only gives
+        birth to carnivores.
         """
         mocker.patch('random.random', return_value=0)
         mocker.patch('random.gauss', return_value=7)
         self.cell.birth()
-        mutants = 0
+        herbis = []
+        cars = []
         for herbi in self.cell.herbi_list:
-            pass
+            herbis.append(isinstance(herbi, Herbivores))
+        for carni in self.cell.carni_list:
+            cars.append(isinstance(carni, Carnivores))
 
-        assert 0 == 1
+        assert herbis == [True]*len(self.cell.herbi_list) and cars == [True]*len(self.cell.carni_list)
 
     def possible_no_animals(self):
         """
@@ -189,26 +203,31 @@ class TestLowland:
         self.low = Lowland(animals_list=animals)
         return self.low
 
-    def test_no_cannibalism(self, initial_lowland):
+    def test_no_cannibalism(self, initial_lowland, mocker):
         """
         Test that carnivores only kill and eat herbivores. Does this by checking that
         the number of carnivores are the same after killing as before.
         """
         carni_before = len(self.low.carni_list)
+        mocker.patch('random.random', return_value=0)
         self.low.animals_in_cell_eat()
         carni_after = len(self.low.carni_list)
         assert carni_before == carni_after
 
-    def test_herbivores_eaten(self, initial_lowland, mock):
-        """Tests that carnivores eat herbivores"""
-        mocker.patch('random.random', return_value=1)
+    def test_herbivores_eaten(self, initial_lowland, mocker):
+        """
+        Tests that carnivores eat herbivores, check that the number of herbivores are lower
+        after eating.
+        """
+        mocker.patch('random.random', return_value=0)
         herbi_before = len(self.low.herbi_list)
         self.low.animals_in_cell_eat()
         herbi_after = len(self.low.herbi_list)
         assert herbi_before > herbi_after
 
     def test_weight_gain_eat(self, initial_lowland, mocker):
-        """Check that animals weights more after eating. First find the average of weight of
+        """
+        Check that animals weights more after eating. First find the average of weight of
         herbivores and carnivores before eating, then the weight of both after eating.
         The first test checks that herbivores gain weight. The second test checks that
         carnivores gain weight. Thus both species must be able to eat for the test to pass.
@@ -223,7 +242,7 @@ class TestLowland:
             sum_weight_carni_before += carni.weight
         av_carni_before = sum_weight_carni_before/len(self.low.carni_list)
 
-        mocker.patch('random.random', return_value=1)
+        mocker.patch('random.random', return_value=0.03)
         self.low.animals_in_cell_eat()
         sum_weight_herbi_after = 0
         for herbi in self.low.herbi_list:
@@ -253,33 +272,28 @@ class TestDesert:
 
     def test_no_herbs(self, initial_desert, mocker):
         """Tests that herbivores can't find food in the desert.
-
-        Todo: sjekk hvorfor dette ikke virker
         """
         sum_weight_before = 0
         for herbi in self.desert.herbi_list:
             sum_weight_before += herbi.weight
 
-        mocker.patch('random.random', return_value=0) #Makes sure no herbis are killed
+        mocker.patch('random.random', return_value=1) #Makes sure no herbis are killed
         self.desert.animals_in_cell_eat()
         sum_weight_after = 0
         for herbi in self.desert.herbi_list:
             sum_weight_after += herbi.weight
         assert sum_weight_before == sum_weight_after
 
-    def test_only_carnivores_kill(self, initial_desert):
+    def test_only_carnivores_kill(self, initial_desert, mocker):
         """
         Test that only carnivores kill and eat other animals. Does so by checking that
-        only carnivores gain weight after eating in the desert.
-
-        Todo: Gjør om denne så den sjeker at carnis vekt øker og antall kjøtt konstant
-            mens antall veg synker
+        the number of carnivores stay constant, while the number of herbivores decreases.
         """
         herbi_before = len(self.desert.herbi_list)
+        carni_before = len(self.desert.carni_list)
+        mocker.patch('random.random', return_value=0.01) #Makes sure some herbis are killed
         self.desert.animals_in_cell_eat()
         herbi_after = len(self.desert.herbi_list)
-        carni_before = len(self.desert.carni_list)
-        self.desert.animals_in_cell_eat()
         carni_after = len(self.desert.carni_list)
-        assert carni_before > carni_after
-        assert herbi_before == herbi_after
+        assert carni_before == carni_after
+        assert herbi_before > herbi_after
