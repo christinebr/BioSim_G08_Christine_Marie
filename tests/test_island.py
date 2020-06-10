@@ -110,8 +110,58 @@ class TestingTheIsland:
         param = self.island.island_cells[1][2].herbi_list[0].get_params()
         assert param['xi'] == 2.0
 
-    def complete_cycle(self, initial_island):
+    def test_complete_cycle(self, initial_island, mocker):
         """
         Checks that all steps in the annual cycle are made.
+
+        Todo: This might be better put into a lott of different tests, but some of the point is to
+            check that all the methods could work together on the same sett. Numbers are used for
+            more than one test, should update the variable names after including migration.
+            Test for aging funker ikke, sjekk dette
         """
-        pass
+        island = self.island
+        animals = island.island_cells[1][2].herbi_list + island.island_cells[2][3].carni_list
+
+        # Eating
+        sum_weight_spring = 0
+        for animal in animals:
+            sum_weight_spring += animal.weight
+        island.all_animals_eat()
+        sum_weight_after_eating = 0
+        for animal in animals:
+            sum_weight_after_eating += animal.weight
+        assert sum_weight_spring < sum_weight_after_eating
+
+        # procreating
+        mocker.patch('random.random', return_value=0)
+        # makes sure there are newborns, and animals eaten later
+        num_animals_spring = island.total_num_animals_on_island()
+        island.animals_procreate()
+        num_animals2 = island.total_num_animals_on_island()
+        assert num_animals_spring < num_animals2
+
+        # Migration
+        # Add this later
+
+        # Aging
+        # sum_age_before = 0
+        # for animal in animals:
+        #     sum_age_before += animal.age
+        # island.all_animals_age()
+        # sum_age_after = 0
+        # for animal in animals:
+        #     sum_age_after += animal.age
+        # assert sum_age_before + island.total_num_animals_on_island()[0] == sum_age_after
+
+        # Loss of weight
+        island.all_animals_losses_weight()
+        sum_weight3 = 0
+        for animal in animals:
+            sum_weight3 += animal.weight
+        assert sum_weight3 < sum_weight_after_eating
+
+        # death
+        mocker.patch('random.random', return_value=0.9) # makes sure not all animals die
+        animals[3].weight = 0 # Makes sure at least one animal dies
+        island.animals_die()
+        assert num_animals2 > island.total_num_animals_on_island()
