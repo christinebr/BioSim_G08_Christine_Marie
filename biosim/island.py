@@ -31,6 +31,9 @@ class TheIsland:
         else:
             self.animals_on_island = []
 
+        self.construct_island_with_cells()
+        self.add_animals_on_island(self.animals_on_island)
+
     def set_cell_params(self, landscape, new_params=None):
         """
         Update the parameters for each cell-type on the island
@@ -94,30 +97,44 @@ class TheIsland:
     @staticmethod
     def landscape_to_array(land):
         """
-        Takes in a multiline string and turns it into a np.array
+        Takes in a multiline string and turns it into a nested list
         """
         land = textwrap.dedent(land)
         land_split = land.split('\n')
         return [list(line) for line in land_split]
 
-    def sort_animals_by_cell(self):
+    def construct_island_with_cells(self):  # RENAME THIS ONE
         """
         Sorting animals by location on the island
         """
         self.island_cells = [[[] for _ in range(self.colon)] for _ in range(self.row)]
+        for x, row in enumerate(self.landscape):
+            for y, col in enumerate(row):
+                if col == 'W':
+                    self.island_cells[x][y] = Water(animals_list=None)
+                elif col == 'L':
+                    self.island_cells[x][y] = Lowland(animals_list=None)
+                elif col == 'H':
+                    self.island_cells[x][y] = Highland(animals_list=None)
+                elif col == 'D':
+                    self.island_cells[x][y] = Desert(animals_list=None)
 
-        for place in self.animals_on_island:
+    def add_animals_on_island(self, new_animals):
+        """
+        Parameters
+        ----------
+        new_animals: list of dict ->
+                    [{'loc': (2, 2), 'pop': [{'species': 'Herbivore', 'age': 5, 'weight': 25}, ... ]
+        """
+        for place in new_animals:
             x, y = place['loc']
             landscape_type = self.landscape[x-1][y-1]
             if landscape_type == 'W':
                 # island_cells[x-1, y-1] = Water(animals_list=None)
                 raise ValueError("Animals can't stay in water")
-            if landscape_type == 'D':
-                self.island_cells[x-1][y-1] = Desert(animals_list=place['pop'])
-            if landscape_type == 'L':
-                self.island_cells[x-1][y-1] = Lowland(animals_list=place['pop'])
-            if landscape_type == 'H':
-                self.island_cells[x-1][y-1] = Highland(animals_list=place['pop'])
+            else:
+                self.island_cells[x-1][y-1].add_new_animals_to_cell(place['pop'])
+                # add new animals to cell
 
     def all_animals_eat(self):
         """
@@ -272,23 +289,6 @@ class TheIsland:
         self.all_animals_losses_weight()
         self.animals_die()
 
-    def add_more_animals_on_island(self, new_animals):
-        """
-        Parameters
-        ----------
-        new_animals: list of dict ->
-                    [{'loc': (2, 2), 'pop': [{'species': 'Herbivore', 'age': 5, 'weight': 25}, ... ]
-        """
-        for place in new_animals:
-            x, y = place['loc']
-            landscape_type = self.landscape[x-1][y-1]
-            if landscape_type == 'W':
-                # island_cells[x-1, y-1] = Water(animals_list=None)
-                raise ValueError("Animals can't stay in water")
-            else:
-                self.island_cells[x-1][y-1].add_new_animals_to_cell(place['pop'])
-                # add new animals to cell
-
     def total_num_animals_on_island(self):
         """Returns total number of animals on the island
 
@@ -297,6 +297,7 @@ class TheIsland:
         Total number of animals on the island
         """
         pass
+
 
 if __name__ == "__main__":
     ini_herbs = [{'loc': (2, 2),
@@ -311,8 +312,11 @@ if __name__ == "__main__":
                 WWW"""
     isl = TheIsland(landscape_of_cells=land, animals_on_island=ini_herbs)
     print("Original landscape given in:\n", isl.landscape)
-    isl.sort_animals_by_cell()
+    isl.construct_island_with_cells()
     print("Landscape used in TheIsland-class\n", isl.island_cells)
+    isl.add_animals_on_island(ini_herbs)
+    print(isl.island_cells[1][1].get_params())
+
     print("Weight of one herbivore:", isl.island_cells[1][1].herbi_list[0].weight)
     isl.all_animals_eat()
     print("Weight of one herbivore:", isl.island_cells[1][1].herbi_list[0].weight)
@@ -357,6 +361,17 @@ if __name__ == "__main__":
 
     print("\nAnimals in cell before:",
           len(isl.island_cells[1][1].herbi_list+isl.island_cells[1][1].carni_list))
-    isl.add_more_animals_on_island(new_animals=new)
+    isl.add_animals_on_island(new_animals=new)
     print("Animals in cell after:",
           len(isl.island_cells[1][1].herbi_list+isl.island_cells[1][1].carni_list))
+
+    bigger_island = """\
+                        WWWWW
+                        WLLLW
+                        WHWHW
+                        WLDLW
+                        WWWWW"""
+    isl2 = TheIsland(landscape_of_cells=bigger_island)
+    print("Original landscape given in:\n", isl2.landscape)
+    isl2.construct_island_with_cells()
+    print("Landscape used in TheIsland-class\n", isl2.island_cells)

@@ -31,7 +31,7 @@ class TestingTheIsland:
                         ]
 
         self.island = TheIsland(landscape_of_cells=test_island, animals_on_island=test_animals)
-        self.island.sort_animals_by_cell()
+        self.island.construct_island_with_cells()
         return self.island
 
     def test_if_check_size(self):
