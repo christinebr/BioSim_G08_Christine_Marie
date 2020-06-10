@@ -22,8 +22,13 @@ class TestSingleCell:
 
     def test_set_params_animals(self, initial_cell_class):
         """Tests that it is possible to update parameters for animals."""
-        
-
+        new_params_herbi = {'sigma_birth': 2.0, 'a_half': 35.0}
+        herbi_params = self.cell.herbi_list[0].get_params()
+        assert herbi_params['sigma_birth'] == 1.5
+        assert herbi_params['a_half'] == 40.0
+        self.cell.set_animals_params(specie='Herbivore', new_params=new_params_herbi)
+        assert herbi_params['sigma_birth'] == 2.0
+        assert herbi_params['a_half'] == 35.0
 
     def test_that_all_animals_age(self, initial_cell_class):
         """
