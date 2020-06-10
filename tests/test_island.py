@@ -84,9 +84,9 @@ class TestingTheIsland:
         """
         mocker.patch('random.random', return_value=0)
         # Makes sure animals are born and killed but do not die
-        num_animals_before = self.island.total_num_animals_on_island()
+        num_animals_before, h, c = self.island.total_num_animals_on_island()
         self.island.annual_cycle()
-        num_animals_after = self.island.total_num_animals_on_island()
+        num_animals_after, h, c = self.island.total_num_animals_on_island()
         assert num_animals_after != num_animals_before
 
     def test_give_params_cell(self, initial_island):
@@ -107,6 +107,7 @@ class TestingTheIsland:
         param = self.island.island_cells[1][2].herbi_list[0].get_params()
         assert param['xi'] == 1.2
         self.island.set_animal_params('Herbivore', new_param)
+        param = self.island.island_cells[1][2].herbi_list[0].get_params()
         assert param['xi'] == 2.0
 
     def complete_cycle(self, initial_island):

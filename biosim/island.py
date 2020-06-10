@@ -59,7 +59,8 @@ class TheIsland:
         new_params: [dict] parameters for animals
         todo: is this ok? parameters for all animals will change?
         """
-        Lowland.set_animals_params(speci, new_params)
+        for cell_type in [Lowland, Highland, Desert, Water]:
+            cell_type.set_animals_params(speci, new_params)
 
     @staticmethod
     def check_if_island_legal(geogr):
@@ -296,7 +297,14 @@ class TheIsland:
         ----------
         Total number of animals on the island
         """
-        pass
+        tot_herbi = 0
+        tot_carni = 0
+        for row in self.island_cells:
+            for cell in row:
+                tot_herbi += len(cell.herbi_list)
+                tot_carni += len(cell.carni_list)
+        tot_animal = tot_herbi + tot_carni
+        return tot_animal, tot_herbi, tot_carni
 
 
 if __name__ == "__main__":
