@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from biosim.animals import Herbivores, Carnivores
 import random
+from itertools import zip_longest
 from operator import itemgetter  # attrgetter
 
 
@@ -153,27 +154,19 @@ class SingleCell:
         num_herbi = len(self.herbi_list)
         num_carni = len(self.carni_list)
 
-        newborn_herbi = []
-        for herbi in self.herbi_list:
-            prob_birth, birth_weight = herbi.birth(num_herbi)
-            # probability of giving birth for mother and weight of newborn
-            if random.random() < prob_birth:  # check if herbivore gives birth
-                newborn_herbi.append(Herbivores(age=0, weight=birth_weight))
-                # add newborn to list of newborns
+        newborn_herbi, newborn_carni = [], []
+        for herbi, carni, in zip_longest(self.herbi_list, self.carni_list):
+            if herbi:  # need this because herbi is None if num_carni > num_herbi
+                prob_birth_herbi, birth_weight_herbi = herbi.birth(num_herbi)
+                if random.random() < prob_birth_herbi:
+                    newborn_herbi.append(Herbivores(age=0, weight=birth_weight_herbi))
+                    herbi.update_weight(weight_of_newborn=birth_weight_herbi)
 
-                # update weight of herbivore (mother)
-                herbi.update_weight(weight_of_newborn=birth_weight)
-
-        newborn_carni = []
-        for carni in self.carni_list:
-            prob_birth, birth_weight = carni.birth(num_carni)
-            # probability of giving birth for mother and weight of newborn
-            if random.random() < prob_birth:  # check if herbivore gives birth
-                newborn_carni.append(Carnivores(age=0, weight=birth_weight))
-                # add newborn to list of newborns
-
-                # update weight of herbivore (mother)
-                carni.update_weight(weight_of_newborn=birth_weight)
+            if carni:  # need this because carni is None if num_herbi > num_carni
+                prob_birth_carni, birth_weight_carni = carni.birth(num_carni)
+                if random.random() < prob_birth_carni:
+                    newborn_carni.append(Carnivores(age=0, weight=birth_weight_carni))
+                    carni.update_weight(weight_of_newborn=birth_weight_carni)
 
         # Adds the newborn animals to the list of animals
         self.herbi_list.extend(newborn_herbi)
