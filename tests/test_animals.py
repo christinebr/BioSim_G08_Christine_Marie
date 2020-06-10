@@ -85,7 +85,7 @@ class TestHerbivores:
         Test that a herbivore dies if it has zero weight
         """
         self.h.weight = 0
-        assert self.h.death() == 1.0
+        assert self.h.probability_death() == 1.0
 
     def test_prob_of_death_when_fitness_is_one(self, initial_herbivore_class):
         """
@@ -93,7 +93,7 @@ class TestHerbivores:
         Age 0 and weight 100 gives fitness 0.999...
         """
         self.h.weight = 100
-        assert self.h.death() < 0.1
+        assert self.h.probability_death() < 0.1
 
     def test_no_birth_when_n_is_1(self, initial_herbivore_class):
         """
@@ -131,7 +131,7 @@ class TestHerbivores:
         Todo: This test has to get better
         """
         h = Herbivores(age=1000, weight=100)
-        prob_death = h.death()
+        prob_death = h.probability_death()
         assert prob_death <= 1
 
 class TestCarnivores:
