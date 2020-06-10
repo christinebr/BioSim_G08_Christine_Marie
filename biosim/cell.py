@@ -33,19 +33,19 @@ class SingleCell:
 
         self.animals_list = self.herbi_list + self.carni_list
 
-    def set_animals_params(self, params_herbi=None, params_carni=None):
+    def set_animals_params(self, specie, new_params=None):
         """
         Update the parameters for each animal in the cell
 
         Parameters
         ----------
-        params_herbi: [dict] parameters for herbivore
-        params_carni: [dict] parameters for carnivore
+        specie: [str] string of species
+        new_params: [dict] parameters animals
         """
-        for herbi in self.herbi_list:
-            herbi.set_params(params_herbi)
-        for carni in self.carni_list:
-            carni.set_params(params_carni)
+        if specie == "Herbivore":
+            Herbivores.set_params(new_params)
+        elif specie == "Carnivore":
+            Carnivores.set_params(new_params)
 
     def add_new_animals_to_cell(self, new_animals):
         # if new_animals:
