@@ -77,29 +77,24 @@ class TestingTheIsland:
         with pytest.raises(ValueError):
             TheIsland(test_island)
 
-
-    def test_that_number_of_animals_is_updated(self, initial_island):
+    def test_that_number_of_animals_is_updated(self, initial_island, mocker):
         """
         Tests that number of animals before the year starts is updated by the end of the year.
         todo: must make sure that animals are born?
               or just check that age/weight have been updated?
         """
-        pass
-
-    def test_yearly_continuity(self, initial_island):
-        """
-        Check that the next year starts where the last one ended, i.e. that the updates from last
-        year are the initial values in the next one.
-
-        Todo: This might be a better test for biosim
-        """
-        pass
+        mocker.patch('random.random', return_value=0)
+        # Makes sure animals are born and killed but do not die
+        num_animals_before = self.island.total_num_animals_on_island()
+        self.island.annual_cycle()
+        num_animals_after = self.island.total_num_animals_on_island()
+        assert num_animals_after != num_animals_before
 
     def test_give_params(self, initial_island):
         """
         Check that it's possible to create new parameters.
         """
-        pass
+
 
     def complete_cycle(self, initial_island):
         """

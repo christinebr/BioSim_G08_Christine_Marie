@@ -262,6 +262,14 @@ class TheIsland:
                 self.island_cells[x-1][y-1].add_new_animals_to_cell(place['pop'])
                 # add new animals to cell
 
+    def total_num_animals_on_island(self):
+        """Returns total number of animals on the island
+
+        Returns:
+        ----------
+        Total number of animals on the island
+        """
+        pass
 
 if __name__ == "__main__":
     ini_herbs = [{'loc': (2, 2),
