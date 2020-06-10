@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from biosim.island import TheIsland
+from biosim.cell import Highland
 import pytest
 
 
@@ -30,6 +31,7 @@ class TestingTheIsland:
                         ]
 
         self.island = TheIsland(landscape_of_cells=test_island, animals_on_island=test_animals)
+        self.island.sort_animals_by_cell()
         return self.island
 
     def test_if_check_size(self):
@@ -80,8 +82,6 @@ class TestingTheIsland:
     def test_that_number_of_animals_is_updated(self, initial_island, mocker):
         """
         Tests that number of animals before the year starts is updated by the end of the year.
-        todo: must make sure that animals are born?
-              or just check that age/weight have been updated?
         """
         mocker.patch('random.random', return_value=0)
         # Makes sure animals are born and killed but do not die
@@ -90,13 +90,28 @@ class TestingTheIsland:
         num_animals_after = self.island.total_num_animals_on_island()
         assert num_animals_after != num_animals_before
 
-    def test_give_params(self, initial_island):
+    def test_give_params_cell(self, initial_island):
         """
-        Check that it's possible to create new parameters.
+        Check that it's possible to create new parameters for cell.
             - check update of cell-params -> f_max
-            - check update of animal-params
         """
-        pass
+        new_param = {'f_max': 400.0}
+        print(self.island.island_cells)
+        param = self.island.island_cells[2][1].get_params()
+        assert param['f_max'] == 300.0
+        self.island.set_cell_params('H', new_param)
+        assert param['f_max'] == 400.0
+
+    def test_set_params_animals(self, initial_island):
+        """Tests that it is possible to update parameters for animals."""
+
+        # new_params_herbi = {'sigma_birth': 2.0, 'a_half': 35.0}
+        # herbi_params = self.island.island_cells
+        # assert herbi_params['sigma_birth'] == 1.5
+        # assert herbi_params['a_half'] == 40.0
+        # self.island.set_animals_params(specie='Herbivore', new_params=new_params_herbi)
+        # assert herbi_params['sigma_birth'] == 2.0
+        # assert herbi_params['a_half'] == 35.0
 
     def complete_cycle(self, initial_island):
         """
