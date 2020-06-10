@@ -12,8 +12,14 @@ class TheIsland:
     """
 
     def __init__(self, landscape_of_cells, animals_on_island=None):
+        """
+        Parameters
+        ----------
+        landscape_of_cells: multiline python string
+        animals_on_island: list of dictionaries
+        """
         # Check conditions for geography of island
-        self.test_if_island_legal(landscape_of_cells)
+        self.check_if_island_legal(landscape_of_cells)
         # Turn into numpy array
         self.landscape = self.landscape_to_array(land=landscape_of_cells)
         self.row, self.colon = len(self.landscape), len(self.landscape[0])
@@ -26,7 +32,7 @@ class TheIsland:
             self.animals_on_island = []
 
     @staticmethod
-    def test_if_island_legal(geogr):
+    def check_if_island_legal(geogr):
         """
         Test if the island follows the specifications.
         The string tha specify the island must only contain legal letters, i.e. L, H, W and D
