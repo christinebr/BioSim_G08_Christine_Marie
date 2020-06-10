@@ -29,6 +29,22 @@ class SingleCell:
             if animal['species'] == 'Carnivore':
                 self.carni_list.append(Carnivores(age=animal['age'], weight=animal['weight']))
 
+        self.animals_list = self.herbi_list + self.carni_list
+
+    def set_animals_params(self, params_herbi=None, params_carni=None):
+        """
+        Update the parameters for each animal in the cell
+
+        Parameters
+        ----------
+        params_herbi: [dict] params for herbivore
+        params_carni: [dict] params for carnivore
+        """
+        for herbi in self.herbi_list:
+            herbi.set_params(params_herbi)
+        for carni in self.carni_list:
+            carni.set_params(params_carni)
+
     def add_new_animals_to_cell(self, new_animals):
         # if new_animals:
         #     animals = new_animals
