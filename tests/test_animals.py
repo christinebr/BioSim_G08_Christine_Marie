@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-# from pytest_mock import mocker
+
 from biosim.animals import Herbivores, Carnivores
 import pytest
-from copy import deepcopy
 
 
 class TestHerbivores:
@@ -26,12 +25,12 @@ class TestHerbivores:
     def test_update_parameters(self):
         """ Test if parameters is updated correctly"""
         h1 = Herbivores(weight=20)
-        old_param = deepcopy(h1.get_params())
+        param = h1.get_params()
+        assert param['beta'] == 0.9
+        assert param['w_half'] == 10.0
         h1.set_params({'w_half': 2.0, 'beta': 0.8})
-        new_param = h1.get_params()
-        assert old_param != new_param
-#        assert old_param['beta'] == pytest.approx(new_param['beta'])
-#        assert old_param['w_half'] == pytest.approx(new_param['w_half'])
+        assert param['beta'] == 0.8
+        assert param['w_half'] == 2.0
 
     def test_default_value_for_age(self, initial_herbivore_class):
         """Testing default value for age"""
