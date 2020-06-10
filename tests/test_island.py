@@ -31,7 +31,6 @@ class TestingTheIsland:
                         ]
 
         self.island = TheIsland(landscape_of_cells=test_island, animals_on_island=test_animals)
-        self.island.construct_island_with_cells()
         return self.island
 
     def test_if_check_size(self):
@@ -96,7 +95,6 @@ class TestingTheIsland:
             - check update of cell-params -> f_max
         """
         new_param = {'f_max': 400.0}
-        print(self.island.island_cells)
         param = self.island.island_cells[2][1].get_params()
         assert param['f_max'] == 300.0
         self.island.set_cell_params('H', new_param)
@@ -105,13 +103,11 @@ class TestingTheIsland:
     def test_set_params_animals(self, initial_island):
         """Tests that it is possible to update parameters for animals."""
 
-        # new_params_herbi = {'sigma_birth': 2.0, 'a_half': 35.0}
-        # herbi_params = self.island.island_cells
-        # assert herbi_params['sigma_birth'] == 1.5
-        # assert herbi_params['a_half'] == 40.0
-        # self.island.set_animals_params(specie='Herbivore', new_params=new_params_herbi)
-        # assert herbi_params['sigma_birth'] == 2.0
-        # assert herbi_params['a_half'] == 35.0
+        new_param = {'xi': 2.0}
+        param = self.island.island_cells[1][2].herbi_list[0].get_params()
+        assert param['xi'] == 1.2
+        self.island.set_animal_params('Herbivore', new_param)
+        assert param['xi'] == 2.0
 
     def complete_cycle(self, initial_island):
         """
