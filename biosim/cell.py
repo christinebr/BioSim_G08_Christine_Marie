@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from biosim.animals import Herbivores, Carnivores
 import random
-from operator import itemgetter, attrgetter
+from operator import itemgetter  # attrgetter
+
 
 class SingleCell:
     """
@@ -37,8 +38,8 @@ class SingleCell:
 
         Parameters
         ----------
-        params_herbi: [dict] params for herbivore
-        params_carni: [dict] params for carnivore
+        params_herbi: [dict] parameters for herbivore
+        params_carni: [dict] parameters for carnivore
         """
         for herbi in self.herbi_list:
             herbi.set_params(params_herbi)
@@ -334,4 +335,3 @@ if __name__ == "__main__":
     print("Number of animals before death:", len(low.herbi_list + low.carni_list))
     low.death()
     print("Number of animals after death:", len(low.herbi_list + low.carni_list))
-

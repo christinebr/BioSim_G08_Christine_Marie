@@ -23,10 +23,10 @@ class TestingTheIsland:
         test_animals = [{'loc': (2, 3),
                          'pop': [{'species': 'Herbivore',
                                   'age': 5,
-                                  'weight': 20} for _ in range(200)] +
-                                 [{'species': 'Carnivore',
-                                  'age': 5,
-                                  'weight': 20} for _ in range(20)]}
+                                  'weight': 20} for _ in range(200)]
+                        + [{'species': 'Carnivore',
+                            'age': 5,
+                            'weight': 20} for _ in range(20)]}
                         ]
 
         self.island = TheIsland(landscape_of_cells=test_island, animals_on_island=test_animals)
@@ -93,8 +93,10 @@ class TestingTheIsland:
     def test_give_params(self, initial_island):
         """
         Check that it's possible to create new parameters.
+            - check update of cell-params -> f_max
+            - check update of animal-params
         """
-
+        pass
 
     def complete_cycle(self, initial_island):
         """
