@@ -90,17 +90,6 @@ class TestingTheIsland:
         num_animals_after, h, c = self.island.total_num_animals_on_island()
         assert num_animals_after != num_animals_before
 
-    def test_give_params_cell(self, initial_island):
-        """
-        Check that it's possible to create new parameters for cell.
-            - check update of cell-params -> f_max
-        """
-        new_param = {'f_max': 400.0}
-        param = self.island.island_cells[2][1].get_params()
-        assert param['f_max'] == 300.0
-        self.island.set_cell_params('H', new_param)
-        assert param['f_max'] == 400.0
-
     def test_animals_eat(self, initial_island):
         """Check that the class can make the animals gain weight by eating."""
         sum_weight_before = 0
