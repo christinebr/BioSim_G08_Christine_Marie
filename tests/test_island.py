@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from biosim.island import TheIsland
+from biosim.cell import Highland
 import pytest
-import numpy as np
 
 
 class TestingTheIsland:
@@ -15,46 +15,175 @@ class TestingTheIsland:
         -------
         A simple test-model
         """
-        test_island = np.array([['W', 'W', 'W', 'W'],
-                                ['W', 'L', 'L', 'W'],
-                                ['W', 'H', 'H', 'W'],
-                                ['W', 'L', 'L', 'W'],
-                                ['W', 'W', 'W', 'W']])
-        test_herb = [{'loc': (10, 10),
-                      'pop': [{'species': 'Herbivore',
-                               'age': 5,
-                               'weight': 20}
-                              for _ in range(10)]}]
-        test_car = []
+        test_island = """\
+                            WWWWW
+                            WLLLW
+                            WHWHW
+                            WLDLW
+                            WWWWW"""
+        test_animals = [{'loc': (2, 3),
+                         'pop': [{'species': 'Herbivore',
+                                  'age': 5,
+                                  'weight': 35} for _ in range(200)]
+                        + [{'species': 'Carnivore',
+                            'age': 5,
+                            'weight': 20} for _ in range(20)]}
+                        ]
 
-        self.island = TheIsland(landscape_of_cells=test_island, herbis=test_herb, carnis=test_car)
-        return self.island
+        self.island = TheIsland(landscape_of_cells=test_island, animals_on_island=test_animals)
+        self.animals = self.island.island_cells[1][2].herbi_list + self.island.island_cells[1][2].carni_list
+        return self.island, self.animals
 
-    def test_that_number_of_animals_is_updated(self, initial_island):
+    def test_if_check_size(self):
+        """
+        Tests if the island class raises a ValueError if given an island with
+        different lengths of the lines
+        """
+        test_island = """\
+                            WWWWW
+                            WLLLW
+                            WHHW
+                            WLDLW
+                            WWWWW"""
+
+        with pytest.raises(ValueError):
+            TheIsland(test_island)
+
+    def test_if_valueerror_if_not_island(self):
+        """
+        Tests if the island class raises a ValueError if given an island without
+        water around the edges
+        """
+        test_island = """\
+                            WWWWW
+                            WLLLW
+                            WHHWH
+                            WLDLW
+                            WWWWW"""
+
+        with pytest.raises(ValueError):
+            TheIsland(test_island)
+
+    def test_not_possible_give_illegal_lanscape(self):
+        """
+        Tests if the island class raises a ValueError if given an island with
+        a illegal type of landscape.
+        """
+        test_island = """\
+                            WWWWW
+                            WLLLW
+                            WHHOW
+                            WLDLW
+                            WWWWW"""
+
+        with pytest.raises(ValueError):
+            TheIsland(test_island)
+
+    def test_that_number_of_animals_is_updated(self, initial_island, mocker):
         """
         Tests that number of animals before the year starts is updated by the end of the year.
-        todo: must make sure that animals are born?
-              or just check that age/weight have been updated?
         """
-        pass
+        mocker.patch('random.random', return_value=0)
+        # Makes sure animals are born and killed but do not die
+        num_animals_before, h, c = self.island.total_num_animals_on_island()
+        self.island.annual_cycle()
+        num_animals_after, h, c = self.island.total_num_animals_on_island()
+        assert num_animals_after != num_animals_before
 
-    def test_yearly_continuity(self, initial_island):
-        """
-        Check that the next year starts where the last one ended, i.e. that the updates from last
-        year are the initial values in the next one.
+    def test_animals_eat(self, initial_island):
+        """Check that the class can make the animals gain weight by eating."""
+        sum_weight_before = 0
+        for animal in self.animals:
+            sum_weight_before += animal.weight
+        self.island.all_animals_eat()
+        sum_weight_after = 0
+        for animal in self.animals:
+            sum_weight_after += animal.weight
+        assert sum_weight_before < sum_weight_after
 
-        Todo: This might be a better test for biosim
-        """
-        pass
+    def test_animals_procreate(self, initial_island, mocker):
+        """Check that animals on island procreate"""
+        island = self.island
+        num_animals_before = island.total_num_animals_on_island()
+        mocker.patch('random.random', return_value=0) # Makes sure animals gives birth
+        island.animals_procreate()
+        num_animals_after = island.total_num_animals_on_island()
+        assert num_animals_before < num_animals_after
 
-    def test_give_params(self, initial_island):
-        """
-        Check that it's possible to create new parameters.
-        """
-        pass
+    def test_loss_of_weight(self, initial_island):
+        """Check that all animals losses weight"""
+        sum_weight_before = 0
+        for animal in self.animals:
+            sum_weight_before += animal.weight
+        self.island.all_animals_losses_weight()
+        sum_weight_after = 0
+        for animal in self.animals:
+            sum_weight_after += animal.weight
+        assert sum_weight_before > sum_weight_after
 
-    def complete_cycle(self, initial_island):
+    def test_death(self, initial_island, mocker):
+        """Tests that animals die."""
+        island = self.island
+        mocker.patch('random.random', return_value=0.9) # makes sure not all animals die
+        self.animals[3].weight = 0 # Makes sure at least one animal dies
+        num_animals_before = island.total_num_animals_on_island()
+        island.animals_die()
+        assert num_animals_before > island.total_num_animals_on_island()
+
+    def test_aging(self, initial_island):
+        """Tests that all animals age one year."""
+        animals = self.animals
+        sum_age_before = 0
+        for animal in animals:
+            sum_age_before += animal.age
+        self.island.all_animals_age()
+        sum_age_after = 0
+        for animal in animals:
+            sum_age_after += animal.age
+        assert sum_age_before + len(animals) == sum_age_after
+
+    def test_migration(self, initial_island, mocker):
+        """
+        Check that animals migrate. Makes everyone migrate north, then check that the original
+        position is empty and all animals has gone to the north.
+        """
+        island = self.island
+        mocker.patch('random.random', return_value=0)  # Makes sure all animals migrate
+        mocker.patch('random.choice', return_value='N')  # makes sure they migrate to the same cell
+        number_of_animals_before = len(self.animals)
+        # All animals are in the first cell at the beginning
+        island.migration()
+        number_new_cell = len(island.island_cells[1][1].herbi_list + self.island.island_cells[1][1].carni_list)
+        number_old_cell = len(island.island_cells[1][2].herbi_list + self.island.island_cells[1][2].carni_list)
+        assert number_new_cell == number_of_animals_before
+        assert number_old_cell == 0
+
+    def test_not_migrate_water(self, initial_island, mocker):
+        """
+        Checking that animals are not allowed to migrate into a water-cell.
+        Does so by trying to send all animals into the water-cell, then checking that there are no
+        animals in the water-cell, and that all animals remain in the old cell.
+
+        Be aware this test will pass if migration is not possible, so try the test that checks that
+        migration can happen at al first.
+        """
+        island = self.island
+        mocker.patch('random.random', return_value=0)  # Makes sure all animals tries to migrate
+        mocker.patch('random.choice', return_value='E')
+        # makes sure all animals tries to migrate to the lake in the middle of the test_island
+        number_of_animals_before = len(self.animals)
+        # All animals are in the first cell at the beginning
+        island.migration()
+        number_new_cell = len(island.island_cells[2][2].herbi_list + self.island.island_cells[2][2].carni_list)
+        number_old_cell = len(island.island_cells[1][2].herbi_list + self.island.island_cells[1][2].carni_list)
+        assert number_new_cell == 0
+        assert number_old_cell == number_of_animals_before
+
+
+    def test_complete_cycle(self, initial_island, mocker):
         """
         Checks that all steps in the annual cycle are made.
+
+        Todo: Do this later, possibly by statistic testing.
         """
         pass

@@ -271,6 +271,14 @@ class TestLowland:
         assert av_herbi_before < av_herbi_after
         assert av_carni_before < av_carni_after
 
+    def test_set_params_cell(self, initial_lowland):
+        """Tests that it is possible to update parameters for cell."""
+        f_max_before = self.low.get_params()['f_max']
+        self.low.set_params({'f_max': 900.0})
+        f_max_after = self.low.get_params()['f_max']
+        assert f_max_before != f_max_after
+
+
 class TestDesert:
 
     @pytest.fixture()

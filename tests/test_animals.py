@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-# from pytest_mock import mocker
+
 from biosim.animals import Herbivores, Carnivores
 import pytest
-from copy import deepcopy
 
 
 class TestHerbivores:
@@ -26,12 +25,12 @@ class TestHerbivores:
     def test_update_parameters(self):
         """ Test if parameters is updated correctly"""
         h1 = Herbivores(weight=20)
-        old_param = deepcopy(h1.get_params())
+        param = h1.get_params()
+        assert param['beta'] == 0.9
+        assert param['w_half'] == 10.0
         h1.set_params({'w_half': 2.0, 'beta': 0.8})
-        new_param = h1.get_params()
-        assert old_param != new_param
-#        assert old_param['beta'] == pytest.approx(new_param['beta'])
-#        assert old_param['w_half'] == pytest.approx(new_param['w_half'])
+        assert param['beta'] == 0.8
+        assert param['w_half'] == 2.0
 
     def test_default_value_for_age(self, initial_herbivore_class):
         """Testing default value for age"""
@@ -85,7 +84,7 @@ class TestHerbivores:
         Test that a herbivore dies if it has zero weight
         """
         self.h.weight = 0
-        assert self.h.death() == 1.0
+        assert self.h.probability_death() == 1.0
 
     def test_prob_of_death_when_fitness_is_one(self, initial_herbivore_class):
         """
@@ -93,7 +92,7 @@ class TestHerbivores:
         Age 0 and weight 100 gives fitness 0.999...
         """
         self.h.weight = 100
-        assert self.h.death() < 0.1
+        assert self.h.probability_death() < 0.1
 
     def test_no_birth_when_n_is_1(self, initial_herbivore_class):
         """
@@ -131,7 +130,7 @@ class TestHerbivores:
         Todo: This test has to get better
         """
         h = Herbivores(age=1000, weight=100)
-        prob_death = h.death()
+        prob_death = h.probability_death()
         assert prob_death <= 1
 
 class TestCarnivores:

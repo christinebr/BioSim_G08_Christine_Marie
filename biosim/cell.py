@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 from biosim.animals import Herbivores, Carnivores
 import random
-from operator import itemgetter, attrgetter
+from itertools import zip_longest
+from operator import itemgetter  # attrgetter
+
 
 class SingleCell:
     """
@@ -29,6 +31,8 @@ class SingleCell:
             if animal['species'] == 'Carnivore':
                 self.carni_list.append(Carnivores(age=animal['age'], weight=animal['weight']))
 
+        self.animals_list = self.herbi_list + self.carni_list
+
     def add_new_animals_to_cell(self, new_animals):
         # if new_animals:
         #     animals = new_animals
@@ -42,6 +46,7 @@ class SingleCell:
                 self.carni_list.append(Carnivores(age=animal['age'], weight=animal['weight']))
 
         # self.animals_list = self.herbi_list + self.carni_list
+
 
     @classmethod
     def set_params(cls, new_params):
@@ -136,27 +141,19 @@ class SingleCell:
         num_herbi = len(self.herbi_list)
         num_carni = len(self.carni_list)
 
-        newborn_herbi = []
-        for herbi in self.herbi_list:
-            prob_birth, birth_weight = herbi.birth(num_herbi)
-            # probability of giving birth for mother and weight of newborn
-            if random.random() < prob_birth:  # check if herbivore gives birth
-                newborn_herbi.append(Herbivores(age=0, weight=birth_weight))
-                # add newborn to list of newborns
+        newborn_herbi, newborn_carni = [], []
+        for herbi, carni, in zip_longest(self.herbi_list, self.carni_list):
+            if herbi:  # need this because herbi is None if num_carni > num_herbi
+                prob_birth_herbi, birth_weight_herbi = herbi.birth(num_herbi)
+                if random.random() < prob_birth_herbi:
+                    newborn_herbi.append(Herbivores(age=0, weight=birth_weight_herbi))
+                    herbi.update_weight(weight_of_newborn=birth_weight_herbi)
 
-                # update weight of herbivore (mother)
-                herbi.update_weight(weight_of_newborn=birth_weight)
-
-        newborn_carni = []
-        for carni in self.carni_list:
-            prob_birth, birth_weight = carni.birth(num_carni)
-            # probability of giving birth for mother and weight of newborn
-            if random.random() < prob_birth:  # check if herbivore gives birth
-                newborn_carni.append(Carnivores(age=0, weight=birth_weight))
-                # add newborn to list of newborns
-
-                # update weight of herbivore (mother)
-                carni.update_weight(weight_of_newborn=birth_weight)
+            if carni:  # need this because carni is None if num_herbi > num_carni
+                prob_birth_carni, birth_weight_carni = carni.birth(num_carni)
+                if random.random() < prob_birth_carni:
+                    newborn_carni.append(Carnivores(age=0, weight=birth_weight_carni))
+                    carni.update_weight(weight_of_newborn=birth_weight_carni)
 
         # Adds the newborn animals to the list of animals
         self.herbi_list.extend(newborn_herbi)
@@ -184,7 +181,8 @@ class SingleCell:
         for herbi in self.herbi_list:
             prob_migrate = herbi.probability_of_migration()
             if random.random() < prob_migrate:  # check if herbivore migrate
-                herbi_move.append(herbi)
+                move_to = random.choice(['N', 'E', 'S', 'W'])
+                herbi_move.append((herbi, move_to))
             else:
                 herbi_stay.append(herbi)
 
@@ -194,7 +192,8 @@ class SingleCell:
         for carni in self.carni_list:
             prob_migrate = carni.probability_of_migration()
             if random.random() < prob_migrate:  # check if carnivore migrate
-                carni_move.append(carni)
+                move_to = random.choice(['N', 'E', 'S', 'W'])
+                carni_move.append((carni, move_to))
             else:
                 carni_stay.append(carni)
 
@@ -302,6 +301,11 @@ if __name__ == "__main__":
     low.birth()
     print("Number of animals after birth:", len(low.herbi_list + low.carni_list))
 
+    herb, carn = low.migration()
+    print(herb)
+    print(carn)
+
+
     a_before = [ani.age for ani in (low.herbi_list+low.carni_list)]
     print("Age before:", a_before)
     # Animals aging
@@ -318,4 +322,3 @@ if __name__ == "__main__":
     print("Number of animals before death:", len(low.herbi_list + low.carni_list))
     low.death()
     print("Number of animals after death:", len(low.herbi_list + low.carni_list))
-
