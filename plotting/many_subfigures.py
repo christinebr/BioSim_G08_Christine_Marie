@@ -24,6 +24,9 @@ WWLHW
 WDDLW
 WWWWW
 """
+
+
+############## Secound island, different parts of the code needs the island in different form, fix this later #########
 geogr_island = """\
            WWWWW
            WWLHW
