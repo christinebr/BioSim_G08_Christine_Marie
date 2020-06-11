@@ -165,7 +165,8 @@ class Animal:
             if self.weight <= birth_weight_newborn:
                 return 0., 0.
             else:
-                return min(1, self._params['gamma'] * self.fitness() * (num - 1)), round(birth_weight_newborn, 2)
+                return min(1, self._params['gamma'] * self.fitness() * (num - 1)),\
+                       round(birth_weight_newborn, 2)
 
     def birth_weight(self):
         """
@@ -189,12 +190,8 @@ class Animal:
         Returns
         -------
         [float] the probability that an animal will die.
-
-        todo: maybe change == to <=
-              or maybe not possible to get negative weight?
-
         """
-        if self.weight == 0:
+        if self.weight <= 0:
             return 1.0  # the animal is dead
         else:
             # Probability of death:

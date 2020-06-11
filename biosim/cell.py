@@ -71,12 +71,6 @@ class SingleCell:
     def get_params(cls):
         return cls._params
 
-    def get_animals(self):
-        """Just making it 'legal' to get information about the animals.
-        todo: remove this, shuold not be needed
-        """
-        return self.animals_list
-
     def sort_animals_after_fitness(self):
         """
         Sorting the animals after fitness

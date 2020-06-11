@@ -20,6 +20,10 @@ class TestSingleCell:
         self.cell = SingleCell(animals_list=animals)
         return self.cell
 
+    def test_empty_animal_list(self):
+        cell = SingleCell(animals_list=None)
+        assert cell.animals_list == []
+
     def test_that_all_animals_age(self, initial_cell_class):
         """
         Tests that method age makes all animals get one year older.
@@ -174,7 +178,7 @@ class TestSingleCell:
 
         assert herbis == [True]*len(self.cell.herbi_list) and cars == [True]*len(self.cell.carni_list)
 
-    def possible_no_animals(self):
+    def test_possible_no_animals(self):
         """
         Checking that there wil be no problems if no animals are given into the class.
         """
@@ -202,6 +206,17 @@ class TestSingleCell:
         sorted_herbi, sorted_carni = cellt.sort_animals_after_fitness()
         assert cellt.herbi_list == sorted_herbi
         assert cellt.carni_list == sorted_carni
+
+    def test_weight_loss_end_of_year(self, initial_cell_class):
+        sum_old = 0
+        for animal in self.cell.herbi_list + self.cell.carni_list:
+            sum_old += animal.weight
+        self.cell.weight_loss_end_of_year()
+
+        sum_new = 0
+        for animal in self.cell.herbi_list + self.cell.carni_list:
+            sum_new += animal.weight
+        assert sum_old > sum_new
 
 
 class TestLowland:
@@ -270,6 +285,10 @@ class TestLowland:
 
         assert av_herbi_before < av_herbi_after
         assert av_carni_before < av_carni_after
+
+    def test_set_params_raises_keyerror(self, initial_lowland):
+        with pytest.raises(KeyError):
+            self.low.set_params({'g_max':200.0})
 
     def test_set_params_cell(self, initial_lowland):
         """Tests that it is possible to update parameters for cell."""
