@@ -34,34 +34,6 @@ class TheIsland:
         self.construct_island_with_cells()
         self.add_animals_on_island(self.animals_on_island)
 
-    def set_cell_params(self, landscape, new_params=None):
-        """
-        Update the parameters for each cell-type on the island
-        Parameters
-        ----------
-        landscape: [str] landscape type: 'L', 'H', 'D' (or 'W')
-        new_params: [dict] parameters for landscape
-        """
-        if landscape == 'L':
-            Lowland.set_params(new_params)
-        elif landscape == 'H':
-            Highland.set_params(new_params)
-        elif landscape == 'D':
-            Desert.set_params(new_params)
-        elif landscape == 'W':
-            Water.set_params(new_params)
-
-    def set_animal_params(self, speci, new_params=None):
-        """
-        Parameters
-        ----------
-        speci: [str] type of animal: Herbivore or Carnivore
-        new_params: [dict] parameters for animals
-        todo: is this ok? parameters for all animals will change?
-        """
-        for cell_type in [Lowland, Highland, Desert, Water]:
-            cell_type.set_animals_params(speci, new_params)
-
     @staticmethod
     def check_if_island_legal(geogr):
         """
