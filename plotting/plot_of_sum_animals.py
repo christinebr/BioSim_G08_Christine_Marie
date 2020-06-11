@@ -19,7 +19,6 @@ if __name__ == "__main__":
                                 'age': 5,
                                 'weight': 20} for _ in range(20)]
                     },
-
                    {'loc': (3,3),
                     'pop': [{'species': 'Herbivore',
                               'age': 5,

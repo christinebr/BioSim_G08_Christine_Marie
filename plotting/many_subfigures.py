@@ -96,6 +96,16 @@ ax3.set_title('Animals count')
 #ax3.set_xlabel('Years')
 #ax3.set_ylabel('Number of animals')
 
+#### ax7
+
+# Just testing
+herbi_fitness = [0.9, 0.3, 0.5, 0.4, 0.6, 0.5, 0.7, 0.3, 0.95, 0.2, 0.3, 0.3]
+carni_fitness = [0.6, 0.4, 0.6, 0.5, 0.6, 0.5, 0.5, 0.5]
+
+ax7.hist(herbi_fitness, bins=5, range=(0, 1), histtype='stepfilled', fill=False, edgecolor='red')
+ax7.hist(carni_fitness, range=(0, 1), histtype='stepfilled', fill=False, edgecolor='blue')
+ax3.set_title('Fitness')
+
 ###
 # axes for text
 axt = fig.add_axes([0.4, 0.8, 0.2, 0.2])  # llx, lly, w, h
