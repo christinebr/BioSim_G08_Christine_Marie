@@ -2,6 +2,7 @@
 Example for creating axes, including empty axes with text.
 """
 
+from biosim.island import TheIsland
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
 import numpy as np
@@ -17,12 +18,37 @@ ax8 = fig.add_subplot(grid[2, 1])
 ax9 = fig.add_subplot(grid[2, 2])
 fig.show()
 
-
+# Making the island, with some animals
 geogr = """WWWWW
 WWLHW
 WDDLW
 WWWWW
 """
+geogr_island = """\
+           WWWWW
+           WWLHW
+           WDDLW
+           WWWWW"""
+
+ini_animals = [{'loc': (2, 3),
+                 'pop': [{'species': 'Herbivore',
+                          'age': 5,
+                          'weight': 20} for _ in range(200)]
+                        + [{'species': 'Carnivore',
+                            'age': 5,
+                            'weight': 20} for _ in range(20)]
+                },
+               {'loc': (3,3),
+                'pop': [{'species': 'Herbivore',
+                          'age': 5,
+                          'weight': 20} for _ in range(200)]
+                        + [{'species': 'Carnivore',
+                            'age': 5,
+                            'weight': 20} for _ in range(20)]}
+                ]
+
+island = TheIsland(geogr_island, ini_animals)
+num_of_years = 100
 
 # Colors to be used for the different landscapes on the island
 #                   R    G    B
@@ -45,6 +71,29 @@ ax1.set_yticklabels(range(1, 1 + len(geogr_rgb)))
 ax1 = fig.add_axes([0.85, 0.1, 0.1, 0.8])  # llx, lly, w, h
 ax1.axis('off')
 
+### ax3
+years = list(range(num_of_years))
+# Makes list of years
+herbi_count = []
+# List with total number of herbivores each year
+carni_count = []
+# Ditto for carnivores
+for year in years:
+    _, total_herbis, total_carnis = island.total_num_animals_on_island()
+    # Number of herbivores and carnivores on the island
+    herbi_count.append(total_herbis)
+    carni_count.append(total_carnis)
+    island.annual_cycle()
+
+ax3.plot(years, herbi_count, label='Herbivores')
+ax3.plot(years, carni_count, label='Carnivores')
+#ax3.legend()
+
+ax3.set_title('Animals count')
+#ax3.set_xlabel('Years')
+#ax3.set_ylabel('Number of animals')
+
+###
 # axes for text
 axt = fig.add_axes([0.4, 0.8, 0.2, 0.2])  # llx, lly, w, h
 axt.axis('off')  # turn off coordinate system
