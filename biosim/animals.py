@@ -43,11 +43,13 @@ class Animal:
               required that eta <= 1
               Implement this and raise ValueError if conditions not met?
         """
-        for key in new_params:
+        for key, value in new_params.items():
             if key not in cls._params:
-                raise KeyError(f"Invalid parameter name + {key}")
-            else:
-                cls._params[key] = new_params[key]
+                raise KeyError(f"Invalid parameter name: {key}")
+            elif value <= 0:
+                raise ValueError(f"Parameter value for {key} must be positive")
+
+        cls._params.update(new_params)
 
     @classmethod
     def get_params(cls):
