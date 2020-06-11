@@ -15,12 +15,21 @@ class TestHerbivores:
         """ Test that the class Herbivores creates an instance."""
         assert isinstance(initial_herbivore_class, Herbivores)
 
-    def test_if_raises_keyerror(self, initial_herbivore_class):
+    def test_set_params_raises_keyerror(self, initial_herbivore_class):
         """
-        Tests that the Herbivores class raises a KeyError if default parameter names are not used.
+        Tests that the Herbivores class raises a KeyError if default parameter
+        names are not used.
         """
         with pytest.raises(KeyError):
             self.h.set_params({'weight': 10, 'a_half': 5.0})
+
+    def test_set_params_raises_valueerror(self, initial_herbivore_class):
+        """
+        Test that Animal class raises ValueError when updating
+        parameters to negative value.
+        """
+        with pytest.raises(ValueError):
+            self.h.set_params({'gamma': -0.8})
 
     def test_update_parameters(self):
         """ Test if parameters is updated correctly"""
@@ -45,13 +54,20 @@ class TestHerbivores:
         with pytest.raises(ValueError):
             Herbivores(age=-1, weight=20)
 
+    def test_update_age(self, initial_herbivore_class):
+        """
+        Check that an animal ages
+        """
+        age_before = self.h.age
+        self.h.update_age()
+        assert age_before < self.h.age
+
     def test_weight_not_negative(self):
         """
         Check that the class raises a ValueError if weight becomes negative
         """
         with pytest.raises(ValueError):
             Herbivores(age=3, weight=-20)
-
 
     def test_increase_weight_when_eating(self, initial_herbivore_class):
         """"
@@ -68,6 +84,15 @@ class TestHerbivores:
         old_weight = self.h.weight
         self.h.update_weight(amount_fodder_eaten=None)
         assert self.h.weight < old_weight
+
+    def test_decrease_weight_after_given_birth(self):
+        """
+        Check if animal losses weight after given birth.
+        """
+        h = Herbivores(weight=35, age=5)
+        prob, newborn_weight = h.birth(num=10)
+        assert prob != 0
+        assert newborn_weight != 0
 
     def test_fitness_between_0_and_1(self, initial_herbivore_class):
         """Testing if value of fitness is between 0 and 1"""

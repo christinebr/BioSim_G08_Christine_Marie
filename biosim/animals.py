@@ -33,20 +33,19 @@ class Animal:
         Raises a KeyError if given an invalid parameter name, invalid key used
         in the dictionary.
 
+        todo: DeltaPhiMax shall be strictly positive (>0)
+              required that eta <= 1
+              Should we implement this?
+
         Parameters
         ----------
         new_params: [dict]
             Dictionary with new parameter values
-
-        todo: all parameters shall be positive (>=0)
-              DeltaPhiMax shall be strictly positive (>0)
-              required that eta <= 1
-              Implement this and raise ValueError if conditions not met?
         """
         for key, value in new_params.items():
             if key not in cls._params:
                 raise KeyError(f"Invalid parameter name: {key}")
-            elif value <= 0:
+            if value <= 0:
                 raise ValueError(f"Parameter value for {key} must be positive")
 
         cls._params.update(new_params)
@@ -54,32 +53,6 @@ class Animal:
     @classmethod
     def get_params(cls):
         return cls._params
-
-    # @property
-    # def age(self):
-    #     """A getter-method for age-property."""
-    #     return self._age
-    #
-    # @age.setter
-    # def age(self, new_age):
-    #     """A setter-method for age."""
-    #     if new_age >= 0 and isinstance(new_age, int):
-    #         self._age = new_age
-    #     else:
-    #         raise ValueError("Age need to be a positive integer")
-
-    # @property
-    # def weight(self):
-    #     """A getter-method for weight-property."""
-    #     return self.weight
-
-    # @weight.setter
-    # def weight(self, new_weight):
-    #     """A setter-method for weight."""
-    #     if new_weight >= 0:
-    #         self.weight = new_weight
-    #     else:
-    #         raise ValueError("Weight need to be a positive number")
 
     def update_age(self):
         """
