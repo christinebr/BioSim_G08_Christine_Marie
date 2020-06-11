@@ -156,32 +156,6 @@ class TheIsland:
                 if cell:  # if cell = [] it is a water cell, no animals eat
                     cell.animals_in_cell_eat()
 
-        # # All herbivores on the island eat
-        # for dictionary in self.herbis:
-        #     row, col = dictionary['loc']  # getting the location of the cell
-        #     landscape_type = landscape[row, col]  # the landscape in the cell
-        #     if landscape_type == 'L':
-        #         low = Lowland(animals_list=dictionary['pop'], f_max=800.0)
-        #         # don't put in 800.0 directly here?
-        #         low.animals_eat()  # animals eat -> use Cell-method directly?
-        #     elif landscape_type == 'H':
-        #         high = Highland(animals_list=dictionary['pop'], f_max=300.0)
-        #         # don't put in 300.0 directly here?
-        #         high.animals_eat()  # animals eat -> use Cell-method directly?
-        #
-        # # All carnivores on the island eat
-        # for dictionary in self.carnis:
-        #     row, col = dictionary['loc']  # getting the location of the cell
-        #     landscape_type = landscape[row, col]  # the landscape in the cell
-        #     if landscape_type == 'L':
-        #         low = Lowland(animals_list=dictionary['pop'], f_max=800.0)
-        #         # don't put in 800.0 directly here?
-        #         low.animals_eat()  # animals eat -> use Cell-method directly?
-        #     elif landscape_type == 'H':
-        #         high = Highland(animals_list=dictionary['pop'], f_max=300.0)
-        #         # don't put in 300.0 directly here?
-        #         high.animals_eat()  # animals eat -> use Cell-method directly?
-
     def animals_procreate(self):
         """
         Loops trough populated cells and animals in all cells have the change to procreate
@@ -200,16 +174,6 @@ class TheIsland:
             for cell in row:
                 if cell:  # nothing happens in water cell
                     cell.birth()
-
-        # for dictionary in self.herbis:
-        #     cell = SingleCell(animals_list=dictionary['pop'])
-        #     updated_pop_list = cell.birth()
-        #     dictionary['pop'] = updated_pop_list
-        #
-        # for dictionary in self.carnis:
-        #     cell = SingleCell(animals_list=dictionary['pop'])
-        #     updated_pop_list = cell.birth()
-        #     dictionary['pop'] = updated_pop_list
 
     def migration(self):
         """
@@ -232,13 +196,6 @@ class TheIsland:
             for cell in row:
                 if cell:  # nothing happens in water cell
                     cell.aging_of_animals()
-        # for dictionary in self.herbis:
-        #     cell = SingleCell(animals_list=dictionary['pop'])
-        #     cell.aging_of_animals()
-        #
-        # for dictionary in self.carnis:
-        #     cell = SingleCell(animals_list=dictionary['pop'])
-        #     cell.aging_of_animals()
 
     def all_animals_losses_weight(self):
         """
@@ -248,26 +205,12 @@ class TheIsland:
             for cell in row:
                 if cell:  # nothing happens in water cell
                     cell.weight_loss_end_of_year()
-        # for dictionary in self.herbis:
-        #     cell = SingleCell(animals_list=dictionary['pop'])
-        #     cell.weight_loss_end_of_year()
-        #
-        # for dictionary in self.carnis:
-        #     cell = SingleCell(animals_list=dictionary['pop'])
-        #     cell.weight_loss_end_of_year()
 
     def animals_die(self):
         for row in self.island_cells:
             for cell in row:
                 if cell:  # nothing happens in water cell
                     cell.death()
-        # for dictionary in self.herbis:
-        #     cell = SingleCell(animals_list=dictionary['pop'])
-        #     dictionary['pop'] = cell.death()
-        #
-        # for dictionary in self.carnis:
-        #     cell = SingleCell(animals_list=dictionary['pop'])
-        #     dictionary['pop'] = cell.death()
 
     def annual_cycle(self):
         """
