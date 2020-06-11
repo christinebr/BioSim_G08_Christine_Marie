@@ -227,6 +227,24 @@ class TheIsland:
         self.all_animals_losses_weight()
         self.animals_die()
 
+    def give_animals_in_cell(self, row, col):
+        """
+        Give lists of herbivores and carnivores in a given cell
+
+        Parameters
+        ----------
+        row: [int] row number for cell
+        col: [int] colon number for cell
+
+        Returns
+        -------
+        herbis: [list] list of herbivores in cell
+        carnis: [list] list of carnivores in cell
+        """
+        herbis = self.island_cells[row-1][col-1].herbi_list
+        carnis = self.island_cells[row-1][col-1].carni_list
+        return herbis, carnis
+
     def total_num_animals_on_island(self):
         """Returns total number of animals on the island
 
