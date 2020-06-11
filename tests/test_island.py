@@ -31,7 +31,8 @@ class TestingTheIsland:
                         ]
 
         self.island = TheIsland(landscape_of_cells=test_island, animals_on_island=test_animals)
-        self.animals = self.island.island_cells[1][2].herbi_list + self.island.island_cells[1][2].carni_list
+        herbis, carnis = self.island.give_animals_in_cell(2,3)
+        self.animals = herbis + carnis
         return self.island, self.animals
 
     def test_if_check_size(self):
@@ -153,8 +154,10 @@ class TestingTheIsland:
         number_of_animals_before = len(self.animals)
         # All animals are in the first cell at the beginning
         island.migration()
-        number_new_cell = len(island.island_cells[1][1].herbi_list + self.island.island_cells[1][1].carni_list)
-        number_old_cell = len(island.island_cells[1][2].herbi_list + self.island.island_cells[1][2].carni_list)
+        herbis, carnis = island.give_animals_in_cell(2,2)
+        number_new_cell = len(herbis + carnis)
+        herbis, carnis = island.give_animals_in_cell(2,3)
+        number_old_cell = len(herbis + carnis)
         assert number_new_cell == number_of_animals_before
         assert number_old_cell == 0
 
@@ -174,8 +177,10 @@ class TestingTheIsland:
         number_of_animals_before = len(self.animals)
         # All animals are in the first cell at the beginning
         island.migration()
-        number_new_cell = len(island.island_cells[2][2].herbi_list + self.island.island_cells[2][2].carni_list)
-        number_old_cell = len(island.island_cells[1][2].herbi_list + self.island.island_cells[1][2].carni_list)
+        herbis, carnis = island.give_animals_in_cell(3,3)
+        number_new_cell = len(herbis + carnis)
+        herbis, carnis = island.give_animals_in_cell(2,3)
+        number_old_cell = len(herbis + carnis)
         assert number_new_cell == 0
         assert number_old_cell == number_of_animals_before
 
