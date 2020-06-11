@@ -157,7 +157,29 @@ class TheIsland:
               for left, right, top and bottom, must use random.choice to pick a random, and use
               method form cell to get the probability for migration
 
+        Method in cell: updates self.herbi_list and self.carni_list
+        # Animals staying in the cell
+        self.herbi_list = herbi_stay
+        self.carni_list = carni_stay
+
+        # Returning the animals which want to migrate
+        return herbi_move, carni_move
+
         """
+        # Miration choices are North, East, South and West
+        migration_choices = ['N', 'E', 'S', 'W']
+
+        ghost_island = [[[] for _ in range(self.colon)] for _ in range(self.row)]
+
+        for x, row in enumerate(self.island_cells):
+            for y, cell in enumerate(row):
+                # if isinstance(cell, (Desert, Lowland, Highland)):  # nothing happens in water cell
+                herbis_move, carnis_move = cell.migration()
+                ghost_island[x][y] = herbis_move + carnis_move
+
+        for x, row in enumerate(ghost_island):
+            for y, cell in enumerate(row):
+                self.landscape
         pass
 
     def all_animals_age(self):
