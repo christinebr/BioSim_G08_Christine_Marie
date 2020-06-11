@@ -47,7 +47,6 @@ class SingleCell:
 
         # self.animals_list = self.herbi_list + self.carni_list
 
-
     @classmethod
     def set_params(cls, new_params):
         """
@@ -153,50 +152,88 @@ class SingleCell:
         self.herbi_list.extend(newborn_herbi)
         self.carni_list.extend(newborn_carni)
 
-    def migration(self):
+    def animals_stay_or_move(self):
         """
         Check if animals stay in cell or migrate to an other cell
 
         Returns
         -------
-        herbi_stay: [list]
-            list of herbivores that stay in the cell
-        herbi_move: [list]
-            list of herbivores that moves out of the cell
-        carni_stay: [list]
-            list of carnivores that stay in the cell
-        carni_move: [list]
-            list of carnivores that moves out of the cell
-
+        animals_move: [list]
+            list of animals that moves out of the cell
         """
-        # Herbivore migrate
-        herbi_stay = []
-        herbi_move = []
-        for herbi in self.herbi_list:
-            prob_migrate = herbi.probability_of_migration()
-            if random.random() < prob_migrate:  # check if herbivore migrate
-                move_to = random.choice(['N', 'E', 'S', 'W'])
-                herbi_move.append((herbi, move_to))
+        animals_stay = []
+        animals_move = []
+        self.animals_list = self.herbi_list + self.carni_list
+
+        for animal in self.animals_list:
+            prob_migrate = animal.probability_of_migration()
+            if random.random() < prob_migrate:  # check if animal migrate
+                animals_move.append(animal)
             else:
-                herbi_stay.append(herbi)
+                animals_stay.append(animal)
 
-        # Carnivore migrate
-        carni_stay = []
-        carni_move = []
-        for carni in self.carni_list:
-            prob_migrate = carni.probability_of_migration()
-            if random.random() < prob_migrate:  # check if carnivore migrate
-                move_to = random.choice(['N', 'E', 'S', 'W'])
-                carni_move.append((carni, move_to))
-            else:
-                carni_stay.append(carni)
+        # Separate animals_stay ...
+        return animals_move
 
-        # Animals staying in the cell
-        self.herbi_list = herbi_stay
-        self.carni_list = carni_stay
+    def animals_migrate(self):
+        """
 
-        # Returning the animals which want to migrate
-        return herbi_move, carni_move
+        Returns
+        -------
+        north, east, south, west: [list] list with animals wanting to move
+                                  to the name of the list
+        """
+        animals_move = self.animals_stay_or_move()
+        north = []
+        east = []
+        south = []
+        west = []
+        for animal in animals_move:
+            move_to = random.choice(['N', 'E', 'S', 'W'])
+            if move_to == 'N':
+                north.append(animal)
+            elif move_to == 'E':
+                east.append(animal)
+            elif move_to == 'S':
+                south.append(animal)
+            elif move_to == 'W':
+                west.append(animal)
+
+        return north, east, south, west
+
+        # # Herbivore migrate
+        # herbi_stay = []
+        # herbi_move = []
+        # for herbi in self.herbi_list:
+        #     prob_migrate = herbi.probability_of_migration()
+        #     if random.random() < prob_migrate:  # check if herbivore migrate
+        #         move_to = random.choice(['N', 'E', 'S', 'W'])
+        #         herbi_move.append((herbi, move_to))
+        #     else:
+        #         herbi_stay.append(herbi)
+        #
+        # # Carnivore migrate
+        # carni_stay = []
+        # carni_move = []
+        # for carni in self.carni_list:
+        #     prob_migrate = carni.probability_of_migration()
+        #     if random.random() < prob_migrate:  # check if carnivore migrate
+        #         move_to = random.choice(['N', 'E', 'S', 'W'])
+        #         carni_move.append((carni, move_to))
+        #     else:
+        #         carni_stay.append(carni)
+        #
+        # # Animals staying in the cell
+        # self.herbi_list = herbi_stay
+        # self.carni_list = carni_stay
+        #
+        # # Returning the animals which want to migrate
+        # return herbi_move, carni_move
+
+    def add_animals_after_migration(self, herb, carn):
+        """ Adds animals to cell after migration """
+        self.herbi_list += herb
+        self.carni_list += carn
 
     def aging_of_animals(self):
         """Makes sure animals ages"""
