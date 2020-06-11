@@ -182,3 +182,9 @@ class TestCarnivores:
         carni.set_params({'DeltaPhiMax': 0.3})
         prob_kill = carni.probability_of_killing_herbivore(fitness_herbi=0.5)
         assert prob_kill == 1
+
+    def test_update_weight_after_kill(self):
+        carni = Carnivores(weight=25, age=2)  # fitness 0.917
+        weight_before = carni.weight
+        carni.update_weight_after_kill(weight_herbi=14)
+        assert weight_before < carni.weight
