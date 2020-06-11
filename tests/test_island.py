@@ -101,16 +101,6 @@ class TestingTheIsland:
         self.island.set_cell_params('H', new_param)
         assert param['f_max'] == 400.0
 
-    def test_set_params_animals(self, initial_island):
-        """Tests that it is possible to update parameters for animals."""
-
-        new_param = {'xi': 2.0}
-        param = self.island.island_cells[1][2].herbi_list[0].get_params()
-        assert param['xi'] == 1.2
-        self.island.set_animal_params('Herbivore', new_param)
-        param = self.island.island_cells[1][2].herbi_list[0].get_params()
-        assert param['xi'] == 2.0
-
     def test_animals_eat(self, initial_island):
         """Check that the class can make the animals gain weight by eating."""
         sum_weight_before = 0
@@ -169,7 +159,8 @@ class TestingTheIsland:
         position is empty and all animals has gone to the north.
         """
         island = self.island
-        mocker.patch('random.choice', return_value='N')  # makes sure all animals migrate
+        mocker.patch('random.random', return_value=0)  # Makes sure all animals migrate
+        mocker.patch('random.choice', return_value='N')  # makes sure they migrate to the same cell
         number_of_animals_before = len(self.animals)
         # All animals are in the first cell at the beginning
         island.migration()
@@ -188,6 +179,7 @@ class TestingTheIsland:
         migration can happen at al first.
         """
         island = self.island
+        mocker.patch('random.random', return_value=0)  # Makes sure all animals tries to migrate
         mocker.patch('random.choice', return_value='E')
         # makes sure all animals tries to migrate to the lake in the middle of the test_island
         number_of_animals_before = len(self.animals)

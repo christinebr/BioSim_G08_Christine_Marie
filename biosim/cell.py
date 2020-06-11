@@ -33,7 +33,8 @@ class SingleCell:
 
         self.animals_list = self.herbi_list + self.carni_list
 
-    def set_animals_params(self, specie, new_params=None):
+    @classmethod
+    def set_animals_params(cls, specie, new_params=None):
         """
         Update the parameters for each animal in the cell
 
@@ -60,6 +61,7 @@ class SingleCell:
                 self.carni_list.append(Carnivores(age=animal['age'], weight=animal['weight']))
 
         # self.animals_list = self.herbi_list + self.carni_list
+
 
     @classmethod
     def set_params(cls, new_params):
