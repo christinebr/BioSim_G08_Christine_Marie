@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import matplotlib.pyplot as plt
-import textwrap
 from biosim.island import TheIsland
 
 if __name__ == "__main__":
