@@ -172,7 +172,7 @@ class SingleCell:
             else:
                 animals_stay.append(animal)
 
-        # Separate animals_stay ...
+        # Separate animals_stay into self.herbi_list and self.carni_list
         return animals_move
 
     def animals_migrate(self):
@@ -230,10 +230,13 @@ class SingleCell:
         # # Returning the animals which want to migrate
         # return herbi_move, carni_move
 
-    def add_animals_after_migration(self, herb, carn):
+    def add_animals_after_migration(self, animals_migrated):
         """ Adds animals to cell after migration """
-        self.herbi_list += herb
-        self.carni_list += carn
+        for animal in animals_migrated:
+            if isinstance(animal, Herbivores):
+                self.herbi_list += animal
+            if isinstance(animal, Carnivores):
+                self.carni_list += animal
 
     def aging_of_animals(self):
         """Makes sure animals ages"""
