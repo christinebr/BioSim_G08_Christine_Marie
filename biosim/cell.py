@@ -33,21 +33,6 @@ class SingleCell:
 
         self.animals_list = self.herbi_list + self.carni_list
 
-    @classmethod
-    def set_animals_params(cls, specie, new_params=None):
-        """
-        Update the parameters for each animal in the cell
-
-        Parameters
-        ----------
-        specie: [str] string of species
-        new_params: [dict] parameters animals
-        """
-        if specie == "Herbivore":
-            Herbivores.set_params(new_params)
-        elif specie == "Carnivore":
-            Carnivores.set_params(new_params)
-
     def add_new_animals_to_cell(self, new_animals):
         # if new_animals:
         #     animals = new_animals
@@ -196,7 +181,8 @@ class SingleCell:
         for herbi in self.herbi_list:
             prob_migrate = herbi.probability_of_migration()
             if random.random() < prob_migrate:  # check if herbivore migrate
-                herbi_move.append(herbi)
+                move_to = random.choice(['N', 'E', 'S', 'W'])
+                herbi_move.append((herbi, move_to))
             else:
                 herbi_stay.append(herbi)
 
@@ -206,7 +192,8 @@ class SingleCell:
         for carni in self.carni_list:
             prob_migrate = carni.probability_of_migration()
             if random.random() < prob_migrate:  # check if carnivore migrate
-                carni_move.append(carni)
+                move_to = random.choice(['N', 'E', 'S', 'W'])
+                carni_move.append((carni, move_to))
             else:
                 carni_stay.append(carni)
 
@@ -313,6 +300,11 @@ if __name__ == "__main__":
     print("Number of animals before birth:", len(low.herbi_list + low.carni_list))
     low.birth()
     print("Number of animals after birth:", len(low.herbi_list + low.carni_list))
+
+    herb, carn = low.migration()
+    print(herb)
+    print(carn)
+
 
     a_before = [ani.age for ani in (low.herbi_list+low.carni_list)]
     print("Age before:", a_before)
