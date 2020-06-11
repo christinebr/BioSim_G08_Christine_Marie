@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from biosim.animals import Herbivores, Carnivores
+from biosim.cell import Water, Desert, Lowland, Highland
 
 
 class BioSim:
@@ -40,7 +42,8 @@ class BioSim:
         """
         pass
 
-    def set_animal_parameters(self, species, params):
+    @staticmethod
+    def set_animal_parameters(species, params):
         """
         Set parameters for animal species.
 
@@ -49,9 +52,13 @@ class BioSim:
         species: String, name of animal species
         params: Dict with valid parameter specification for species
         """
-        pass
+        if species == "Herbivore":
+            Herbivores.set_params(params)
+        elif species == "Carnivore":
+            Carnivores.set_params(params)
 
-    def set_landscape_parameters(self, landscape, params):
+    @staticmethod
+    def set_landscape_parameters(landscape, params):
         """
         Set parameters for landscape type
 
@@ -60,7 +67,14 @@ class BioSim:
         landscape: String, code letter for landscape
         params: Dict with valid parameter specification for landscape
         """
-        pass
+        if landscape == 'L':
+            Lowland.set_params(params)
+        elif landscape == 'H':
+            Highland.set_params(params)
+        elif landscape == 'D':
+            Desert.set_params(params)
+        elif landscape == 'W':
+            Water.set_params(params)
 
     def simulate(self, num_years, vis_years=1, img_years=None):
         """
