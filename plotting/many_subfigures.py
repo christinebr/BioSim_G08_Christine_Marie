@@ -98,16 +98,24 @@ ax3.set_title('Animals count')
 #ax3.set_ylabel('Number of animals')
 
 ### ax4
-test_array = [[2, 5, 8, 3, 0, 5], [0, 4, 6, 5, 2, 3]]
+herbis_lists = []
+carnis_lists = []
+for row in range(island.row):
+    herbis_row = []
+    carnis_row = []
+    for col in range(island.colon):
+        herbis, carnis = island.give_animals_in_cell(row+1, col+1)
+        herbis_row.append(len(herbis))
+        carnis_row.append(len(carnis))
+    herbis_lists.append(herbis_row)
+    carnis_lists.append(carnis_row)
 
-ax4.imshow(test_array, cmap='viridis')
+ax4.imshow(herbis_lists, cmap='viridis')
 ax4.set_title('Herbivore distribution')
 # ax4.colorbar(cax=ax4)
 
 ### ax5
-test_array5 = [[2, 2, 8, 5, 0, 5], [0, 4, 6, 7, 2, 3]]
-
-ax5.imshow(test_array, cmap='viridis')
+ax5.imshow(carnis_lists, cmap='viridis')
 ax5.set_title('Carnivore distribution')
 # ax4.colorbar(cax=ax4)
 

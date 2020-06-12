@@ -33,11 +33,11 @@ for row in range(island.row):
     herbis_row = []
     carnis_row = []
     for col in range(island.colon):
-        herbis, carnis = island.give_animals_in_cell(row, col)
-        herbis_row += len(herbis)
-        carnis_row += len(carnis)
-    herbis_lists += herbis_row
-    carnis_lists += carnis_row
+        herbis, carnis = island.give_animals_in_cell(row+1, col+1)
+        herbis_row.append(len(herbis))
+        carnis_row.append(len(carnis))
+    herbis_lists.append(herbis_row)
+    carnis_lists.append(carnis_row)
 
 plt.imshow(herbis_lists, cmap='viridis')
 plt.colorbar()
