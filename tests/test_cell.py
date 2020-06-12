@@ -243,6 +243,39 @@ class TestLowland:
         carni_after = len(self.low.carni_list)
         assert carni_before == carni_after
 
+    def test_if_cell_collect_fitness_for_all_animals(self, initial_lowland):
+        """
+        Test if cell can collect fitness for all animals and return them
+        in a list
+        """
+        num_animals_in_cell = len(self.low.herbi_list + self.low.carni_list)
+        fitness_list = self.low.collect_fitness_all_animals_in_cell()
+        assert len(fitness_list) == num_animals_in_cell
+        for fitness in fitness_list:
+            assert 0 <= fitness <= 1
+
+    def test_if_cell_collect_age_for_all_animals(self):
+        """
+        Test if cell can collect age for all animals and return them in
+        a list
+        """
+        num_animals_in_cell = len(self.low.herbi_list + self.low.carni_list)
+        age_list = self.low.collect_age_all_animals_in_cell()
+        assert len(age_list) == num_animals_in_cell
+        for age in age_list:
+            assert age >= 0
+
+    def test_if_cell_collect_weight_for_all_animals(self):
+        """
+        Test if cell can collect age for all animals and return them in
+        a list
+        """
+        num_animals_in_cell = len(self.low.herbi_list + self.low.carni_list)
+        weight_list = self.low.collect_weight_all_animals_in_cell()
+        assert len(weight_list) == num_animals_in_cell
+        for weight in weight_list:
+            assert weight > 0
+
     def test_herbivores_eaten(self, initial_lowland, mocker):
         """
         Tests that carnivores eat herbivores, check that the number of herbivores are lower
