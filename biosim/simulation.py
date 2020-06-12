@@ -71,10 +71,6 @@ class BioSim:
             Lowland.set_params(params)
         elif landscape == 'H':
             Highland.set_params(params)
-        elif landscape == 'D':
-            Desert.set_params(params)
-        elif landscape == 'W':
-            Water.set_params(params)
 
     def simulate(self, num_years, vis_years=1, img_years=None):
         """
