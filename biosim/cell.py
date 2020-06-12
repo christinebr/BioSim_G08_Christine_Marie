@@ -197,14 +197,14 @@ class SingleCell:
         south = []
         west = []
         for animal in animals_move:
-            move_to = random.choice(['N', 'E', 'S', 'W'])
-            if move_to == 'N':
+            move_to = random.choice(['North', 'East', 'South', 'West'])
+            if move_to == 'North':
                 north.append(animal)
-            elif move_to == 'E':
+            elif move_to == 'East':
                 east.append(animal)
-            elif move_to == 'S':
+            elif move_to == 'South':
                 south.append(animal)
-            elif move_to == 'W':
+            elif move_to == 'West':
                 west.append(animal)
 
         return north, east, south, west

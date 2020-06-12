@@ -165,13 +165,13 @@ class TheIsland:
         """
         directions = []
         if self.landscape[row-1][col] != 'W':
-            directions.append('N')
+            directions.append('North')
         elif self.landscape[row][col+1] != 'W':
-            directions.append('E')
+            directions.append('East')
         elif self.landscape[row+1][col] != 'W':
-            directions.append('S')
+            directions.append('South')
         elif self.landscape[row][col-1] != 'W':
-            directions.append('W')
+            directions.append('West')
         return directions
 
     def migration(self):
@@ -195,22 +195,22 @@ class TheIsland:
                 if self.landscape[x][y] != 'W':
                     pos_dir = self.where_can_animals_migrate_to(x, y)
                     north, east, south, west = cell.animals_migrate()
-                    if 'N' in pos_dir:
+                    if 'North' in pos_dir:
                         ghost_island[x-1][y] += north
                     else:
                         ghost_island[x][y] += north
 
-                    if 'E' in pos_dir:
+                    if 'East' in pos_dir:
                         ghost_island[x][y+1] += east
                     else:
                         ghost_island[x][y] += east
 
-                    if 'S' in pos_dir:
+                    if 'South' in pos_dir:
                         ghost_island[x + 1][y] += south
                     else:
                         ghost_island[x][y] += south
 
-                    if 'W' in pos_dir:
+                    if 'West' in pos_dir:
                         ghost_island[x][y - 1] += west
                     else:
                         ghost_island[x][y] += west
