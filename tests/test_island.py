@@ -265,6 +265,41 @@ class TestingTheIsland:
         assert number_new_cell == 0
         assert number_old_cell == number_of_animals_before
 
+    def test_possible_get_fitness(self, initial_island):
+        """
+        Tests that it is possible to get a list of the fitnesses of the animals.
+        """
+        num_animals_in_cell = len(self.animals)
+        fitness_herb_list = self.island.collect_fitness_age_weight_herbi()[0]
+        fitness_carn_list = self.island.collect_fitness_age_weight_carni()[0]
+        assert len(fitness_herb_list + fitness_carn_list) == num_animals_in_cell
+        for fitness_herb in fitness_herb_list:
+            assert 0 <= fitness_herb <= 1
+        for fitness_carn in fitness_carn_list:
+            assert 0 <= fitness_carn <= 1
+
+    def test_possible_get_age(self, initial_island):
+        """
+        Tests that it is possible to get a list of the ages of the animals.
+        """
+        num_animals_in_cell = len(self.animals)
+        age_herb_list = self.island.collect_fitness_age_weight_herbi()[1]
+        age_carn_list = self.island.collect_fitness_age_weight_carni()[1]
+        assert len(age_herb_list + age_carn_list) == num_animals_in_cell
+        for age in age_herb_list + age_carn_list:
+            assert age >= 0
+
+    def test_possible_get_weight(self, initial_island):
+        """
+        Tests that it is possible to get a list of the weights of the animals.
+        """
+        num_animals_in_cell = len(self.animals)
+        age_herb_list = self.island.collect_fitness_age_weight_herbi()[2]
+        age_carn_list = self.island.collect_fitness_age_weight_carni()[2]
+        assert len(age_herb_list + age_carn_list) == num_animals_in_cell
+        for age in age_herb_list + age_carn_list:
+            assert age >= 0
+
     def test_complete_cycle(self, initial_island, mocker):
         """
         Checks that all steps in the annual cycle are made.
