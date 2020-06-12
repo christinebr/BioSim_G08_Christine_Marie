@@ -253,62 +253,46 @@ class SingleCell:
         self.herbi_list = survived_herbis
         self.carni_list = survived_carnis
 
-    def collect_fitness_all_animals_in_cell(self):
+    def collect_fitness_age_weight_herbi(self):
         """
-        Collects the fitness of all animals and returns it in two lists, one
-        for herbivores and one for carnivores.
+        Collects the fitness, age and weight for all herbivores and returns
+        it in three lists, one fitness, one for age and one for weight
         Returns
         -------
-        fitness_herbi: [list] fitness of herbivores in cell
-        fitness_carni: [list] fitness of carnivores in cell
+        fitness: [list] fitness of herbivores in cell
+        age:     [list] age of herbivores in cell
+        weight:  [list] weight of herbivores in cell
         """
-        fitness_herbi = []
-        fitness_carni = []
+        fitness = []
+        age = []
+        weight = []
         for herbi in self.herbi_list:
-            fitness_herbi.append(herbi.fitness())
+            fitness.append(herbi.fitness())
+            age.append(herbi.age)
+            weight.append(herbi.weight)
 
-        for carni in self.carni_list:
-            fitness_carni.append(carni.fitness())
+        return fitness, age, weight
 
-        return fitness_herbi, fitness_carni
-
-    def collect_age_all_animals_in_cell(self):
+    def collect_fitness_age_weight_carni(self):
         """
-        Collects the fitness of all animals and returns it in two lists, one
-        for herbivores and one for carnivores.
+        Collects the fitness, age and weight for all carnivores and returns
+        it in three lists, one fitness, one for age and one for weight
         Returns
         -------
-        fitness_herbi: [list] fitness of herbivores in cell
-        fitness_carni: [list] fitness of carnivores in cell
+        fitness: [list] fitness of carnivores in cell
+        age:     [list] age of carnivores in cell
+        weight:  [list] weight of carnivores in cell
         """
-        age_herbi = []
-        age_carni = []
-        for herbi in self.herbi_list:
-            age_herbi.append(herbi.age)
-
+        fitness = []
+        age = []
+        weight = []
         for carni in self.carni_list:
-            age_carni.append(carni.age)
+            fitness.append(carni.fitness())
+            age.append(carni.age)
+            weight.append(carni.weight)
 
-        return age_herbi, age_carni
+        return fitness, age, weight
 
-    def collect_weight_all_animals_in_cell(self):
-        """
-        Collects the fitness of all animals and returns it in two lists, one
-        for herbivores and one for carnivores.
-        Returns
-        -------
-        fitness_herbi: [list] fitness of herbivores in cell
-        fitness_carni: [list] fitness of carnivores in cell
-        """
-        weight_herbi = []
-        weight_carni = []
-        for herbi in self.herbi_list:
-            weight_herbi.append(herbi.weight)
-
-        for carni in self.carni_list:
-            weight_carni.append(carni.weight)
-
-        return weight_herbi, weight_carni
 
 class Water(SingleCell):
     _params = {'f_max': 0.0}
