@@ -217,6 +217,70 @@ class TestSingleCell:
             sum_new += animal.weight
         assert sum_old > sum_new
 
+    def test_all_animals_wants_to_move(self, initial_cell_class, mocker):
+        """
+        Test that all animals in cell wants to move when mocking
+        random.random(). check that no animals are left in cell
+        """
+        num_animals_before = len(self.cell.herbi_list+self.cell.carni_list)
+        mocker.patch('random.random', return_value=0)
+        moving_animals = self.cell.animals_stay_or_move()
+        num_animals_after = len(self.cell.herbi_list+self.cell.carni_list)
+        assert len(moving_animals) == num_animals_before
+        assert num_animals_after == 0
+
+    def test_no_animals_wants_to_move(self, initial_cell_class, mocker):
+        """
+        Test that no animals in cell wants to move when mocking
+        random.random(). check that no animals are left in cell
+        """
+        num_animals_before = len(self.cell.herbi_list+self.cell.carni_list)
+        mocker.patch('random.random', return_value=1)
+        moving_animals = self.cell.animals_stay_or_move()
+        num_animals_after = len(self.cell.herbi_list+self.cell.carni_list)
+        assert len(moving_animals) == 0
+        assert num_animals_before == num_animals_after
+
+    def test_animals_migrate_north(self, initial_cell_class, mocker):
+        num_animals_before = len(self.cell.herbi_list+self.cell.carni_list)
+        mocker.patch('random.random', return_value=0)  # Makes sure all animals migrate
+        mocker.patch('random.choice', return_value='North')
+        north, east, south, west = self.cell.animals_migrate()
+        assert len(north) == num_animals_before
+        assert len(east) == 0
+        assert len(south) == 0
+        assert len(west) == 0
+
+    def test_animals_migrate_east(self, initial_cell_class, mocker):
+        num_animals_before = len(self.cell.herbi_list+self.cell.carni_list)
+        mocker.patch('random.random', return_value=0)  # Makes sure all animals migrate
+        mocker.patch('random.choice', return_value='East')
+        north, east, south, west = self.cell.animals_migrate()
+        assert len(north) == 0
+        assert len(east) == num_animals_before
+        assert len(south) == 0
+        assert len(west) == 0
+
+    def test_animals_migrate_south(self, initial_cell_class, mocker):
+        num_animals_before = len(self.cell.herbi_list+self.cell.carni_list)
+        mocker.patch('random.random', return_value=0)  # Makes sure all animals migrate
+        mocker.patch('random.choice', return_value='South')
+        north, east, south, west = self.cell.animals_migrate()
+        assert len(north) == 0
+        assert len(east) == 0
+        assert len(south) == num_animals_before
+        assert len(west) == 0
+
+    def test_animals_migrate_west(self, initial_cell_class, mocker):
+        num_animals_before = len(self.cell.herbi_list+self.cell.carni_list)
+        mocker.patch('random.random', return_value=0)  # Makes sure all animals migrate
+        mocker.patch('random.choice', return_value='West')
+        north, east, south, west = self.cell.animals_migrate()
+        assert len(north) == 0
+        assert len(east) == 0
+        assert len(south) == 0
+        assert len(west) == num_animals_before
+
 
 class TestLowland:
 

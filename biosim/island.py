@@ -303,6 +303,50 @@ class TheIsland:
         tot_animal = tot_herbi + tot_carni
         return tot_animal, tot_herbi, tot_carni
 
+    def collect_fitness_age_weight_herbi(self):
+        """
+
+        Returns
+        -------
+        fitness_herbi: [list] fitness
+        age_herbi: [list]
+        weight_herbi: [list]
+
+        """
+        fitness_herbi = []
+        age_herbi = []
+        weight_herbi = []
+        for row in self.island_cells:
+            for cell in row:
+                fitness, age, weight = cell.collect_fitness_age_weight_herbi()
+                fitness_herbi += fitness
+                age_herbi += age
+                weight_herbi += weight
+
+        return fitness_herbi, age_herbi, weight_herbi
+
+    def collect_fitness_age_weight_carni(self):
+        """
+
+        Returns
+        -------
+        fitness_herbi: [list] fitness
+        age_herbi: [list]
+        weight_herbi: [list]
+
+        """
+        fitness_herbi = []
+        age_herbi = []
+        weight_herbi = []
+        for row in self.island_cells:
+            for cell in row:
+                fitness, age, weight = cell.collect_fitness_age_weight_carni()
+                fitness_herbi += fitness
+                age_herbi += age
+                weight_herbi += weight
+
+        return fitness_herbi, age_herbi, weight_herbi
+
 
 if __name__ == "__main__":
     ini_herbs = [{'loc': (2, 2),
