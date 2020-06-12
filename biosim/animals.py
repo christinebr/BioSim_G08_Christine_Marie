@@ -9,12 +9,13 @@ class Animal:
 
     def __init__(self, weight, age=0):
         """
+        Create an animal with weight and age.
+
         Parameters
         ----------
-        weight: [float]
-            the weight of an animal
-        age: [int]
-            the age of an animal, default value is zero (the age at birth)
+        weight: [float] the weight of an animal
+        age: [int] the age of an animal
+                   default value is zero (the age at birth)
         """
         if weight < 0:
             raise ValueError("Weight can't be negative")
@@ -30,8 +31,6 @@ class Animal:
     def set_params(cls, new_params):
         """
         Set parameters for class.
-        Raises a KeyError if given an invalid parameter name, invalid key used
-        in the dictionary.
 
         todo: DeltaPhiMax shall be strictly positive (>0)
               required that eta <= 1
@@ -39,8 +38,12 @@ class Animal:
 
         Parameters
         ----------
-        new_params: [dict]
-            Dictionary with new parameter values
+        new_params: [dict] dictionary with new parameter values
+
+        Raises
+        ------
+        KeyError: if invalid parameter name
+        ValueError: if invalid parameter value
         """
         for key, value in new_params.items():
             if key not in cls._params:
@@ -52,13 +55,18 @@ class Animal:
 
     @classmethod
     def get_params(cls):
+        """
+        Get class parameters
+
+        Returns
+        -------
+        _params: [dict] dictionary with class parameters
+        """
         return cls._params
 
     def update_age(self):
         """
-        Updating the age by 1 when one year has passed.
-        Todo: Is this necessary?
-              Seems like we could do everything in SingleCell?
+        Updating the age of the animal by 1.
         """
         self.age += 1
 
@@ -114,17 +122,20 @@ class Animal:
         -------
         [float] The value of fitness for an animal.
         """
-        age = self.age
-        weight = self.weight
-        if weight <= 0:
+        if self.weight <= 0:
             return 0.
         else:
-            return (self._q(+1, age, self._params['a_half'], self._params['phi_age']))\
-                      * (self._q(-1, weight, self._params['w_half'], self._params['phi_weight']))
+            return (self._q(+1, self.age,
+                            self._params['a_half'],
+                            self._params['phi_age']))\
+                      * (self._q(-1, self.weight,
+                                 self._params['w_half'],
+                                 self._params['phi_weight']))
 
     def probability_of_migration(self):
         """
-        Finds the probability of migration based on the animals fitness.
+        Finds the probability of migration based on the animals fitness and
+        the parameter 'mu'.
 
         Returns
         -------
@@ -140,10 +151,6 @@ class Animal:
             - If the weight of an animal is less that a weight limit, the
               probability of giving birth is also 0.
 
-        todo: if num=0 we will get a negative probability
-              maybe not a problem because we won't calculate probability
-              of birth when there is no animals?
-
         Parameters
         ----------
         num: [int]
@@ -152,11 +159,11 @@ class Animal:
         Returns
         -------
         [float] the probability that an animal will give birth.
-        [float] Weight of the newborn
+        [float] weight of the newborn animal
         """
         weight_limit = self._params['zeta'] * (self._params['w_birth']
                                                + self._params['sigma_birth'])
-        if num == 1:
+        if num == 1:  # only one animal
             return 0., 0.
         elif self.weight < weight_limit:
             return 0., 0.
@@ -175,7 +182,7 @@ class Animal:
 
         Returns
         -------
-        [float] The weight of a newborn
+        [float] the weight of a newborn animal
         """
         return round(random.gauss(self._params['w_birth'],
                                   self._params['sigma_birth']), 2)
@@ -209,12 +216,13 @@ class Herbivores(Animal):
                'F': 10.0}
 
     def __init__(self, weight, age=0):
-        """Create a herbivore with age 0"""
+        """Create a herbivore with age 0."""
         super().__init__(weight, age)
 
 
 class Carnivores(Animal):
     """This class will represent carnivores."""
+
     # Default parameters for carnivores:
     _params = {'w_birth': 6.0, 'sigma_birth': 1.0, 'beta': 0.75,
                'eta': 0.125, 'a_half': 40.0, 'phi_age': 0.3,
@@ -223,15 +231,19 @@ class Carnivores(Animal):
                'F': 50.0, 'DeltaPhiMax': 10.0}
 
     def __init__(self, weight, age=0):
-        """ Initialise the carnivore """
+        """Create a carnivore with age 0."""
         super().__init__(weight, age)
 
     def probability_of_killing_herbivore(self, fitness_herbi):
         """
+        Calculating the probability that a carnivore kills a herbivore,
+        depending on the fitness of the herbivores and the carnivore, and
+        also the 'DeltaPhiMax' parameter for a carnivore.
+
         Parameters
         ----------
-        fitness_herbi: [float]
-            the fitness of a herbivore that a carnivore is preying on.
+        fitness_herbi: [float] the fitness of the herbivore that the carnivore
+                               is trying to kill.
 
         Returns
         -------
@@ -248,12 +260,11 @@ class Carnivores(Animal):
     def update_weight_after_kill(self, weight_herbi):
         """
         Updates the weight of a carnivore with the weight of the herbivore
-        killed and eaten time the carnivore-parameter 'beta'.
+        killed, and eaten, times the 'beta' parameter.
 
         Parameters
         ----------
-        weight_herbi: [float]
-            the weight of the herbivore killed
+        weight_herbi: [float] the weight of the herbivore killed
         """
         self.weight += round(self._params['beta']*weight_herbi, 2)
 
