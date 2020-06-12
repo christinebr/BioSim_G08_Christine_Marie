@@ -151,12 +151,12 @@ class TheIsland:
     def where_can_animals_migrate_to(self, row, col):
         """
         Check if any of the neighboring adjacent cells are water, and
-        returns if animals can move to cell (True) or not (False) in a list.
+        returns the cells animals can move to.
 
         Parameters
         ----------
         row: [int] row number as python uses it
-        col: [int] colon number as pythen uses it
+        col: [int] colon number as python uses it
 
         Returns
         -------
@@ -166,11 +166,11 @@ class TheIsland:
         directions = []
         if self.landscape[row-1][col] != 'W':
             directions.append('North')
-        elif self.landscape[row][col+1] != 'W':
+        if self.landscape[row][col+1] != 'W':
             directions.append('East')
-        elif self.landscape[row+1][col] != 'W':
+        if self.landscape[row+1][col] != 'W':
             directions.append('South')
-        elif self.landscape[row][col-1] != 'W':
+        if self.landscape[row][col-1] != 'W':
             directions.append('West')
         return directions
 

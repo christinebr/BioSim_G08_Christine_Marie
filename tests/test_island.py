@@ -196,9 +196,9 @@ class TestingTheIsland:
         mocker.patch('random.choice', return_value='East')  # makes sure they migrate to the same cell
         number_of_animals_before = self.isl_mig.total_num_animals_on_island()[0]
         # All animals are in the first cell at the beginning
-        self.isl_mig.migration()
-        herbis, carnis = self.isl_mig.give_animals_in_cell(3, 3)
-        number_old_cell = len(herbis + carnis)
+        isl = self.isl_mig.migration()
+        herbis1, carnis1 = self.isl_mig.give_animals_in_cell(3, 3)
+        number_old_cell = len(herbis1 + carnis1)
         herbis, carnis = self.isl_mig.give_animals_in_cell(3, 4)
         number_new_cell = len(herbis + carnis)
         assert number_old_cell == 0
