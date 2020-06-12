@@ -115,6 +115,10 @@ ax3.plot(years, carni_count, label='Carnivores')
 #ax3.legend()
 
 ax3.set_title('Animals count', fontsize=font)
+# list_xticks = [0, int(years/4), int(years/2), int(years*3/4), years]
+list_xticks = [0, 25, 50, 75, 100]
+ax3.set_xticks(list_xticks)
+ax3.set_xticklabels(list_xticks, fontsize=font_axes)
 # ax3.set_xlabel('Years')
 # ax3.set_ylabel('Number of animals')
 
@@ -157,8 +161,9 @@ ax7.hist(herbi_fitness, bins=20, range=(0, 1), histtype='stepfilled', fill=False
 ax7.hist(carni_fitness, bins=20, range=(0, 1), histtype='stepfilled', fill=False, edgecolor='red')
 
 ax7.set_title('Fitness', fontsize=font)
-# ax7.set_xticks(range(5))
-# ax7.set_xticklabels([0, 0.25, 0.5, 0.75, 1], fontsize=font_axes)
+ax7.set_xticks([0, 0.25, 0.5, 0.75, 1])
+ax7.set_xticklabels([0, 0.25, 0.5, 0.75, 1], fontsize=font_axes)
+# ax7.set_yticklabels(fontsize=font_axes)
 
 #### ax8
 
