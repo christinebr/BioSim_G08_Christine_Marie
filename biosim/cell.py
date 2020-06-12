@@ -284,6 +284,7 @@ class SingleCell:
 
 
 class Water(SingleCell):
+    _params = {'f_max': 0.0}
     """
     Represents the water-landscape.
     """
@@ -292,6 +293,7 @@ class Water(SingleCell):
 
 
 class Desert(SingleCell):
+    _params = {'f_max': 0.0}
     """
     Represents the desert-landscape.
     """
