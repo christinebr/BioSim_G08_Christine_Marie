@@ -294,11 +294,11 @@ class TestingTheIsland:
         Tests that it is possible to get a list of the weights of the animals.
         """
         num_animals_in_cell = len(self.animals)
-        age_herb_list = self.island.collect_fitness_age_weight_herbi()[2]
-        age_carn_list = self.island.collect_fitness_age_weight_carni()[2]
-        assert len(age_herb_list + age_carn_list) == num_animals_in_cell
-        for age in age_herb_list + age_carn_list:
-            assert age >= 0
+        weight_herb_list = self.island.collect_fitness_age_weight_herbi()[2]
+        weight_carn_list = self.island.collect_fitness_age_weight_carni()[2]
+        assert len(weight_herb_list + weight_carn_list) == num_animals_in_cell
+        for weight in weight_herb_list + weight_carn_list:
+            assert weight > 0
 
     def test_complete_cycle(self, initial_island, mocker):
         """
