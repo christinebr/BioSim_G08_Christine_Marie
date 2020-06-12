@@ -234,9 +234,9 @@ class SingleCell:
         """ Adds animals to cell after migration """
         for animal in animals_migrated:
             if isinstance(animal, Herbivores):
-                self.herbi_list += animal
+                self.herbi_list.append(animal)
             if isinstance(animal, Carnivores):
-                self.carni_list += animal
+                self.carni_list.append(animal)
 
     def aging_of_animals(self):
         """Makes sure animals ages"""
