@@ -2,6 +2,7 @@
 import numpy as np
 from biosim.cell import SingleCell, Highland, Lowland, Desert, Water
 import textwrap
+import random
 
 
 class TheIsland:
@@ -376,15 +377,15 @@ if __name__ == "__main__":
                         WLDLW
                         WWWWW"""
 
-    animals_isl2 = [{'loc': (2, 2),
-                     'pop': [{'species': 'Herbivore', 'age': 5, 'weight': 20}
-                             for _ in range(10)]
-                     },
-                    {'loc': (2, 3),
-                     'pop': [{'species': 'Herbivore', 'age': 5, 'weight': 20}
-                             for _ in range(10)]
-                     }
-                    ]
+    animals_isl2 = [{'loc': (3, 3),
+                     'pop': [{'species': 'Carnivore', 'age': 5, 'weight': 30}
+                             for _ in range(200)]
+                     }]
+                    # {'loc': (2, 3),
+                    #  'pop': [{'species': 'Herbivore', 'age': 5, 'weight': 30}
+                    #          for _ in range(10)]
+                    #  }
+                    # ]
 
     isl2 = TheIsland(landscape_of_cells=bigger_island)
     print("Original landscape given in:\n", isl2.landscape)
@@ -394,9 +395,29 @@ if __name__ == "__main__":
     print(isl2.give_animals_in_cell(2, 2))
     print("before migration")
     print(isl2.migration())
+    print(isl2.migration())
+    print(isl2.migration())
+    print(isl2.migration())
+    print(isl2.migration())
+    print(isl2.migration())
+    print(isl2.migration())
+    print(isl2.migration())
     print("after migration")
-    print(f"\nAnimals in (2, 2):", isl2.give_animals_in_cell(2, 2))
-    print(f"\nAnimals in (2, 3):", isl2.give_animals_in_cell(2, 3))
-    print(f"\nAnimals in (2, 4):", isl2.give_animals_in_cell(2, 4))
-    print(f"\nAnimals in (3, 3):", isl2.give_animals_in_cell(3, 3))
-    print(f"\nAnimals in (3, 2):", isl2.give_animals_in_cell(3, 2))
+    herb, carn = isl2.give_animals_in_cell(2, 2)
+    print(f"\nAnimals in (2, 2):", len(herb + carn))
+    herb, carn = isl2.give_animals_in_cell(2, 3)
+    print(f"Animals in (2, 3):", len(herb + carn))
+    herb, carn = isl2.give_animals_in_cell(2, 4)
+    print(f"Animals in (2, 4):", len(herb + carn))
+    herb, carn = isl2.give_animals_in_cell(3, 2)
+    print(f"\nAnimals in (3, 2):", len(herb + carn))
+    herb, carn = isl2.give_animals_in_cell(3, 3)
+    print(f"Animals in (3, 3):", len(herb + carn))
+    herb, carn = isl2.give_animals_in_cell(3, 4)
+    print(f"Animals in (3, 4):", len(herb + carn))
+    herb, carn = isl2.give_animals_in_cell(4, 2)
+    print(f"\nAnimals in (4, 2):", len(herb + carn))
+    herb, carn = isl2.give_animals_in_cell(4, 3)
+    print(f"Animals in (4, 3):", len(herb + carn))
+    herb, carn = isl2.give_animals_in_cell(4, 4)
+    print(f"Animals in (4, 4):", len(herb + carn))

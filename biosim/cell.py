@@ -173,6 +173,14 @@ class SingleCell:
                 animals_stay.append(animal)
 
         # Separate animals_stay into self.herbi_list and self.carni_list
+        self.herbi_list = []
+        self.carni_list = []
+        for animal in animals_stay:
+            if isinstance(animal, Herbivores):
+                self.herbi_list.append(animal)
+            elif isinstance(animal, Carnivores):
+                self.carni_list.append(animal)
+        
         return animals_move
 
     def animals_migrate(self):

@@ -150,16 +150,16 @@ class TestingTheIsland:
         """
         island = self.island
         mocker.patch('random.random', return_value=0)  # Makes sure all animals migrate
-        mocker.patch('random.choice', return_value='N')  # makes sure they migrate to the same cell
+        mocker.patch('random.choice', return_value='W')  # makes sure they migrate to the same cell
         number_of_animals_before = len(self.animals)
         # All animals are in the first cell at the beginning
         island.migration()
-        herbis, carnis = island.give_animals_in_cell(2,2)
+        herbis, carnis = island.give_animals_in_cell(2, 2)
         number_new_cell = len(herbis + carnis)
-        herbis, carnis = island.give_animals_in_cell(2,3)
+        herbis, carnis = island.give_animals_in_cell(2, 3)
         number_old_cell = len(herbis + carnis)
-        assert number_new_cell == number_of_animals_before
         assert number_old_cell == 0
+        assert number_new_cell == number_of_animals_before
 
     def test_not_migrate_water(self, initial_island, mocker):
         """
@@ -172,18 +172,17 @@ class TestingTheIsland:
         """
         island = self.island
         mocker.patch('random.random', return_value=0)  # Makes sure all animals tries to migrate
-        mocker.patch('random.choice', return_value='E')
+        mocker.patch('random.choice', return_value='N')
         # makes sure all animals tries to migrate to the lake in the middle of the test_island
         number_of_animals_before = len(self.animals)
         # All animals are in the first cell at the beginning
         island.migration()
-        herbis, carnis = island.give_animals_in_cell(3,3)
+        herbis, carnis = island.give_animals_in_cell(1,3)
         number_new_cell = len(herbis + carnis)
         herbis, carnis = island.give_animals_in_cell(2,3)
         number_old_cell = len(herbis + carnis)
         assert number_new_cell == 0
         assert number_old_cell == number_of_animals_before
-
 
     def test_complete_cycle(self, initial_island, mocker):
         """
