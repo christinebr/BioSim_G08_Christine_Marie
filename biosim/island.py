@@ -264,7 +264,7 @@ class TheIsland:
         """
         self.all_animals_eat()
         self.animals_procreate()
-        # self.migration()
+        self.migration()
         self.all_animals_age()
         self.all_animals_losses_weight()
         self.animals_die()
