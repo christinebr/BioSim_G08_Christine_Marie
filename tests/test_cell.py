@@ -75,20 +75,19 @@ class TestSingleCell:
         mocker.patch('random.random', return_value=0)
         mocker.patch('random.gauss', return_value=7)
         # Starts with finding what the weight of the mother should be after giving birth
-        correct_weights = []
         weight_limit_herbi = 3.5 * (8 + 1.5)
-        weight_new_herbi = random.gauss(8, 1.5)
+        weight_newborn = random.gauss(7, 1)
         weight_limit_carni = 3.5 * (6 + 1.)
-        weight_new_carni = random.gauss(6, 1.)
+        correct_weights = []
         for herbi in self.cell.herbi_list:
             if herbi.weight > weight_limit_herbi:
-                correct_weights.append(herbi.weight - 1.2 * weight_new_herbi)
+                correct_weights.append(herbi.weight - 1.2 * weight_newborn)
             else:
                 correct_weights.append(herbi.weight)
 
         for carni in self.cell.carni_list:
             if carni.weight > weight_limit_carni:
-                correct_weights.append(carni.weight - 1.1 * weight_new_carni)
+                correct_weights.append(carni.weight - 1.1 * weight_newborn)
             else:
                 correct_weights.append(carni.weight)
 
@@ -98,7 +97,7 @@ class TestSingleCell:
         new_list_of_animals = self.cell.herbi_list + self.cell.carni_list
         new_list_parents = []
         for animal in new_list_of_animals:
-            if animal.weight != weight_new_herbi or animal.weight != weight_new_carni:
+            if animal.weight != weight_newborn:
                 new_list_parents.append(animal)
 
         old_weights = []
