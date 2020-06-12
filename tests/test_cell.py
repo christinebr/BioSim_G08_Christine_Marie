@@ -251,7 +251,7 @@ class TestLowland:
         num_animals_in_cell = len(self.low.herbi_list + self.low.carni_list)
         fitness_herb_list = self.low.collect_fitness_age_weight_herbi()[0]
         fitness_carn_list = self.low.collect_fitness_age_weight_carni()[0]
-        assert len(fitness_herb_list+fitness_carn_list) == num_animals_in_cell
+        assert len(fitness_herb_list + fitness_carn_list) == num_animals_in_cell
         for fitness_herb in fitness_herb_list:
             assert 0 <= fitness_herb <= 1
         for fitness_carn in fitness_carn_list:
@@ -265,8 +265,8 @@ class TestLowland:
         num_animals_in_cell = len(self.low.herbi_list + self.low.carni_list)
         age_herb_list = self.low.collect_fitness_age_weight_herbi()[1]
         age_carn_list = self.low.collect_fitness_age_weight_carni()[1]
-        assert len(age_herb_list+age_carn_list) == num_animals_in_cell
-        for age in age_herb_list+age_carn_list:
+        assert len(age_herb_list + age_carn_list) == num_animals_in_cell
+        for age in age_herb_list + age_carn_list:
             assert age >= 0
 
     def test_if_cell_collect_weight_for_all_animals(self, initial_lowland):
@@ -277,8 +277,8 @@ class TestLowland:
         num_animals_in_cell = len(self.low.herbi_list + self.low.carni_list)
         weight_herb_list = self.low.collect_fitness_age_weight_herbi()[2]
         weight_carn_list = self.low.collect_fitness_age_weight_carni()[2]
-        assert len(weight_herb_list+weight_carn_list) == num_animals_in_cell
-        for weight in weight_herb_list+weight_carn_list:
+        assert len(weight_herb_list + weight_carn_list) == num_animals_in_cell
+        for weight in weight_herb_list + weight_carn_list:
             assert weight > 0
 
     def test_herbivores_eaten(self, initial_lowland, mocker):
