@@ -66,13 +66,13 @@ geogr_rgb = [[rgb_value[column] for column in row]
 
 # ax1 = fig.add_axes([0.1, 0.1, 0.7, 0.8])  # llx, lly, w, h
 ax1.imshow(geogr_rgb)
-# ax1.set_xticks(range(len(geogr_rgb[0])))
-# ax1.set_xticklabels(range(1, 1 + len(geogr_rgb[0])))
-# ax1.set_yticks(range(len(geogr_rgb)))
-# ax1.set_yticklabels(range(1, 1 + len(geogr_rgb)))
+ax1.set_xticks(range(len(geogr_rgb[0])))
+ax1.set_xticklabels(range(1, 1 + len(geogr_rgb[0])))
+ax1.set_yticks(range(len(geogr_rgb)))
+ax1.set_yticklabels(range(1, 1 + len(geogr_rgb)))
 
-ax1 = fig.add_axes([0.85, 0.1, 0.1, 0.8])  # llx, lly, w, h
-ax1.axis('off')
+#ax1 = fig.add_axes([0.85, 0.1, 0.1, 0.8])  # llx, lly, w, h
+#ax1.axis('off')
 ax1.set_title('The island')
 
 ### ax3
@@ -113,32 +113,29 @@ ax5.set_title('Carnivore distribution')
 
 #### ax7
 
-# Just testing
-herbi_fitness = [0.9, 0.3, 0.5, 0.4, 0.6, 0.5, 0.7, 0.3, 0.95, 0.2, 0.3, 0.3]
-carni_fitness = [0.6, 0.4, 0.6, 0.5, 0.6, 0.5, 0.5, 0.5]
+herbi_fitness = island.collect_fitness_age_weight_herbi()[0]
+carni_fitness = island.collect_fitness_age_weight_carni()[0]
 
-ax7.hist(herbi_fitness, bins=5, range=(0, 1), histtype='stepfilled', fill=False, edgecolor='blue')
-ax7.hist(carni_fitness, range=(0, 1), histtype='stepfilled', fill=False, edgecolor='red')
+ax7.hist(herbi_fitness, bins=20, range=(0, 1), histtype='stepfilled', fill=False, edgecolor='blue')
+ax7.hist(carni_fitness, bins=20, range=(0, 1), histtype='stepfilled', fill=False, edgecolor='red')
 ax7.set_title('Fitness')
 
 #### ax8
 
-# Just testing
-herbi_age = [0.9, 0.3, 0.5, 0.4, 0.6, 0.5, 0.7, 0.3, 0.95, 0.2, 0.3, 0.3]
-carni_age = [0.6, 0.4, 0.6, 0.5, 0.6, 0.5, 0.5, 0.5]
+herbi_age = island.collect_fitness_age_weight_herbi()[1]
+carni_age = island.collect_fitness_age_weight_carni()[1]
 
-ax8.hist(herbi_age, bins=5, range=(0, 1), histtype='stepfilled', fill=False, edgecolor='blue')
-ax8.hist(carni_age, range=(0, 1), histtype='stepfilled', fill=False, edgecolor='red')
+ax8.hist(herbi_age, bins=20, histtype='stepfilled', fill=False, edgecolor='blue')
+ax8.hist(carni_age, bins=20, histtype='stepfilled', fill=False, edgecolor='red')
 ax8.set_title('Age')
 
 #### ax9
 
-# Just testing
-herbi_weight = [0.9, 0.3, 0.5, 0.4, 0.6, 0.5, 0.7, 0.3, 0.95, 0.2, 0.3, 0.3]
-carni_weight = [0.6, 0.4, 0.6, 0.5, 0.6, 0.5, 0.5, 0.5]
+herbi_weight = island.collect_fitness_age_weight_herbi()[2]
+carni_weight = island.collect_fitness_age_weight_carni()[2]
 
-ax9.hist(herbi_weight, bins=5, range=(0, 1), histtype='stepfilled', fill=False, edgecolor='blue')
-ax9.hist(carni_weight, range=(0, 1), histtype='stepfilled', fill=False, edgecolor='red')
+ax9.hist(herbi_weight, bins=20, histtype='stepfilled', fill=False, edgecolor='blue')
+ax9.hist(carni_weight, bins=20, range=(0,40), histtype='stepfilled', fill=False, edgecolor='red')
 ax9.set_title('Weight')
 
 
