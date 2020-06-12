@@ -58,9 +58,9 @@ class TestingTheIsland:
                             'weight': 20} for _ in range(20)]}
                         ]
 
-        self.island_migration = TheIsland(landscape_of_cells=test_island, animals_on_island=test_animals)
-        return self.island_migration
-
+        self.isl_mig = TheIsland(landscape_of_cells=test_island,
+                                 animals_on_island=test_animals)
+        return self.isl_mig
 
     def test_if_check_size(self):
         """
@@ -175,15 +175,14 @@ class TestingTheIsland:
         Check that animals migrate. Makes everyone migrate north, then check that the original
         position is empty and all animals has gone to the north.
         """
-        island = self.island_migration
         mocker.patch('random.random', return_value=0)  # Makes sure all animals migrate
         mocker.patch('random.choice', return_value='West')  # makes sure they migrate to the same cell
-        number_of_animals_before = island.total_num_animals_on_island()[0]
+        number_of_animals_before = self.isl_mig.total_num_animals_on_island()[0]
         # All animals are in the first cell at the beginning
-        island.migration()
-        herbis, carnis = island.give_animals_in_cell(3, 3)
+        self.isl_mig.migration()
+        herbis, carnis = self.isl_mig.give_animals_in_cell(3, 3)
         number_old_cell = len(herbis + carnis)
-        herbis, carnis = island.give_animals_in_cell(3, 2)
+        herbis, carnis = self.isl_mig.give_animals_in_cell(3, 2)
         number_new_cell = len(herbis + carnis)
         assert number_old_cell == 0
         assert number_new_cell == number_of_animals_before
@@ -193,15 +192,14 @@ class TestingTheIsland:
         Check that animals migrate. Makes everyone migrate north, then check that the original
         position is empty and all animals has gone to the north.
         """
-        island = self.island_migration
         mocker.patch('random.random', return_value=0)  # Makes sure all animals migrate
         mocker.patch('random.choice', return_value='East')  # makes sure they migrate to the same cell
-        number_of_animals_before = island.total_num_animals_on_island()[0]
+        number_of_animals_before = self.isl_mig.total_num_animals_on_island()[0]
         # All animals are in the first cell at the beginning
-        island.migration()
-        herbis, carnis = island.give_animals_in_cell(3, 3)
+        self.isl_mig.migration()
+        herbis, carnis = self.isl_mig.give_animals_in_cell(3, 3)
         number_old_cell = len(herbis + carnis)
-        herbis, carnis = island.give_animals_in_cell(3, 4)
+        herbis, carnis = self.isl_mig.give_animals_in_cell(3, 4)
         number_new_cell = len(herbis + carnis)
         assert number_old_cell == 0
         assert number_new_cell == number_of_animals_before
