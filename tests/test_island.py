@@ -172,11 +172,12 @@ class TestingTheIsland:
 
     def test_migration_west(self, start_point_migration, mocker):
         """
-        Check that animals migrate. Makes everyone migrate north, then check that the original
-        position is empty and all animals has gone to the north.
+        Check that animals migrate westward. Makes everyone migrate westward, then check that the
+        original position is empty and all animals has gone to the nwest.
         """
         mocker.patch('random.random', return_value=0)  # Makes sure all animals migrate
-        mocker.patch('random.choice', return_value='West')  # makes sure they migrate to the same cell
+        mocker.patch('random.choice', return_value='West')
+        # makes sure they migrate to the same cell
         number_of_animals_before = self.isl_mig.total_num_animals_on_island()[0]
         # All animals are in the first cell at the beginning
         self.isl_mig.migration()
@@ -189,8 +190,8 @@ class TestingTheIsland:
 
     def test_migration_east(self, start_point_migration, mocker):
         """
-        Check that animals migrate. Makes everyone migrate north, then check that the original
-        position is empty and all animals has gone to the north.
+        Check that animals migrate to the east. Makes everyone migrate eastward, then check that
+        the original position is empty and all animals has gone to the east.
         """
         mocker.patch('random.random', return_value=0)  # Makes sure all animals migrate
         mocker.patch('random.choice', return_value='East')  # makes sure they migrate to the same cell
@@ -200,6 +201,43 @@ class TestingTheIsland:
         herbis1, carnis1 = self.isl_mig.give_animals_in_cell(3, 3)
         number_old_cell = len(herbis1 + carnis1)
         herbis, carnis = self.isl_mig.give_animals_in_cell(3, 4)
+        number_new_cell = len(herbis + carnis)
+        assert number_old_cell == 0
+        assert number_new_cell == number_of_animals_before
+
+    def test_migration_south(self, start_point_migration, mocker):
+        """
+        Check that animals migrate southward. Makes everyone migrate southward, then check that
+        the original position is empty and all animals has gone to the south.
+        """
+        mocker.patch('random.random', return_value=0)  # Makes sure all animals migrate
+        mocker.patch('random.choice', return_value='South')
+        # makes sure they migrate to the same cell
+        number_of_animals_before = self.isl_mig.total_num_animals_on_island()[0]
+        # All animals are in the first cell at the beginning
+        isl = self.isl_mig.migration()
+        herbis1, carnis1 = self.isl_mig.give_animals_in_cell(3, 3)
+        number_old_cell = len(herbis1 + carnis1)
+        herbis, carnis = self.isl_mig.give_animals_in_cell(4, 3)
+        number_new_cell = len(herbis + carnis)
+        assert number_old_cell == 0
+        assert number_new_cell == number_of_animals_before
+
+    def test_migration_north(self, start_point_migration, mocker):
+        """
+        Check that animals migrate northward. Makes everyone migrate northward, then check that
+        the original position is empty and all animals has gone to the north. (Yes, it is was
+        necessary to test for all directions.)
+        """
+        mocker.patch('random.random', return_value=0)  # Makes sure all animals migrate
+        mocker.patch('random.choice', return_value='North')
+        # makes sure they migrate to the same cell
+        number_of_animals_before = self.isl_mig.total_num_animals_on_island()[0]
+        # All animals are in the first cell at the beginning
+        isl = self.isl_mig.migration()
+        herbis1, carnis1 = self.isl_mig.give_animals_in_cell(3, 3)
+        number_old_cell = len(herbis1 + carnis1)
+        herbis, carnis = self.isl_mig.give_animals_in_cell(2, 3)
         number_new_cell = len(herbis + carnis)
         assert number_old_cell == 0
         assert number_new_cell == number_of_animals_before
