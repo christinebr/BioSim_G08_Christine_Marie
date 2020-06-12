@@ -35,6 +35,33 @@ class TestingTheIsland:
         self.animals = herbis + carnis
         return self.island, self.animals
 
+    @pytest.fixture()
+    def start_point_migration(self):
+        """
+        Makes a simple test-model to use in tests
+        Returns
+        -------
+        A simple test-model
+        """
+        test_island = """\
+                            WWWWW
+                            WLLLW
+                            WHDHW
+                            WLDLW
+                            WWWWW"""
+        test_animals = [{'loc': (3, 3),
+                         'pop': [{'species': 'Herbivore',
+                                  'age': 5,
+                                  'weight': 35} for _ in range(200)]
+                        + [{'species': 'Carnivore',
+                            'age': 5,
+                            'weight': 20} for _ in range(20)]}
+                        ]
+
+        self.island_migration = TheIsland(landscape_of_cells=test_island, animals_on_island=test_animals)
+        return self.island_migration
+
+
     def test_if_check_size(self):
         """
         Tests if the island class raises a ValueError if given an island with
@@ -143,21 +170,39 @@ class TestingTheIsland:
             sum_age_after += animal.age
         assert sum_age_before + len(animals) == sum_age_after
 
-    def test_migration(self, initial_island, mocker):
+    def test_migration_west(self, start_point_migration, mocker):
         """
         Check that animals migrate. Makes everyone migrate north, then check that the original
         position is empty and all animals has gone to the north.
         """
-        island = self.island
+        island = self.island_migration
         mocker.patch('random.random', return_value=0)  # Makes sure all animals migrate
-        mocker.patch('random.choice', return_value='W')  # makes sure they migrate to the same cell
-        number_of_animals_before = len(self.animals)
+        mocker.patch('random.choice', return_value='West')  # makes sure they migrate to the same cell
+        number_of_animals_before = island.total_num_animals_on_island()[0]
         # All animals are in the first cell at the beginning
         island.migration()
-        herbis, carnis = island.give_animals_in_cell(2, 2)
-        number_new_cell = len(herbis + carnis)
-        herbis, carnis = island.give_animals_in_cell(2, 3)
+        herbis, carnis = island.give_animals_in_cell(3, 3)
         number_old_cell = len(herbis + carnis)
+        herbis, carnis = island.give_animals_in_cell(3, 2)
+        number_new_cell = len(herbis + carnis)
+        assert number_old_cell == 0
+        assert number_new_cell == number_of_animals_before
+
+    def test_migration_east(self, start_point_migration, mocker):
+        """
+        Check that animals migrate. Makes everyone migrate north, then check that the original
+        position is empty and all animals has gone to the north.
+        """
+        island = self.island_migration
+        mocker.patch('random.random', return_value=0)  # Makes sure all animals migrate
+        mocker.patch('random.choice', return_value='East')  # makes sure they migrate to the same cell
+        number_of_animals_before = island.total_num_animals_on_island()[0]
+        # All animals are in the first cell at the beginning
+        island.migration()
+        herbis, carnis = island.give_animals_in_cell(3, 3)
+        number_old_cell = len(herbis + carnis)
+        herbis, carnis = island.give_animals_in_cell(3, 4)
+        number_new_cell = len(herbis + carnis)
         assert number_old_cell == 0
         assert number_new_cell == number_of_animals_before
 
@@ -172,7 +217,7 @@ class TestingTheIsland:
         """
         island = self.island
         mocker.patch('random.random', return_value=0)  # Makes sure all animals tries to migrate
-        mocker.patch('random.choice', return_value='N')
+        mocker.patch('random.choice', return_value='North')
         # makes sure all animals tries to migrate to the lake in the middle of the test_island
         number_of_animals_before = len(self.animals)
         # All animals are in the first cell at the beginning
