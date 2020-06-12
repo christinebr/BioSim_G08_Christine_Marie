@@ -209,35 +209,6 @@ class SingleCell:
 
         return north, east, south, west
 
-        # # Herbivore migrate
-        # herbi_stay = []
-        # herbi_move = []
-        # for herbi in self.herbi_list:
-        #     prob_migrate = herbi.probability_of_migration()
-        #     if random.random() < prob_migrate:  # check if herbivore migrate
-        #         move_to = random.choice(['N', 'E', 'S', 'W'])
-        #         herbi_move.append((herbi, move_to))
-        #     else:
-        #         herbi_stay.append(herbi)
-        #
-        # # Carnivore migrate
-        # carni_stay = []
-        # carni_move = []
-        # for carni in self.carni_list:
-        #     prob_migrate = carni.probability_of_migration()
-        #     if random.random() < prob_migrate:  # check if carnivore migrate
-        #         move_to = random.choice(['N', 'E', 'S', 'W'])
-        #         carni_move.append((carni, move_to))
-        #     else:
-        #         carni_stay.append(carni)
-        #
-        # # Animals staying in the cell
-        # self.herbi_list = herbi_stay
-        # self.carni_list = carni_stay
-        #
-        # # Returning the animals which want to migrate
-        # return herbi_move, carni_move
-
     def add_animals_after_migration(self, animals_migrated):
         """ Adds animals to cell after migration """
         for animal in animals_migrated:
@@ -282,6 +253,62 @@ class SingleCell:
         self.herbi_list = survived_herbis
         self.carni_list = survived_carnis
 
+    def collect_fitness_all_animals_in_cell(self):
+        """
+        Collects the fitness of all animals and returns it in two lists, one
+        for herbivores and one for carnivores.
+        Returns
+        -------
+        fitness_herbi: [list] fitness of herbivores in cell
+        fitness_carni: [list] fitness of carnivores in cell
+        """
+        fitness_herbi = []
+        fitness_carni = []
+        for herbi in self.herbi_list:
+            fitness_herbi.append(herbi.fitness())
+
+        for carni in self.carni_list:
+            fitness_carni.append(carni.fitness())
+
+        return fitness_herbi, fitness_carni
+
+    def collect_age_all_animals_in_cell(self):
+        """
+        Collects the fitness of all animals and returns it in two lists, one
+        for herbivores and one for carnivores.
+        Returns
+        -------
+        fitness_herbi: [list] fitness of herbivores in cell
+        fitness_carni: [list] fitness of carnivores in cell
+        """
+        age_herbi = []
+        age_carni = []
+        for herbi in self.herbi_list:
+            age_herbi.append(herbi.age)
+
+        for carni in self.carni_list:
+            age_carni.append(carni.age)
+
+        return age_herbi, age_carni
+
+    def collect_weight_all_animals_in_cell(self):
+        """
+        Collects the fitness of all animals and returns it in two lists, one
+        for herbivores and one for carnivores.
+        Returns
+        -------
+        fitness_herbi: [list] fitness of herbivores in cell
+        fitness_carni: [list] fitness of carnivores in cell
+        """
+        weight_herbi = []
+        weight_carni = []
+        for herbi in self.herbi_list:
+            weight_herbi.append(herbi.weight)
+
+        for carni in self.carni_list:
+            weight_carni.append(carni.weight)
+
+        return weight_herbi, weight_carni
 
 class Water(SingleCell):
     _params = {'f_max': 0.0}

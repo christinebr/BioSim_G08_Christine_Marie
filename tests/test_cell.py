@@ -256,7 +256,7 @@ class TestLowland:
         for fitness_carn in fitness_carn_list:
             assert 0 <= fitness_carn <= 1
 
-    def test_if_cell_collect_age_for_all_animals(self):
+    def test_if_cell_collect_age_for_all_animals(self, initial_lowland):
         """
         Test if cell can collect age for all animals and return them in
         a list
@@ -267,7 +267,7 @@ class TestLowland:
         for age in age_herb_list+age_carn_list:
             assert age >= 0
 
-    def test_if_cell_collect_weight_for_all_animals(self):
+    def test_if_cell_collect_weight_for_all_animals(self, initial_lowland):
         """
         Test if cell can collect age for all animals and return them in
         a list
