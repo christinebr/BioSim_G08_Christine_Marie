@@ -3,6 +3,7 @@ from biosim.animals import Herbivores, Carnivores
 from biosim.cell import Water, Desert, Lowland, Highland
 from biosim.island import TheIsland
 import random
+from biosim.plotting import Plotting
 
 
 class BioSim:
@@ -93,6 +94,11 @@ class BioSim:
 
         Image files will be numbered consecutively
         """
+        for year in num_years:
+            # plotting
+            herb = self.isl.total_num_animals_on_island[1]
+            carn = self.isl.total_num_animals_on_island[2]
+            self.isl.annual_cycle()
 
 
     def add_population(self, population):

@@ -7,7 +7,7 @@ from biosim.island import TheIsland
 
 class Plotting:
 
-    def __init__(self):
+    def __init__(self, num_years):
 
         # Initialising figure with subplots
         self.fig = plt.figure()
@@ -26,6 +26,15 @@ class Plotting:
         self.font = 8
         # Fontsizes to be used on the axes of all plots
         self.font_axes = 8
+
+        self.tot_herbis = []
+        self.tot_carnis = []
+        self.num_years = num_years
+
+        self.herbis_line = self.ax3.plot(np.arange(self.num_years),
+                                         np.full(self.num_years, np.nan), 'b-')[0]
+        self.carnis_line = self.ax3.plot(np.arange(self.num_years),
+                                         np.full(self.num_years, np.nan), 'r-')[0]
 
     def map_of_island(self, geogr):
         """
@@ -55,6 +64,16 @@ class Plotting:
         self.ax1.set_yticklabels(range(1, 1 + len(geogr_rgb)), fontsize=self.font_axes)
 
         self.ax1.set_title('The island', fontsize=self.font)
+
+    def plot_animal_count(self, year, tot_herbi, tot_carni):
+        y_herbis = self.herbis_line.get_ydata()
+        y_carnis = self.carnis_line.get_ydata()
+
+        y_herbis[year] = tot_herbi
+        y_carnis[year] = tot_carni
+
+        self.herbis_line.set_ydata(y_herbis)
+        self.carnis_line.set_ydata(y_carnis)
 
     def heatmaps_sepcies_dist(self, herbis_dist, carnis_dist, cmax_animals):
         """
