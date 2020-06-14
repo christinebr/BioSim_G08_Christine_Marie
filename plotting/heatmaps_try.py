@@ -32,7 +32,7 @@ carnis_lists = []
 for row in range(island.row):
     herbis_row = []
     carnis_row = []
-    for col in range(island.colon):
+    for col in range(island.col):
         herbis, carnis = island.give_animals_in_cell(row+1, col+1)
         herbis_row.append(len(herbis))
         carnis_row.append(len(carnis))

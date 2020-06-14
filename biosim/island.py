@@ -1,241 +1,297 @@
 # -*- coding: utf-8 -*-
-import numpy as np
-from biosim.cell import SingleCell, Highland, Lowland, Desert, Water
+from biosim.cell import Highland, Lowland, Desert, Water
 import textwrap
-import random
 
 
 class TheIsland:
-    """
-    Keeps control of the island.
-
-    Takes a matrix with the landscape types of each cell.
-    """
+    """ This class will represent an island. """
 
     def __init__(self, landscape_of_cells, animals_on_island=None):
         """
+        Create an island consisting of cells based on landscape-types.
+
         Parameters
         ----------
-        landscape_of_cells: multiline python string
-        animals_on_island: list of dictionaries
+        landscape_of_cells: [str] multiline python string representing the
+                            landscape of the island.
+        animals_on_island: [list of dicts] list of dictionaries with location
+                           of cell and population of animals in that cell.
         """
         # Check conditions for geography of island
         self.check_if_island_legal(landscape_of_cells)
-        # Turn into numpy array
-        self.landscape = self.landscape_to_array(land=landscape_of_cells)
-        self.row, self.colon = len(self.landscape), len(self.landscape[0])
 
-        self.island_cells = []
+        # Make landscape into list of lists
+        self.landscape = self.landscape_to_list_of_lists(landscape_of_cells)
+        self.row, self.col = len(self.landscape), len(self.landscape[0])
+
+        # Create empty island, then construction of cells
+        self.island_cells = [[[] for _ in range(self.col)] for _ in range(self.row)]
+        self.construct_island_with_cells()
 
         if animals_on_island:
             self.animals_on_island = animals_on_island
         else:
             self.animals_on_island = []
 
-        self.construct_island_with_cells()
         self.add_animals_on_island(self.animals_on_island)
 
     @staticmethod
     def check_if_island_legal(geogr):
         """
-        Test if the island follows the specifications.
-        The string tha specify the island must only contain legal letters, i.e. L, H, W and D
-        All the outermost cells must be of the water type.
+        Checks if the landscape of the island follows the specifications.
+            - only have 'W' around edges
+            - no other characters than 'L', 'H', 'D' and 'W'
+            - all lines in the string must have equal length
 
-        Returns
+        Raises
         -------
-        Raises ValueError if any of the specifications is violated.
-
-        Todo: This might be better to do in the __init__ section, and/or in biosim
+        ValueError: if any of the specifications is violated.
         """
         geogr = textwrap.dedent(geogr)
         geogr_split = geogr.split('\n')
         len_first_line = len(geogr_split[0])
         for line in geogr_split:
             if len(line) != len_first_line:
-                raise ValueError("All lines must have same length")
+                raise ValueError("All lines must have the same length.")
 
         for top, bottom in zip(geogr_split[0], geogr_split[-1]):
             if top != 'W' or bottom != 'W':
-                raise ValueError("North and south of island is not only water")
+                raise ValueError("North or south of island is not only water.")
 
         for line in geogr_split:
             if line[0] != 'W' or line[-1] != 'W':
-                raise ValueError("West or east side of island is not only water")
+                raise ValueError("West or east side of island is not only water.")
 
         for line in geogr_split:
             for element in line:
                 if element not in ['W', 'D', 'L', 'H']:
-                    raise ValueError("Forbidden character, only 'W', 'D', 'L' and 'H' allowed")
+                    raise ValueError("Forbidden character, only 'W', 'D', 'L' and 'H' allowed.")
 
     @staticmethod
-    def landscape_to_array(land):
+    def landscape_to_list_of_lists(landscape):
         """
-        Takes in a multiline string and turns it into a nested list
-        """
-        land = textwrap.dedent(land)
-        land_split = land.split('\n')
-        return [list(line) for line in land_split]
+        Makes a landscape string into a nested list (list of lists).
 
-    def construct_island_with_cells(self):  # RENAME THIS ONE
+        Parameters
+        ----------
+        landscape: [str] multiline string representing the landscape of
+                   the island
+
+        Returns
+        -------
+        [list of lists] an inner list is a row and an element of an inner list
+        is the landscape of that cell.
         """
-        Sorting animals by location on the island
+        landscape = textwrap.dedent(landscape)
+        landscape_split = landscape.split('\n')
+        return [list(line) for line in landscape_split]
+
+    def construct_island_with_cells(self):
         """
-        self.island_cells = [[[] for _ in range(self.colon)] for _ in range(self.row)]
+        Construction the island by initialising a class for each of the
+        landscape types. For each cell the class is initialized with no
+        animals.
+
+        Returns
+        -------
+        None
+        """
         for x, row in enumerate(self.landscape):
-            for y, col in enumerate(row):
-                if col == 'W':
+            for y, cell in enumerate(row):
+                if cell == 'W':
                     self.island_cells[x][y] = Water(animals_list=None)
-                elif col == 'L':
+                elif cell == 'L':
                     self.island_cells[x][y] = Lowland(animals_list=None)
-                elif col == 'H':
+                elif cell == 'H':
                     self.island_cells[x][y] = Highland(animals_list=None)
-                elif col == 'D':
+                elif cell == 'D':
                     self.island_cells[x][y] = Desert(animals_list=None)
 
     def add_animals_on_island(self, new_animals):
         """
+        Add animals on island by adding animals to specified cells.
+
         Parameters
         ----------
-        new_animals: list of dict ->
-                    [{'loc': (2, 2), 'pop': [{'species': 'Herbivore', 'age': 5, 'weight': 25}, ... ]
+        new_animals: [list of dicts] list of dictionaries with location
+                     of cell and population of animals in that cell.
+
+        Returns
+        -------
+        None
+
+        Raises
+        ------
+        ValueError: if animals are being placed in water cells where they
+                    can't stay
         """
-        for place in new_animals:
-            x, y = place['loc']
-            landscape_type = self.landscape[x-1][y-1]
+        for dictionary in new_animals:
+            x, y = dictionary['loc']  # Location of a cell
+            landscape_type = self.landscape[x-1][y-1]  # Landscape type of cell
             if landscape_type == 'W':
-                # island_cells[x-1, y-1] = Water(animals_list=None)
                 raise ValueError("Animals can't stay in water")
             else:
-                self.island_cells[x-1][y-1].add_new_animals_to_cell(place['pop'])
+                self.island_cells[x-1][y-1].add_new_animals_to_cell(dictionary['pop'])
                 # add new animals to cell
 
     def all_animals_eat(self):
         """
-        Params
-        ------
-        herbis: [list]
-            list of dictionaries containing location of a cell and the
-            population of herbivores in that cell
-        carnis: [list]
-            list of dictionaries containing location of a cell and the
-            population of carnivores in that cell
-        landscape: [narray]
-            numpy array of the landscape of the island
-
-        """
-        for row in self.island_cells:
-            for cell in row:
-                if cell:  # if cell = [] it is a water cell, no animals eat
-                    cell.animals_in_cell_eat()
-
-    def animals_procreate(self):
-        """
-        Loops trough populated cells and animals in all cells have the change to procreate
-        Parameters
-        ----------
-        herbis
-        carnis
-
-        todo: carnis and herbis have same structure as described in the method above
+        Letting the animals on the island eat.
+        Looping through the cells of the island and letting the animals in
+        each cell eat.
 
         Returns
         -------
-
+        None
         """
         for row in self.island_cells:
             for cell in row:
-                if cell:  # nothing happens in water cell
-                    cell.birth()
+                cell.animals_in_cell_eat()
+
+    def animals_procreate(self):
+        """
+        Letting animals on the island procreate
+        Looping through the cells of the island and giving the animals in the
+        cells the change to procreate.
+
+        Returns
+        -------
+        None
+        """
+        for row in self.island_cells:
+            for cell in row:
+                cell.birth()
 
     def where_can_animals_migrate_to(self, row, col):
         """
         Check if any of the neighboring adjacent cells are water, and
-        returns the cells animals can move to.
+        returns the directions animals can migrate to.
 
         Parameters
         ----------
         row: [int] row number as python uses it
-        col: [int] colon number as python uses it
+        col: [int] column number as python uses it
 
         Returns
         -------
         directions: [list] list with possible directions
-            - can move to east and south --> directions = ['E', 'S']
+            - can move in all directions: ['North', 'East', 'South', 'West']
+            - can only move to east and south: ['East', 'South']
         """
         directions = []
         if self.landscape[row-1][col] != 'W':
             directions.append('North')
+
         if self.landscape[row][col+1] != 'W':
             directions.append('East')
+
         if self.landscape[row+1][col] != 'W':
             directions.append('South')
+
         if self.landscape[row][col-1] != 'W':
             directions.append('West')
+
         return directions
 
     def migration(self):
         """
-        Makes migration happen, updates amount of animals in each cell
+        Makes migration happen, by creating a ghost island where migrating
+        animals makes a 'pit-stop' to a cell before getting added to that
+        cell later in the 'real' island
+
         Returns
         -------
-        Method in cell: updates self.herbi_list and self.carni_list
-        # Animals staying in the cell
-        self.herbi_list = herbi_stay
-        self.carni_list = carni_stay
-
-        # Returning the animals which want to migrate
-        return herbi_move, carni_move
+        None
         """
         # Make ghost island to store migrating animals
-        ghost_island = [[[] for _ in range(self.colon)] for _ in range(self.row)]
+        ghost_island = [[[] for _ in range(self.col)] for _ in range(self.row)]
 
+        # Placing migrating animals on the ghost island
         for x, row in enumerate(self.island_cells):
             for y, cell in enumerate(row):
                 if self.landscape[x][y] != 'W':
                     pos_dir = self.where_can_animals_migrate_to(x, y)
+                    # Finding animals wanting to migrate
                     north, east, south, west = cell.animals_migrate()
-                    if 'North' in pos_dir:
-                        ghost_island[x-1][y] += north
-                    else:
-                        ghost_island[x][y] += north
-
-                    if 'East' in pos_dir:
-                        ghost_island[x][y+1] += east
-                    else:
-                        ghost_island[x][y] += east
-
-                    if 'South' in pos_dir:
-                        ghost_island[x + 1][y] += south
-                    else:
-                        ghost_island[x][y] += south
-
-                    if 'West' in pos_dir:
-                        ghost_island[x][y - 1] += west
-                    else:
-                        ghost_island[x][y] += west
-
+                    # Adding animals to ghost island
+                    ghost_island = self.relocated_animals(x, y, pos_dir, north,
+                                                          east, south, west,
+                                                          ghost_island)
+        # Adding migrating animals to cells
         for x, row in enumerate(self.island_cells):
             for y, cell in enumerate(row):
                 cell.add_animals_after_migration(ghost_island[x][y])
 
-        return ghost_island
+    @staticmethod
+    def relocated_animals(x, y, pos_dir, north, east, south, west, ghost_island):
+        """
+        Checks if animals can move or not for every direction. If the animals
+        are allowed to move, these are added to that adjacent cell in the
+        ghost island. Otherwise the animals are added to the original cell,
+        which means that they do not migrate.
 
-    def possible_relocations(self):
-        pass
+        Parameters
+        ----------
+        x: [int] row of original cell
+        y: [int] column of original cell
+        pos_dir: [list] possible directions animals can move along
+        north: [list] animals wanting to move north
+        east:  [list] animals wanting to move east
+        south: [list] animals wanting to move south
+        west:  [list] animals wanting to move west
+        ghost_island: [list of lists] a replicate of the island, but an
+                      element in an inner row contains list of animals
+
+        Returns
+        -------
+        ghost_island: [list of lists] updated ghost island with the animals
+                      added to cells for which they were allowed to move to.
+        """
+        if 'North' in pos_dir:
+            ghost_island[x - 1][y] += north
+        else:
+            ghost_island[x][y] += north
+
+        if 'East' in pos_dir:
+            ghost_island[x][y + 1] += east
+        else:
+            ghost_island[x][y] += east
+
+        if 'South' in pos_dir:
+            ghost_island[x + 1][y] += south
+        else:
+            ghost_island[x][y] += south
+
+        if 'West' in pos_dir:
+            ghost_island[x][y - 1] += west
+        else:
+            ghost_island[x][y] += west
+
+        return ghost_island
 
     def all_animals_age(self):
         """
-        Animals in each cell age
+        All animals on the island age.
+        Looping through the cells of the island and letting the animals in the
+        cells age.
+
+        Returns
+        -------
+        None
         """
         for row in self.island_cells:
             for cell in row:
-                if cell:  # nothing happens in water cell
-                    cell.aging_of_animals()
+                cell.aging_of_animals()
 
     def all_animals_losses_weight(self):
         """
-        Animals in each cell losses weight (end of year)
+        All animals on the island losses weight (end of year).
+        Looping through the cells of the island and letting the animals in the
+        cells lose weight.
+
+        Returns
+        -------
+        None
         """
         for row in self.island_cells:
             for cell in row:
@@ -243,24 +299,32 @@ class TheIsland:
                     cell.weight_loss_end_of_year()
 
     def animals_die(self):
-        for row in self.island_cells:
-            for cell in row:
-                if cell:  # nothing happens in water cell
-                    cell.death()
-
-    def annual_cycle(self):
         """
-        Makes the year happen.
-        1. Animals eats, first herbivores, then carnivores
-        2. Animals procreates
-        3. Animals migrates
-        4. Animals age
-        5. Animals looses weight
-        6. Animals die
+        Letting animals on the island die.
+        Looping through the cells of the island and the animals in the
+        cells have a change of dying.
 
         Returns
         -------
-        Updates the list of animals for the two species at the end of the year.
+        None
+        """
+        for row in self.island_cells:
+            for cell in row:
+                cell.death()
+
+    def annual_cycle(self):
+        """
+        The annual cycle on the island:
+            1. Animals eats
+            2. Animals procreates
+            3. Animals migrates
+            4. Animals age
+            5. Animals looses weight
+            6. Animals die
+
+        Returns
+        -------
+        None
         """
         self.all_animals_eat()
         self.animals_procreate()
@@ -273,10 +337,12 @@ class TheIsland:
         """
         Give lists of herbivores and carnivores in a given cell
 
+        todo: was this only made for tests purposes and uses in the main-section?
+
         Parameters
         ----------
         row: [int] row number for cell
-        col: [int] colon number for cell
+        col: [int] column number for cell
 
         Returns
         -------
@@ -289,14 +355,16 @@ class TheIsland:
 
     def herbis_and_carnis_on_island(self):
         """
+        Make two island, one for herbivores and one for carnivores.
+        In each cell the number of herbivores/carnivores are stored.
 
         Returns
         -------
         herbi_island: [list] island with number of herbivores in each cell
         carni_island: [list] island with number of carnivores in each cell
         """
-        herbi_island = [[[] for _ in range(self.colon)] for _ in range(self.row)]
-        carni_island = [[[] for _ in range(self.colon)] for _ in range(self.row)]
+        herbi_island = [[[] for _ in range(self.col)] for _ in range(self.row)]
+        carni_island = [[[] for _ in range(self.col)] for _ in range(self.row)]
         for x, row in enumerate(self.island_cells):
             for y, cell in enumerate(row):
                 herbi_island[x][y] = len(cell.herbi_list)
@@ -304,11 +372,17 @@ class TheIsland:
         return herbi_island, carni_island
 
     def total_num_animals_on_island(self):
-        """Returns total number of animals on the island
+        """
+        Calculates the total number of
+            - animals on the island
+            - herbivores on the island
+            - carnivores on the island
 
         Returns:
         ----------
-        Total number of animals on the island
+        tot_animal: [int] total number of animals on the island
+        tot_herbi:  [int] total number of herbivores on the island
+        tot_carni : [int] total number of carnivores on the island
         """
         tot_herbi = 0
         tot_carni = 0
@@ -321,13 +395,14 @@ class TheIsland:
 
     def collect_fitness_age_weight_herbi(self):
         """
+        Collect the fitness, age and weight of all herbivores on the island in
+        three lists.
 
         Returns
         -------
-        fitness_herbi: [list] fitness
-        age_herbi: [list]
-        weight_herbi: [list]
-
+        fitness_herbi: [list] fitness for all herbivores on the island
+        age_herbi: [list] age for all herbivores on the island
+        weight_herbi: [list] weight for all herbivores on the island
         """
         fitness_herbi = []
         age_herbi = []
@@ -343,25 +418,27 @@ class TheIsland:
 
     def collect_fitness_age_weight_carni(self):
         """
+        Collect the fitness, age and weight of all carnivores on the island in
+        three lists.
 
         Returns
         -------
-        fitness_herbi: [list] fitness
-        age_herbi: [list]
-        weight_herbi: [list]
+        fitness_carni: [list] fitness for all carnivores on the island
+        age_carni: [list] age for all carnivores on the island
+        weight_carni: [list] weight for all carnivores on the island
 
         """
-        fitness_herbi = []
-        age_herbi = []
-        weight_herbi = []
+        fitness_carni = []
+        age_carni = []
+        weight_carni = []
         for row in self.island_cells:
             for cell in row:
                 fitness, age, weight = cell.collect_fitness_age_weight_carni()
-                fitness_herbi += fitness
-                age_herbi += age
-                weight_herbi += weight
+                fitness_carni += fitness
+                age_carni += age
+                weight_carni += weight
 
-        return fitness_herbi, age_herbi, weight_herbi
+        return fitness_carni, age_carni, weight_carni
 
 
 if __name__ == "__main__":
