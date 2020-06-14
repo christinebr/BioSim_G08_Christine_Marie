@@ -287,6 +287,22 @@ class TheIsland:
         carnis = self.island_cells[row-1][col-1].carni_list
         return herbis, carnis
 
+    def herbis_and_carnis_on_island(self):
+        """
+
+        Returns
+        -------
+        herbi_island: [list] island with number of herbivores in each cell
+        carni_island: [list] island with number of carnivores in each cell
+        """
+        herbi_island = [[[] for _ in range(self.colon)] for _ in range(self.row)]
+        carni_island = [[[] for _ in range(self.colon)] for _ in range(self.row)]
+        for x, row in enumerate(self.island_cells):
+            for y, cell in enumerate(row):
+                herbi_island[x][y] = len(cell.herbi_list)
+                carni_island[x][y] = len(cell.carni_list)
+        return herbi_island, carni_island
+
     def total_num_animals_on_island(self):
         """Returns total number of animals on the island
 
