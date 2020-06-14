@@ -2,6 +2,7 @@
 import numpy as np
 from biosim.cell import SingleCell, Highland, Lowland, Desert, Water
 import textwrap
+import random
 
 
 class TheIsland:
@@ -147,16 +148,37 @@ class TheIsland:
                 if cell:  # nothing happens in water cell
                     cell.birth()
 
+    def where_can_animals_migrate_to(self, row, col):
+        """
+        Check if any of the neighboring adjacent cells are water, and
+        returns the cells animals can move to.
+
+        Parameters
+        ----------
+        row: [int] row number as python uses it
+        col: [int] colon number as python uses it
+
+        Returns
+        -------
+        directions: [list] list with possible directions
+            - can move to east and south --> directions = ['E', 'S']
+        """
+        directions = []
+        if self.landscape[row-1][col] != 'W':
+            directions.append('North')
+        if self.landscape[row][col+1] != 'W':
+            directions.append('East')
+        if self.landscape[row+1][col] != 'W':
+            directions.append('South')
+        if self.landscape[row][col-1] != 'W':
+            directions.append('West')
+        return directions
+
     def migration(self):
         """
         Makes migration happen, updates amount of animals in each cell
         Returns
         -------
-
-        todo: think that we should make list of choices like moving = ['L', 'R', 'T', 'B']
-              for left, right, top and bottom, must use random.choice to pick a random, and use
-              method form cell to get the probability for migration
-
         Method in cell: updates self.herbi_list and self.carni_list
         # Animals staying in the cell
         self.herbi_list = herbi_stay
@@ -164,22 +186,42 @@ class TheIsland:
 
         # Returning the animals which want to migrate
         return herbi_move, carni_move
-
         """
-        # Miration choices are North, East, South and West
-        migration_choices = ['N', 'E', 'S', 'W']
-
+        # Make ghost island to store migrating animals
         ghost_island = [[[] for _ in range(self.colon)] for _ in range(self.row)]
 
         for x, row in enumerate(self.island_cells):
             for y, cell in enumerate(row):
-                # if isinstance(cell, (Desert, Lowland, Highland)):  # nothing happens in water cell
-                herbis_move, carnis_move = cell.migration()
-                ghost_island[x][y] = herbis_move + carnis_move
+                if self.landscape[x][y] != 'W':
+                    pos_dir = self.where_can_animals_migrate_to(x, y)
+                    north, east, south, west = cell.animals_migrate()
+                    if 'North' in pos_dir:
+                        ghost_island[x-1][y] += north
+                    else:
+                        ghost_island[x][y] += north
 
-        for x, row in enumerate(ghost_island):
+                    if 'East' in pos_dir:
+                        ghost_island[x][y+1] += east
+                    else:
+                        ghost_island[x][y] += east
+
+                    if 'South' in pos_dir:
+                        ghost_island[x + 1][y] += south
+                    else:
+                        ghost_island[x][y] += south
+
+                    if 'West' in pos_dir:
+                        ghost_island[x][y - 1] += west
+                    else:
+                        ghost_island[x][y] += west
+
+        for x, row in enumerate(self.island_cells):
             for y, cell in enumerate(row):
-                self.landscape
+                cell.add_animals_after_migration(ghost_island[x][y])
+
+        return ghost_island
+
+    def possible_relocations(self):
         pass
 
     def all_animals_age(self):
@@ -222,10 +264,28 @@ class TheIsland:
         """
         self.all_animals_eat()
         self.animals_procreate()
-        # self.migration()
+        self.migration()
         self.all_animals_age()
         self.all_animals_losses_weight()
         self.animals_die()
+
+    def give_animals_in_cell(self, row, col):
+        """
+        Give lists of herbivores and carnivores in a given cell
+
+        Parameters
+        ----------
+        row: [int] row number for cell
+        col: [int] colon number for cell
+
+        Returns
+        -------
+        herbis: [list] list of herbivores in cell
+        carnis: [list] list of carnivores in cell
+        """
+        herbis = self.island_cells[row-1][col-1].herbi_list
+        carnis = self.island_cells[row-1][col-1].carni_list
+        return herbis, carnis
 
     def total_num_animals_on_island(self):
         """Returns total number of animals on the island
@@ -242,6 +302,50 @@ class TheIsland:
                 tot_carni += len(cell.carni_list)
         tot_animal = tot_herbi + tot_carni
         return tot_animal, tot_herbi, tot_carni
+
+    def collect_fitness_age_weight_herbi(self):
+        """
+
+        Returns
+        -------
+        fitness_herbi: [list] fitness
+        age_herbi: [list]
+        weight_herbi: [list]
+
+        """
+        fitness_herbi = []
+        age_herbi = []
+        weight_herbi = []
+        for row in self.island_cells:
+            for cell in row:
+                fitness, age, weight = cell.collect_fitness_age_weight_herbi()
+                fitness_herbi += fitness
+                age_herbi += age
+                weight_herbi += weight
+
+        return fitness_herbi, age_herbi, weight_herbi
+
+    def collect_fitness_age_weight_carni(self):
+        """
+
+        Returns
+        -------
+        fitness_herbi: [list] fitness
+        age_herbi: [list]
+        weight_herbi: [list]
+
+        """
+        fitness_herbi = []
+        age_herbi = []
+        weight_herbi = []
+        for row in self.island_cells:
+            for cell in row:
+                fitness, age, weight = cell.collect_fitness_age_weight_carni()
+                fitness_herbi += fitness
+                age_herbi += age
+                weight_herbi += weight
+
+        return fitness_herbi, age_herbi, weight_herbi
 
 
 if __name__ == "__main__":
@@ -295,12 +399,12 @@ if __name__ == "__main__":
     print("Age of one herbivore:", isl.island_cells[1][1].herbi_list[0].age)
 
     new = [{'loc': (2, 2),
-            'pop':[{'species': 'Herbivore', 'age': 10, 'weight': 10},
-                   {'species': 'Herbivore', 'age': 8, 'weight': 25},
-                   {'species': 'Herbivore', 'age': 5, 'weight': 15},
-                   {'species': 'Carnivore', 'age': 6, 'weight': 10},
-                   {'species': 'Carnivore', 'age': 3, 'weight': 8},
-                   {'species': 'Carnivore', 'age': 43, 'weight': 8}]
+            'pop': [{'species': 'Herbivore', 'age': 10, 'weight': 10},
+                    {'species': 'Herbivore', 'age': 8, 'weight': 25},
+                    {'species': 'Herbivore', 'age': 5, 'weight': 15},
+                    {'species': 'Carnivore', 'age': 6, 'weight': 10},
+                    {'species': 'Carnivore', 'age': 3, 'weight': 8},
+                    {'species': 'Carnivore', 'age': 43, 'weight': 8}]
             }
            ]
 
@@ -313,10 +417,51 @@ if __name__ == "__main__":
     bigger_island = """\
                         WWWWW
                         WLLLW
-                        WHWHW
+                        WHDHW
                         WLDLW
                         WWWWW"""
+
+    animals_isl2 = [{'loc': (3, 3),
+                     'pop': [{'species': 'Carnivore', 'age': 5, 'weight': 30}
+                             for _ in range(200)]
+                     }]
+                    # {'loc': (2, 3),
+                    #  'pop': [{'species': 'Herbivore', 'age': 5, 'weight': 30}
+                    #          for _ in range(10)]
+                    #  }
+                    # ]
+
     isl2 = TheIsland(landscape_of_cells=bigger_island)
     print("Original landscape given in:\n", isl2.landscape)
     isl2.construct_island_with_cells()
     print("Landscape used in TheIsland-class\n", isl2.island_cells)
+    isl2.add_animals_on_island(new_animals=animals_isl2)
+    print(isl2.give_animals_in_cell(2, 2))
+    print("before migration")
+    print(isl2.migration())
+    print(isl2.migration())
+    print(isl2.migration())
+    print(isl2.migration())
+    print(isl2.migration())
+    print(isl2.migration())
+    print(isl2.migration())
+    print(isl2.migration())
+    print("after migration")
+    herb, carn = isl2.give_animals_in_cell(2, 2)
+    print(f"\nAnimals in (2, 2):", len(herb + carn))
+    herb, carn = isl2.give_animals_in_cell(2, 3)
+    print(f"Animals in (2, 3):", len(herb + carn))
+    herb, carn = isl2.give_animals_in_cell(2, 4)
+    print(f"Animals in (2, 4):", len(herb + carn))
+    herb, carn = isl2.give_animals_in_cell(3, 2)
+    print(f"\nAnimals in (3, 2):", len(herb + carn))
+    herb, carn = isl2.give_animals_in_cell(3, 3)
+    print(f"Animals in (3, 3):", len(herb + carn))
+    herb, carn = isl2.give_animals_in_cell(3, 4)
+    print(f"Animals in (3, 4):", len(herb + carn))
+    herb, carn = isl2.give_animals_in_cell(4, 2)
+    print(f"\nAnimals in (4, 2):", len(herb + carn))
+    herb, carn = isl2.give_animals_in_cell(4, 3)
+    print(f"Animals in (4, 3):", len(herb + carn))
+    herb, carn = isl2.give_animals_in_cell(4, 4)
+    print(f"Animals in (4, 4):", len(herb + carn))

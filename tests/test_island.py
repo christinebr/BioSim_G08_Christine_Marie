@@ -31,8 +31,36 @@ class TestingTheIsland:
                         ]
 
         self.island = TheIsland(landscape_of_cells=test_island, animals_on_island=test_animals)
-        self.animals = self.island.island_cells[1][2].herbi_list + self.island.island_cells[1][2].carni_list
+        herbis, carnis = self.island.give_animals_in_cell(2,3)
+        self.animals = herbis + carnis
         return self.island, self.animals
+
+    @pytest.fixture()
+    def start_point_migration(self):
+        """
+        Makes a simple test-model to use in tests
+        Returns
+        -------
+        A simple test-model
+        """
+        test_island = """\
+                            WWWWW
+                            WLLLW
+                            WHDHW
+                            WLDLW
+                            WWWWW"""
+        test_animals = [{'loc': (3, 3),
+                         'pop': [{'species': 'Herbivore',
+                                  'age': 5,
+                                  'weight': 35} for _ in range(200)]
+                        + [{'species': 'Carnivore',
+                            'age': 5,
+                            'weight': 20} for _ in range(20)]}
+                        ]
+
+        self.isl_mig = TheIsland(landscape_of_cells=test_island,
+                                 animals_on_island=test_animals)
+        return self.isl_mig
 
     def test_if_check_size(self):
         """
@@ -142,21 +170,77 @@ class TestingTheIsland:
             sum_age_after += animal.age
         assert sum_age_before + len(animals) == sum_age_after
 
-    def test_migration(self, initial_island, mocker):
+    def test_migration_west(self, start_point_migration, mocker):
         """
-        Check that animals migrate. Makes everyone migrate north, then check that the original
-        position is empty and all animals has gone to the north.
+        Check that animals migrate westward. Makes everyone migrate westward, then check that the
+        original position is empty and all animals has gone to the nwest.
         """
-        island = self.island
         mocker.patch('random.random', return_value=0)  # Makes sure all animals migrate
-        mocker.patch('random.choice', return_value='N')  # makes sure they migrate to the same cell
-        number_of_animals_before = len(self.animals)
+        mocker.patch('random.choice', return_value='West')
+        # makes sure they migrate to the same cell
+        number_of_animals_before = self.isl_mig.total_num_animals_on_island()[0]
         # All animals are in the first cell at the beginning
-        island.migration()
-        number_new_cell = len(island.island_cells[1][1].herbi_list + self.island.island_cells[1][1].carni_list)
-        number_old_cell = len(island.island_cells[1][2].herbi_list + self.island.island_cells[1][2].carni_list)
-        assert number_new_cell == number_of_animals_before
+        self.isl_mig.migration()
+        herbis, carnis = self.isl_mig.give_animals_in_cell(3, 3)
+        number_old_cell = len(herbis + carnis)
+        herbis, carnis = self.isl_mig.give_animals_in_cell(3, 2)
+        number_new_cell = len(herbis + carnis)
         assert number_old_cell == 0
+        assert number_new_cell == number_of_animals_before
+
+    def test_migration_east(self, start_point_migration, mocker):
+        """
+        Check that animals migrate to the east. Makes everyone migrate eastward, then check that
+        the original position is empty and all animals has gone to the east.
+        """
+        mocker.patch('random.random', return_value=0)  # Makes sure all animals migrate
+        mocker.patch('random.choice', return_value='East')  # makes sure they migrate to the same cell
+        number_of_animals_before = self.isl_mig.total_num_animals_on_island()[0]
+        # All animals are in the first cell at the beginning
+        isl = self.isl_mig.migration()
+        herbis1, carnis1 = self.isl_mig.give_animals_in_cell(3, 3)
+        number_old_cell = len(herbis1 + carnis1)
+        herbis, carnis = self.isl_mig.give_animals_in_cell(3, 4)
+        number_new_cell = len(herbis + carnis)
+        assert number_old_cell == 0
+        assert number_new_cell == number_of_animals_before
+
+    def test_migration_south(self, start_point_migration, mocker):
+        """
+        Check that animals migrate southward. Makes everyone migrate southward, then check that
+        the original position is empty and all animals has gone to the south.
+        """
+        mocker.patch('random.random', return_value=0)  # Makes sure all animals migrate
+        mocker.patch('random.choice', return_value='South')
+        # makes sure they migrate to the same cell
+        number_of_animals_before = self.isl_mig.total_num_animals_on_island()[0]
+        # All animals are in the first cell at the beginning
+        isl = self.isl_mig.migration()
+        herbis1, carnis1 = self.isl_mig.give_animals_in_cell(3, 3)
+        number_old_cell = len(herbis1 + carnis1)
+        herbis, carnis = self.isl_mig.give_animals_in_cell(4, 3)
+        number_new_cell = len(herbis + carnis)
+        assert number_old_cell == 0
+        assert number_new_cell == number_of_animals_before
+
+    def test_migration_north(self, start_point_migration, mocker):
+        """
+        Check that animals migrate northward. Makes everyone migrate northward, then check that
+        the original position is empty and all animals has gone to the north. (Yes, it is was
+        necessary to test for all directions.)
+        """
+        mocker.patch('random.random', return_value=0)  # Makes sure all animals migrate
+        mocker.patch('random.choice', return_value='North')
+        # makes sure they migrate to the same cell
+        number_of_animals_before = self.isl_mig.total_num_animals_on_island()[0]
+        # All animals are in the first cell at the beginning
+        isl = self.isl_mig.migration()
+        herbis1, carnis1 = self.isl_mig.give_animals_in_cell(3, 3)
+        number_old_cell = len(herbis1 + carnis1)
+        herbis, carnis = self.isl_mig.give_animals_in_cell(2, 3)
+        number_new_cell = len(herbis + carnis)
+        assert number_old_cell == 0
+        assert number_new_cell == number_of_animals_before
 
     def test_not_migrate_water(self, initial_island, mocker):
         """
@@ -169,16 +253,52 @@ class TestingTheIsland:
         """
         island = self.island
         mocker.patch('random.random', return_value=0)  # Makes sure all animals tries to migrate
-        mocker.patch('random.choice', return_value='E')
+        mocker.patch('random.choice', return_value='North')
         # makes sure all animals tries to migrate to the lake in the middle of the test_island
         number_of_animals_before = len(self.animals)
         # All animals are in the first cell at the beginning
         island.migration()
-        number_new_cell = len(island.island_cells[2][2].herbi_list + self.island.island_cells[2][2].carni_list)
-        number_old_cell = len(island.island_cells[1][2].herbi_list + self.island.island_cells[1][2].carni_list)
+        herbis, carnis = island.give_animals_in_cell(1,3)
+        number_new_cell = len(herbis + carnis)
+        herbis, carnis = island.give_animals_in_cell(2,3)
+        number_old_cell = len(herbis + carnis)
         assert number_new_cell == 0
         assert number_old_cell == number_of_animals_before
 
+    def test_possible_get_fitness(self, initial_island):
+        """
+        Tests that it is possible to get a list of the fitnesses of the animals.
+        """
+        num_animals_in_cell = len(self.animals)
+        fitness_herb_list = self.island.collect_fitness_age_weight_herbi()[0]
+        fitness_carn_list = self.island.collect_fitness_age_weight_carni()[0]
+        assert len(fitness_herb_list + fitness_carn_list) == num_animals_in_cell
+        for fitness_herb in fitness_herb_list:
+            assert 0 <= fitness_herb <= 1
+        for fitness_carn in fitness_carn_list:
+            assert 0 <= fitness_carn <= 1
+
+    def test_possible_get_age(self, initial_island):
+        """
+        Tests that it is possible to get a list of the ages of the animals.
+        """
+        num_animals_in_cell = len(self.animals)
+        age_herb_list = self.island.collect_fitness_age_weight_herbi()[1]
+        age_carn_list = self.island.collect_fitness_age_weight_carni()[1]
+        assert len(age_herb_list + age_carn_list) == num_animals_in_cell
+        for age in age_herb_list + age_carn_list:
+            assert age >= 0
+
+    def test_possible_get_weight(self, initial_island):
+        """
+        Tests that it is possible to get a list of the weights of the animals.
+        """
+        num_animals_in_cell = len(self.animals)
+        weight_herb_list = self.island.collect_fitness_age_weight_herbi()[2]
+        weight_carn_list = self.island.collect_fitness_age_weight_carni()[2]
+        assert len(weight_herb_list + weight_carn_list) == num_animals_in_cell
+        for weight in weight_herb_list + weight_carn_list:
+            assert weight > 0
 
     def test_complete_cycle(self, initial_island, mocker):
         """

@@ -20,6 +20,10 @@ class TestSingleCell:
         self.cell = SingleCell(animals_list=animals)
         return self.cell
 
+    def test_empty_animal_list(self):
+        cell = SingleCell(animals_list=None)
+        assert cell.animals_list == []
+
     def test_that_all_animals_age(self, initial_cell_class):
         """
         Tests that method age makes all animals get one year older.
@@ -71,20 +75,19 @@ class TestSingleCell:
         mocker.patch('random.random', return_value=0)
         mocker.patch('random.gauss', return_value=7)
         # Starts with finding what the weight of the mother should be after giving birth
-        correct_weights = []
         weight_limit_herbi = 3.5 * (8 + 1.5)
-        weight_new_herbi = random.gauss(8, 1.5)
+        weight_newborn = random.gauss(7, 1)
         weight_limit_carni = 3.5 * (6 + 1.)
-        weight_new_carni = random.gauss(6, 1.)
+        correct_weights = []
         for herbi in self.cell.herbi_list:
             if herbi.weight > weight_limit_herbi:
-                correct_weights.append(herbi.weight - 1.2 * weight_new_herbi)
+                correct_weights.append(herbi.weight - 1.2 * weight_newborn)
             else:
                 correct_weights.append(herbi.weight)
 
         for carni in self.cell.carni_list:
             if carni.weight > weight_limit_carni:
-                correct_weights.append(carni.weight - 1.1 * weight_new_carni)
+                correct_weights.append(carni.weight - 1.1 * weight_newborn)
             else:
                 correct_weights.append(carni.weight)
 
@@ -94,7 +97,7 @@ class TestSingleCell:
         new_list_of_animals = self.cell.herbi_list + self.cell.carni_list
         new_list_parents = []
         for animal in new_list_of_animals:
-            if animal.weight != weight_new_herbi or animal.weight != weight_new_carni:
+            if animal.weight != weight_newborn:
                 new_list_parents.append(animal)
 
         old_weights = []
@@ -174,7 +177,7 @@ class TestSingleCell:
 
         assert herbis == [True]*len(self.cell.herbi_list) and cars == [True]*len(self.cell.carni_list)
 
-    def possible_no_animals(self):
+    def test_possible_no_animals(self):
         """
         Checking that there wil be no problems if no animals are given into the class.
         """
@@ -203,6 +206,81 @@ class TestSingleCell:
         assert cellt.herbi_list == sorted_herbi
         assert cellt.carni_list == sorted_carni
 
+    def test_weight_loss_end_of_year(self, initial_cell_class):
+        sum_old = 0
+        for animal in self.cell.herbi_list + self.cell.carni_list:
+            sum_old += animal.weight
+        self.cell.weight_loss_end_of_year()
+
+        sum_new = 0
+        for animal in self.cell.herbi_list + self.cell.carni_list:
+            sum_new += animal.weight
+        assert sum_old > sum_new
+
+    def test_all_animals_wants_to_move(self, initial_cell_class, mocker):
+        """
+        Test that all animals in cell wants to move when mocking
+        random.random(). check that no animals are left in cell
+        """
+        num_animals_before = len(self.cell.herbi_list+self.cell.carni_list)
+        mocker.patch('random.random', return_value=0)
+        moving_animals = self.cell.animals_stay_or_move()
+        num_animals_after = len(self.cell.herbi_list+self.cell.carni_list)
+        assert len(moving_animals) == num_animals_before
+        assert num_animals_after == 0
+
+    def test_no_animals_wants_to_move(self, initial_cell_class, mocker):
+        """
+        Test that no animals in cell wants to move when mocking
+        random.random(). check that no animals are left in cell
+        """
+        num_animals_before = len(self.cell.herbi_list+self.cell.carni_list)
+        mocker.patch('random.random', return_value=1)
+        moving_animals = self.cell.animals_stay_or_move()
+        num_animals_after = len(self.cell.herbi_list+self.cell.carni_list)
+        assert len(moving_animals) == 0
+        assert num_animals_before == num_animals_after
+
+    def test_animals_migrate_north(self, initial_cell_class, mocker):
+        num_animals_before = len(self.cell.herbi_list+self.cell.carni_list)
+        mocker.patch('random.random', return_value=0)  # Makes sure all animals migrate
+        mocker.patch('random.choice', return_value='North')
+        north, east, south, west = self.cell.animals_migrate()
+        assert len(north) == num_animals_before
+        assert len(east) == 0
+        assert len(south) == 0
+        assert len(west) == 0
+
+    def test_animals_migrate_east(self, initial_cell_class, mocker):
+        num_animals_before = len(self.cell.herbi_list+self.cell.carni_list)
+        mocker.patch('random.random', return_value=0)  # Makes sure all animals migrate
+        mocker.patch('random.choice', return_value='East')
+        north, east, south, west = self.cell.animals_migrate()
+        assert len(north) == 0
+        assert len(east) == num_animals_before
+        assert len(south) == 0
+        assert len(west) == 0
+
+    def test_animals_migrate_south(self, initial_cell_class, mocker):
+        num_animals_before = len(self.cell.herbi_list+self.cell.carni_list)
+        mocker.patch('random.random', return_value=0)  # Makes sure all animals migrate
+        mocker.patch('random.choice', return_value='South')
+        north, east, south, west = self.cell.animals_migrate()
+        assert len(north) == 0
+        assert len(east) == 0
+        assert len(south) == num_animals_before
+        assert len(west) == 0
+
+    def test_animals_migrate_west(self, initial_cell_class, mocker):
+        num_animals_before = len(self.cell.herbi_list+self.cell.carni_list)
+        mocker.patch('random.random', return_value=0)  # Makes sure all animals migrate
+        mocker.patch('random.choice', return_value='West')
+        north, east, south, west = self.cell.animals_migrate()
+        assert len(north) == 0
+        assert len(east) == 0
+        assert len(south) == 0
+        assert len(west) == num_animals_before
+
 
 class TestLowland:
 
@@ -228,6 +306,44 @@ class TestLowland:
         self.low.animals_in_cell_eat()
         carni_after = len(self.low.carni_list)
         assert carni_before == carni_after
+
+    def test_if_cell_collect_fitness_for_all_animals(self, initial_lowland):
+        """
+        Test if cell can collect fitness for all animals and return them
+        in a list.
+        """
+        num_animals_in_cell = len(self.low.herbi_list + self.low.carni_list)
+        fitness_herb_list = self.low.collect_fitness_age_weight_herbi()[0]
+        fitness_carn_list = self.low.collect_fitness_age_weight_carni()[0]
+        assert len(fitness_herb_list + fitness_carn_list) == num_animals_in_cell
+        for fitness_herb in fitness_herb_list:
+            assert 0 <= fitness_herb <= 1
+        for fitness_carn in fitness_carn_list:
+            assert 0 <= fitness_carn <= 1
+
+    def test_if_cell_collect_age_for_all_animals(self, initial_lowland):
+        """
+        Test if cell can collect age for all animals and return them in
+        a list.
+        """
+        num_animals_in_cell = len(self.low.herbi_list + self.low.carni_list)
+        age_herb_list = self.low.collect_fitness_age_weight_herbi()[1]
+        age_carn_list = self.low.collect_fitness_age_weight_carni()[1]
+        assert len(age_herb_list + age_carn_list) == num_animals_in_cell
+        for age in age_herb_list + age_carn_list:
+            assert age >= 0
+
+    def test_if_cell_collect_weight_for_all_animals(self, initial_lowland):
+        """
+        Test if cell can collect age for all animals and return them in
+        a list.
+        """
+        num_animals_in_cell = len(self.low.herbi_list + self.low.carni_list)
+        weight_herb_list = self.low.collect_fitness_age_weight_herbi()[2]
+        weight_carn_list = self.low.collect_fitness_age_weight_carni()[2]
+        assert len(weight_herb_list + weight_carn_list) == num_animals_in_cell
+        for weight in weight_herb_list + weight_carn_list:
+            assert weight > 0
 
     def test_herbivores_eaten(self, initial_lowland, mocker):
         """
@@ -270,6 +386,10 @@ class TestLowland:
 
         assert av_herbi_before < av_herbi_after
         assert av_carni_before < av_carni_after
+
+    def test_set_params_raises_keyerror(self, initial_lowland):
+        with pytest.raises(KeyError):
+            self.low.set_params({'g_max':200.0})
 
     def test_set_params_cell(self, initial_lowland):
         """Tests that it is possible to update parameters for cell."""
