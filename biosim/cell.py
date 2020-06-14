@@ -44,11 +44,13 @@ class SingleCell:
         """
         Makes i possible to add new animals to the cell. This method updates
         the variables in init.
+
+
+        Todo: Combine this with the method sort_animals_by_species.
+
         Parameters
         ----------
         new_animals: [list] List of new animals that shall be added to the cell.
-
-        Todo: Combine this with the method sort_animals_by_species.
         """
         # if new_animals:
         #     animals = new_animals
@@ -139,6 +141,8 @@ class SingleCell:
 
         The surviving herbivores are stored in a list that's in the end used
         to update the herbivore list in init. Carnivores in init are also updated.
+
+        Todo: This is a little to long.
         """
         # Herbivores eats
         random.shuffle(self.herbi_list)  # Shuffles the herbivores, they eat in random order
@@ -165,7 +169,7 @@ class SingleCell:
             sorted_herbi = not_killed_herbis
 
         self.herbi_list = sorted_herbi  # the herbis remaining are the not_killed_herbis
-        self.carni_list = sorted_carni  # the carnis after eating
+        self.carni_list = sorted_carni  # carnis after eating
 
     def birth(self):
         """
@@ -178,11 +182,12 @@ class SingleCell:
 
         newborn_herbi, newborn_carni = [], []
         for herbi, carni, in zip_longest(self.herbi_list, self.carni_list):
-            if herbi:  # need this because herbi is None if num_carni > num_herbi
+            if herbi:  # needs this because herbi is None if num_carni > num_herbi
                 prob_birth_herbi, birth_weight_herbi = herbi.birth(num_herbi)
                 if random.random() < prob_birth_herbi:
                     newborn_herbi.append(Herbivores(age=0, weight=birth_weight_herbi))
                     herbi.update_weight(weight_of_newborn=birth_weight_herbi)
+                    # This updates the weight of the mother according to the weight of the newborn
 
             if carni:  # need this because carni is None if num_herbi > num_carni
                 prob_birth_carni, birth_weight_carni = carni.birth(num_carni)
@@ -228,11 +233,15 @@ class SingleCell:
 
     def animals_migrate(self):
         """
+        Sorts animals that wants to move in list showing the direction they
+        wants to move in.
 
         Returns
         -------
-        north, east, south, west: [list] list with animals wanting to move
-                                  to the name of the list
+        north: [list] Animals who wants to move to the north.
+        east: [list] Animals who wants to move to the east.
+        south: [list] Animals who wants to move to the south.
+        west: [list] Animals who wants to move to the west.
         """
         animals_move = self.animals_stay_or_move()
         north = []
@@ -270,7 +279,8 @@ class SingleCell:
 
     def weight_loss_end_of_year(self):
         """
-        Makes all the animals looses weight according to their start-weight and the constant eta
+        Makes all the animals loose weight according to their start-weight and
+        the constant eta.
         """
         for herbi in self.herbi_list:
             herbi.update_weight()
@@ -280,11 +290,12 @@ class SingleCell:
     def death(self):
         """
         Decides which of the animals that dies and updates the animal_list
+        accordingly.
         """
         survived_herbis = []
         for herbi in self.herbi_list:
             if random.random() > herbi.probability_death():
-                # Testing if the animal survives, not if it dies. That's why we use > instead of <
+                # Tests if the animal survives, not if it dies. That's why we use > instead of <
                 survived_herbis.append(herbi)
 
         survived_carnis = []
@@ -299,7 +310,8 @@ class SingleCell:
     def collect_fitness_age_weight_herbi(self):
         """
         Collects the fitness, age and weight for all herbivores and returns
-        it in three lists, one fitness, one for age and one for weight
+        it in three lists, one with fitness, one with age and one with weight.
+
         Returns
         -------
         fitness: [list] fitness of herbivores in cell
