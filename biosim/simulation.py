@@ -91,7 +91,7 @@ class BioSim:
         vis_years: years between visualization updates
         img_years: years between visualizations saved to files (default: vis_years)
 
-        Image files will be numbered conseccutively
+        Image files will be numbered consecutively
         """
         pass
 
@@ -103,7 +103,7 @@ class BioSim:
         ----------
         population: List of dictionaries specifying population
         """
-        pass
+        self.isl.add_animals_on_island(new_animals=population)
 
     @property
     def year(self):
@@ -113,12 +113,14 @@ class BioSim:
     @property
     def num_animals(self):
         """Total number of animals on island."""
-        pass
+        return self.isl.total_num_animals_on_island()[0]
 
     @property
     def num_animals_per_species(self):
         """Number of animals per species in island, as dictionary."""
-        pass
+        herbis = self.isl.total_num_animals_on_island()[1]
+        carnis = self.isl.total_num_animals_on_island()[2]
+        return {'Herbivore': herbis, 'Carnivore': carnis}
 
     def make_movie(self):
         """Create MPEG4 movie from visualization images saved."""
