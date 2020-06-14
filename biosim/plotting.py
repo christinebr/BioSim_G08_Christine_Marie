@@ -65,7 +65,19 @@ class Plotting:
 
         self.ax1.set_title('The island', fontsize=self.font)
 
-    def plot_animal_count(self, year, tot_herbi, tot_carni):
+    def update_animal_count(self, year, tot_herbi, tot_carni):
+        """
+        Updating plot over total amount of herbivores and carnivores on the island.
+        Parameters
+        ----------
+        year
+        tot_herbi
+        tot_carni
+
+        Returns
+        -------
+
+        """
         y_herbis = self.herbis_line.get_ydata()
         y_carnis = self.carnis_line.get_ydata()
 

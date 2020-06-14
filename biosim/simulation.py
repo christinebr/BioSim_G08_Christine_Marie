@@ -45,6 +45,7 @@ class BioSim:
         """
         self.isl = TheIsland(landscape_of_cells=island_map,
                              animals_on_island=ini_pop)
+        self.island_map = island_map
         random.seed(seed)
         self.ymax_animals = ymax_animals
         self.cmax_animals = cmax_animals
@@ -94,12 +95,19 @@ class BioSim:
 
         Image files will be numbered consecutively
         """
+        plot = Plotting(num_years)
+        island_map = self.island_map.replace(' ', '') + '\n'
+        plot.map_of_island(island_map)
         for year in num_years:
-            # plotting
             herb = self.isl.total_num_animals_on_island[1]
             carn = self.isl.total_num_animals_on_island[2]
+            plot.update_animal_count(num_years, herb, carn)
+            animals = self.isl.herbis_and_carnis_on_island()
+            plot.heatmaps_sepcies_dist(animals[0], animals[1], self.cmax_animals)
+            herbi_prop = self.isl.collect_fitness_age_weight_herbi()
+            carni_prop = self.isl.collect_fitness_age_weight_carni()
+            plot.histograms(herbi_prop, carni_prop, self.hist_specs)
             self.isl.annual_cycle()
-
 
     def add_population(self, population):
         """
