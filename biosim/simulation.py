@@ -93,7 +93,7 @@ class BioSim:
 
         Image files will be numbered consecutively
         """
-        pass
+
 
     def add_population(self, population):
         """
