@@ -10,6 +10,13 @@ class TestSingleCell:
 
     @pytest.fixture()
     def initial_cell_class(self):
+        """
+        Makes a single cell with animals to use as test-cell.
+
+        Returns
+        -------
+        cell: [class instance] A cell with animals
+        """
         animals = [{'species': 'Herbivore', 'age': 10, 'weight': 40},
                    {'species': 'Herbivore', 'age': 40, 'weight': 20},
                    {'species': 'Herbivore', 'age': 2, 'weight': 8},
@@ -21,14 +28,18 @@ class TestSingleCell:
         return self.cell
 
     def test_empty_animal_list(self):
+        """
+        Check that it's possible to call SingleCell without supplying any
+        animals (i.e. with animals_list=None).
+        """
         cell = SingleCell(animals_list=None)
         assert cell.animals_list == []
 
     def test_that_all_animals_age(self, initial_cell_class):
         """
         Tests that method age makes all animals get one year older.
-        The sum of the age in the test-sett increases with a number equal to the number of
-        animals every year.
+        The sum of the age in the test-sett increases with a number equal to
+        the number of animals every year.
         """
         sum_old = 0
         for animal in self.cell.herbi_list + self.cell.carni_list:
@@ -44,9 +55,11 @@ class TestSingleCell:
 
     def test_that_give_birth(self, initial_cell_class, mocker):
         """
-        Tests that the birth-method makes more animals, both among herbivores and carnivores.
+        Tests that the birth-method makes more animals, both among herbivores
+        and carnivores.
         """
         mocker.patch('random.random', return_value=0)
+        # Making sure all animals who are able to give birth does so.
         herbis_before = len(self.cell.herbi_list)
         carnis_before = len(self.cell.carni_list)
         self.cell.birth()
@@ -58,8 +71,12 @@ class TestSingleCell:
     def test_that_newborns_weights_something(self, initial_cell_class, mocker):
         """
         Tests that the birth method assigns a weight to the newborn animal.
+        Strictly speaking, the test checks all animals, but if no animal has
+        weight zero, there are no newborns with this weight either. And we've
+        already established that the birth-method makes new animals.
         """
         mocker.patch('random.random', return_value=0)
+        # Makes sure there are newborns
         self.cell.birth()
         nonexsistent_newborns = 0
         for animal in self.cell.herbi_list + self.cell.carni_list:
@@ -70,26 +87,44 @@ class TestSingleCell:
 
     def test_that_mother_looses_weight(self, initial_cell_class, mocker):
         """
-        Tests that the birth method makes the mother loose weight.
+        Tests that the birth method makes the mother loose the right amount of
+        weight.
         """
+        # mocker.patch('random.random', return_value=0)  # Makes sure that there will be newborns
+        # weight_newborn = 7
+        # # Makes sure all newborns have the same weight.
+        # mocker.patch('random.gauss', return_value=weight_newborn)
+        # correct_weights = []  # What the weight of the mother should be after giving birth
+        # # Before birth the number of herbivores and carnivores are equal, and it's safe to use zip.
+        # for herbi, carni in zip(self.cell.herbi_list, self.cell.carni_list):
+        #     if herbi.weight > 3.5 * (8 + 1.5):  # Checking against the weight limit for herbivores.
+        #         correct_weights.append(herbi.weight - 1.2 * weight_newborn)
+        #     else:
+        #         correct_weights.append(herbi.weight)
+        #
+        #     if carni.weight > 3.5 * (6 + 1.):  # Checking against the weight limit for carnivores.
+        #         correct_weights.append(carni.weight - 1.1 * weight_newborn)
+        #     else:
+        #         correct_weights.append(carni.weight)
+
+        # Makes sure that there will be newborns, who's weight will be 7
         mocker.patch('random.random', return_value=0)
-        mocker.patch('random.gauss', return_value=7)
-        # Starts with finding what the weight of the mother should be after giving birth
-        weight_limit_herbi = 3.5 * (8 + 1.5)
-        weight_newborn = random.gauss(7, 1)
-        weight_limit_carni = 3.5 * (6 + 1.)
+        weight_newborn = 7
         correct_weights = []
         for herbi in self.cell.herbi_list:
-            if herbi.weight > weight_limit_herbi:
+            if herbi.weight > 3.5 * (8 + 1.5): # Tests against the weight limit for herbivores
                 correct_weights.append(herbi.weight - 1.2 * weight_newborn)
             else:
                 correct_weights.append(herbi.weight)
 
         for carni in self.cell.carni_list:
-            if carni.weight > weight_limit_carni:
+            if carni.weight > 3.5 * (6 + 1.):  # Tests against the weight limit for carnivores
                 correct_weights.append(carni.weight - 1.1 * weight_newborn)
             else:
                 correct_weights.append(carni.weight)
+
+        # Makes sure all newborns have the same weight.
+        mocker.patch('random.gauss', return_value=weight_newborn)
 
         # Then find the old weights and the new weights
         old_list_of_animals = self.cell.herbi_list + self.cell.carni_list
