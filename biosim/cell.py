@@ -383,6 +383,3 @@ class Highland(SingleCell):
     """
     def __init__(self, animals_list):
         super().__init__(animals_list)
-
-    def animals_eat(self):
-        return self.animals_in_cell_eat()
