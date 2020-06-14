@@ -50,6 +50,35 @@ def map_of_island(geogr):
 
     ax1.set_title('The island', fontsize=font)
 
+def heatmaps_sepcies_dist(herbis_dist, carnis_dist, cmax_animals):
+    """
+    Makes heatmaps showing the distribution of herbivore and carnivare distribution on the island.
+    Parameters
+    ----------
+    herbis_dist: [list of lists] Amount of herbivores in each cell.
+    carnis_dist: [list of lists] Amount of carnivores in each cell.
+    cmax_animals: [dict] Maximum values for colorbars of herbivores and carnivores.
+    """
+    width_island = len(herbis_dist[0])
+    height_island = len(herbis_dist)
+    # Herbivores distribution
+    im = ax4.imshow(herbis_dist, cmap='viridis')
+    ax4.set_title('Herbivore distribution', fontsize=font)
+    fig.colorbar(im, ax=ax4, orientation='vertical', max=cmax_animals['Herbivore'])
+    ax4.set_xticks(range(width_island))
+    ax4.set_xticklabels(range(1, 1 + width_island), fontsize=font_axes)
+    ax4.set_yticks(range(height_island))
+    ax4.set_yticklabels(range(1, 1 + height_island), fontsize=font_axes)
+
+    # Carnivores distribution
+    im = ax6.imshow(carnis_dist, cmap='viridis')
+    ax6.set_title('Carnivore distribution', fontsize=font)
+    fig.colorbar(im, ax=ax6, orientation='vertical', max=cmax_animals['Carnivore'])
+    ax6.set_xticks(range(width_island))
+    ax6.set_xticklabels(range(1, 1 + width_island), fontsize=font_axes)
+    ax6.set_yticks(range(height_island))
+    ax6.set_yticklabels(range(1, 1 + height_island), fontsize=font_axes)
+
 def histograms(herbi_properties, carni_properties, hist_specs):
     """
     Makes histograms for the properties fitness, age and weight for herbivores and arnivores.

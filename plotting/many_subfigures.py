@@ -136,18 +136,18 @@ for row in range(island.row):
     herbis_lists.append(herbis_row)
     carnis_lists.append(carnis_row)
 
-ax4.imshow(herbis_lists, cmap='viridis')
+im = ax4.imshow(herbis_lists, cmap='viridis')
 ax4.set_title('Herbivore distribution', fontsize=font)
-# ax4.colorbar(cax=ax4)
+fig.colorbar(im, ax=ax4, orientation='vertical')
 ax4.set_xticks(range(len(geogr_rgb[0])))
 ax4.set_xticklabels(range(1, 1 + len(geogr_rgb[0])), fontsize=font_axes)
 ax4.set_yticks(range(len(geogr_rgb)))
 ax4.set_yticklabels(range(1, 1 + len(geogr_rgb)), fontsize=font_axes)
 
 ### ax6
-ax6.imshow(carnis_lists, cmap='viridis')
+im = ax6.imshow(carnis_lists, cmap='viridis')
 ax6.set_title('Carnivore distribution', fontsize=font)
-# ax4.colorbar(cax=ax4)
+fig.colorbar(im, ax=ax6, orientation='vertical')
 ax6.set_xticks(range(len(geogr_rgb[0])))
 ax6.set_xticklabels(range(1, 1 + len(geogr_rgb[0])), fontsize=font_axes)
 ax6.set_yticks(range(len(geogr_rgb)))
