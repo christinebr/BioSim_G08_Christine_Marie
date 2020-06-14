@@ -107,6 +107,7 @@ class BioSim:
             herbi_prop = self.isl.collect_fitness_age_weight_herbi()
             carni_prop = self.isl.collect_fitness_age_weight_carni()
             plot.histograms(herbi_prop, carni_prop, self.hist_specs)
+            plot.text_axis()
             self.isl.annual_cycle()
 
     def add_population(self, population):

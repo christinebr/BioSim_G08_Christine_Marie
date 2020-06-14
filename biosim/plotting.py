@@ -158,6 +158,11 @@ class Plotting:
                 self.ax9.set_xticks(xticks)
                 self.ax9.set_xticklabels(xticks, fontsize=self.font_axes)
 
+    def text_axis(self):
+        """
+        Plots the counter an some informational text.
+        """
+        pass
 
 if __name__ == '__main__':
     geogr = """WWWWW
