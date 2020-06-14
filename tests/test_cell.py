@@ -3,7 +3,6 @@
 from biosim.cell import SingleCell, Lowland, Desert
 from biosim.animals import Herbivores, Carnivores
 import pytest
-import random
 
 
 class TestSingleCell:
@@ -95,7 +94,7 @@ class TestSingleCell:
         weight_newborn = 7
         correct_weights = []
         for herbi in self.cell.herbi_list:
-            if herbi.weight > 3.5 * (8 + 1.5): # Tests against the weight limit for herbivores
+            if herbi.weight > 3.5 * (8 + 1.5):  # Tests against the weight limit for herbivores
                 correct_weights.append(herbi.weight - 1.2 * weight_newborn)
             else:
                 correct_weights.append(herbi.weight)
@@ -149,7 +148,7 @@ class TestSingleCell:
         list_of_animals = self.cell.herbi_list + self.cell.carni_list
         assert len(list_of_animals) == 0
 
-    def test_that_newborn_same_speci_as_parent(self,initial_cell_class, mocker):
+    def test_that_newborn_same_speci_as_parent(self, initial_cell_class, mocker):
         """
         Tests that herbivores only gives birth to herbivores and carnivores
         only gives birth to carnivores.
@@ -307,7 +306,7 @@ class TestLowland:
 
         Returns
         -------
-        cell: [class instance] A lowlans cell with animals
+        cell: [class instance] A lowland cell with animals
         """
         animals = [{'species': 'Herbivore', 'age': 10, 'weight': 15},
                    {'species': 'Herbivore', 'age': 40, 'weight': 20},
@@ -332,7 +331,7 @@ class TestLowland:
 
     def test_if_cell_collect_fitness_for_all_animals(self, initial_lowland):
         """
-        Test if cell can collect fitness for all animals and return them
+        Tests if cell can collect fitness for all animals and return them
         in a list.
         """
         num_animals_in_cell = len(self.low.herbi_list + self.low.carni_list)
@@ -346,7 +345,7 @@ class TestLowland:
 
     def test_if_cell_collect_age_for_all_animals(self, initial_lowland):
         """
-        Test if cell can collect age for all animals and return them in
+        Tests if cell can collect age for all animals and return them in
         a list.
         """
         num_animals_in_cell = len(self.low.herbi_list + self.low.carni_list)
@@ -370,8 +369,8 @@ class TestLowland:
 
     def test_herbivores_eaten(self, initial_lowland, mocker):
         """
-        Tests that carnivores eat herbivores, check that the number of herbivores are lower
-        after eating.
+        Tests that carnivores eat herbivores by check that the number of
+        herbivores are lower after eating.
         """
         mocker.patch('random.random', return_value=0)
         herbi_before = len(self.low.herbi_list)
@@ -397,6 +396,7 @@ class TestLowland:
         av_carni_before = sum_weight_carni_before/len(self.low.carni_list)
 
         mocker.patch('random.random', return_value=0.03)
+        # Makes sure some herbivores, but not all, are eaten.
         self.low.animals_in_cell_eat()
         sum_weight_herbi_after = 0
         for herbi in self.low.herbi_list:
@@ -411,8 +411,12 @@ class TestLowland:
         assert av_carni_before < av_carni_after
 
     def test_set_params_raises_keyerror(self, initial_lowland):
+        """
+        Check that the method set_params raises a keyerror when given an
+        illegal key.
+        """
         with pytest.raises(KeyError):
-            self.low.set_params({'g_max':200.0})
+            self.low.set_params({'g_max': 200.0})
 
     def test_set_params_cell(self, initial_lowland):
         """Tests that it is possible to update parameters for cell."""
@@ -443,7 +447,7 @@ class TestDesert:
         for herbi in self.desert.herbi_list:
             sum_weight_before += herbi.weight
 
-        mocker.patch('random.random', return_value=1) #Makes sure no herbis are killed
+        mocker.patch('random.random', return_value=1)  # Makes sure no herbis are killed
         self.desert.animals_in_cell_eat()
         sum_weight_after = 0
         for herbi in self.desert.herbi_list:
@@ -452,12 +456,13 @@ class TestDesert:
 
     def test_only_carnivores_kill(self, initial_desert, mocker):
         """
-        Test that only carnivores kill and eat other animals. Does so by checking that
-        the number of carnivores stay constant, while the number of herbivores decreases.
+        Test that only carnivores kill and eat other animals. Does so by
+        checking that the number of carnivores stay constant, while the number
+        of herbivores decreases.
         """
         herbi_before = len(self.desert.herbi_list)
         carni_before = len(self.desert.carni_list)
-        mocker.patch('random.random', return_value=0.01) #Makes sure some herbis are killed
+        mocker.patch('random.random', return_value=0.01)  # Makes sure some herbis are killed
         self.desert.animals_in_cell_eat()
         herbi_after = len(self.desert.herbi_list)
         carni_after = len(self.desert.carni_list)
