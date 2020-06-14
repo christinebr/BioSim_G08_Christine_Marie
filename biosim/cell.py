@@ -2,16 +2,22 @@
 from biosim.animals import Herbivores, Carnivores
 import random
 from itertools import zip_longest
-from operator import itemgetter  # attrgetter
+from operator import itemgetter
 
 
 class SingleCell:
     """
-    Keeps control of the amount of animals of both species and fodder, and landscape-type.
+    Keeps control of the number of animals of both species,the amount of
+    fodder, and landscape-type.
     """
-    _params = None  # = {}, or just an empty dictionary?
+    _params = None
 
     def __init__(self, animals_list=None):
+        """
+        Parameters
+        ----------
+        animals_list: [list] List of animals, default-value is None
+        """
         if animals_list:
             self.animals_list = animals_list
         else:
@@ -24,6 +30,7 @@ class SingleCell:
     def sort_animals_by_species(self):
         """
         Sorting the animals in lists of herbivores and carnivores.
+        This method is called in init, to make sure variables are updated.
         """
         for animal in self.animals_list:
             if animal['species'] == 'Herbivore':
@@ -34,6 +41,15 @@ class SingleCell:
         self.animals_list = self.herbi_list + self.carni_list
 
     def add_new_animals_to_cell(self, new_animals):
+        """
+        Makes i possible to add new animals to the cell. This method updates
+        the variables in init.
+        Parameters
+        ----------
+        new_animals: [list] List of new animals that shall be added to the cell.
+
+        Todo: Combine this with the method sort_animals_by_species.
+        """
         # if new_animals:
         #     animals = new_animals
         # else:
@@ -51,8 +67,8 @@ class SingleCell:
     def set_params(cls, new_params):
         """
         Set parameters for class.
-        Raises a KeyError if given an invalid parameter name, invalid key used
-        in the dictionary.
+        Raises a KeyError if given an invalid parameter name, i.e. a key that's
+        not present in the dictionary.
         Raises a ValueError if given invalid value for key.
 
         Parameters
@@ -68,24 +84,36 @@ class SingleCell:
 
     @classmethod
     def get_params(cls):
+        """
+        Makes it possible to get the parameter values
+        Returns
+        -------
+        _params: [dict] Dictionary of parameter values.
+        """
         return cls._params
 
     def sort_animals_after_fitness(self):
         """
         Sorting the animals after fitness
-            - herbivores are sorted from lowest to highest fitness
-            - carnivores are sorted from highest to lowest fitness
+            - herbivores are sorted from lowest to highest fitness.
+            - carnivores are sorted from highest to lowest fitness.
+        Returns
+        -------
+        sorted_herbis: [list of class-instances]
+            List of herbivores sorted from lowest to highest fitness.
+        sorted_carnis: [list of class-instances]
+            List of herbivores sorted from highest to lowest fitness.
         """
-        # Sorting the herbivores after fitness
-        # fining the fitness of each herbi and placing them in a list
+        # Sorting the herbivores
+        # finding the fitness of each herbi and placing them in a list
         fitness_herbi = [herbi.fitness() for herbi in self.herbi_list]
-        # the first element is the herbi with lowest fitness
+        # the first element is the herbi with the lowest fitness
         zip_fitness_herbis = zip(fitness_herbi, self.herbi_list)
         sorted_herbi_after_fitness = sorted(zip_fitness_herbis, key=itemgetter(0))
         sorted_herbis = [herb for _, herb in sorted_herbi_after_fitness]
 
-        # Sorting the carnivores after fitness
-        # fining the fitness of each herbi and placing them in a list
+        # Sorting the carnivores
+        # finding the fitness of each herbi and placing them in a list
         fitness_carni = [carni.fitness() for carni in self.carni_list]
         # sorting the self.carni_list after the fitness_carni
         # the first element is the carni with the highest fitness
@@ -97,11 +125,23 @@ class SingleCell:
 
     def animals_in_cell_eat(self):
         """
-        shuffles the animals, loops through all the animals in self.animal_list
-        call the function animal.update_weight()
+        First the herbivores eat, they eat in random order. Shuffle the
+        herbivores list, then let the first animal eat and gain weigh. This
+        goes on until there are no fodder left in the cell.
+
+        Then the carnivores eat. The fittest carnivore eats first, it tries to
+        kill the least fit herbivores until it is filled or there are no more
+        herbivores that's week enough for it to kill. Then the next carnivore
+        kills and eat, and so on until there are no more herbivores week enough
+        to be killed by the hungry carnivores or all carnivores are stuffed. If
+        a carnivore kills a herbivore that weights more than what the carnivore
+        wants to eat, the remainders of the herbivore are lost.
+
+        The surviving herbivores are stored in a list that's in the end used
+        to update the herbivore list in init. Carnivores in init are also updated.
         """
-        # Herbivore eats
-        random.shuffle(self.herbi_list)  # Shuffles the herbivore, they eat in random order
+        # Herbivores eats
+        random.shuffle(self.herbi_list)  # Shuffles the herbivores, they eat in random order
         fodder_in_cell = self._params['f_max']
         for herbi in self.herbi_list:
             fodder = herbi.get_params()['F']
@@ -129,7 +169,9 @@ class SingleCell:
 
     def birth(self):
         """
-        Decides if animals are born and updates the animal_list
+        Decides if animals are born and updates the animal_list.
+        Makes sure the mother loses weight and assigns a weight and specie to
+        the newborn animals.
         """
         num_herbi = len(self.herbi_list)
         num_carni = len(self.carni_list)
@@ -154,7 +196,8 @@ class SingleCell:
 
     def animals_stay_or_move(self):
         """
-        Check if animals stay in cell or migrate to an other cell
+        Check if animals stay in a cell or migrate to another cell. The method
+        also updates lists of herbivores and carnivores in the init.
 
         Returns
         -------
@@ -357,7 +400,6 @@ if __name__ == "__main__":
     herb, carn = low.migration()
     print(herb)
     print(carn)
-
 
     a_before = [ani.age for ani in (low.herbi_list+low.carni_list)]
     print("Age before:", a_before)
