@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from biosim.cell import SingleCell, Lowland, Desert
+from biosim.cell import SingleCell, Lowland, Desert, Water
 from biosim.animals import Herbivores, Carnivores
 import pytest
 
@@ -430,6 +430,13 @@ class TestDesert:
 
     @pytest.fixture()
     def initial_desert(self):
+        """
+        Makes a single cell with animals to use as test-cell for desert-class.
+
+        Returns
+        -------
+        cell: [class instance] A desert cell with animals
+        """
         animals = [{'species': 'Herbivore', 'age': 10, 'weight': 15},
                    {'species': 'Herbivore', 'age': 40, 'weight': 20},
                    {'species': 'Herbivore', 'age': 2, 'weight': 8},
@@ -468,3 +475,19 @@ class TestDesert:
         carni_after = len(self.desert.carni_list)
         assert carni_before == carni_after
         assert herbi_before > herbi_after
+
+class TestWater:
+
+    def test_make_water_instance(self):
+        """
+        Makes sure it is (not?) possible to make a water-instance.
+        """
+        animals = [{'species': 'Herbivore', 'age': 10, 'weight': 15},
+                   {'species': 'Herbivore', 'age': 40, 'weight': 20},
+                   {'species': 'Herbivore', 'age': 2, 'weight': 8},
+                   {'species': 'Carnivore', 'age': 30, 'weight': 8},
+                   {'species': 'Carnivore', 'age': 5, 'weight': 3.5},
+                   {'species': 'Carnivore', 'age': 37, 'weight': 5.7}
+                   ]
+        w = Water(animals_list = animals)
+        assert isinstance(w, Water)
