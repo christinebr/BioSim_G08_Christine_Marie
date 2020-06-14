@@ -4,28 +4,28 @@ import matplotlib.pyplot as plt
 import numpy as np
 from biosim.island import TheIsland
 
-class Plotting():
+
+class Plotting:
 
     def __init__(self):
 
         # Initialising figure with subplots
-        fig = plt.figure()
-        grid = fig.add_gridspec(ncols=3, nrows=3, wspace=0.2, hspace=0.4)
-        self.ax1 = fig.add_subplot(grid[0, 0])
-        self.ax3 = fig.add_subplot(grid[0, 2])
-        self.ax4 = fig.add_subplot(grid[1, 0])
-        self.ax6 = fig.add_subplot(grid[1, 2])
-        self.ax7 = fig.add_subplot(grid[2, 0])
-        self.ax8 = fig.add_subplot(grid[2, 1])
-        self.ax9 = fig.add_subplot(grid[2, 2])
-        fig.show()
+        self.fig = plt.figure()
+        grid = self.fig.add_gridspec(ncols=3, nrows=3, wspace=0.2, hspace=0.4)
+        self.ax1 = self.fig.add_subplot(grid[0, 0])
+        self.ax3 = self.fig.add_subplot(grid[0, 2])
+        self.ax4 = self.fig.add_subplot(grid[1, 0])
+        self.ax6 = self.fig.add_subplot(grid[1, 2])
+        self.ax7 = self.fig.add_subplot(grid[2, 0])
+        self.ax8 = self.fig.add_subplot(grid[2, 1])
+        self.ax9 = self.fig.add_subplot(grid[2, 2])
+        self.fig.show()
 
         # General stuff for the plot
         # Fontsizes to be used on the titles of all plots
         self.font = 8
         # Fontsizes to be used on the axes of all plots
         self.font_axes = 8
-
 
     def map_of_island(self, geogr):
         """
@@ -48,13 +48,13 @@ class Plotting():
         geogr_rgb = [[rgb_value[column] for column in row]
                      for row in geogr.splitlines()]
 
-        ax1.imshow(geogr_rgb)
-        ax1.set_xticks(range(len(geogr_rgb[0])))
-        ax1.set_xticklabels(range(1, 1 + len(geogr_rgb[0])), fontsize=self.font_axes)
-        ax1.set_yticks(range(len(geogr_rgb)))
-        ax1.set_yticklabels(range(1, 1 + len(geogr_rgb)), fontsize=self.font_axes)
+        self.ax1.imshow(geogr_rgb)
+        self.ax1.set_xticks(range(len(geogr_rgb[0])))
+        self.ax1.set_xticklabels(range(1, 1 + len(geogr_rgb[0])), fontsize=self.font_axes)
+        self.ax1.set_yticks(range(len(geogr_rgb)))
+        self.ax1.set_yticklabels(range(1, 1 + len(geogr_rgb)), fontsize=self.font_axes)
 
-        ax1.set_title('The island', fontsize=font)
+        self.ax1.set_title('The island', fontsize=self.font)
 
     def heatmaps_sepcies_dist(self, herbis_dist, carnis_dist, cmax_animals):
         """
@@ -65,27 +65,25 @@ class Plotting():
         carnis_dist: [list of lists] Amount of carnivores in each cell.
         cmax_animals: [dict] Maximum values for colorbars of herbivores and carnivores.
         """
-        font_axes = self.font_axes
-        font = self.font
         width_island = len(herbis_dist[0])
         height_island = len(herbis_dist)
         # Herbivores distribution
-        im = ax4.imshow(herbis_dist, cmap='viridis')
-        ax4.set_title('Herbivore distribution', fontsize=font)
-        fig.colorbar(im, ax=ax4, orientation='vertical', max=cmax_animals['Herbivore'])
-        ax4.set_xticks(range(width_island))
-        ax4.set_xticklabels(range(1, 1 + width_island), fontsize=font_axes)
-        ax4.set_yticks(range(height_island))
-        ax4.set_yticklabels(range(1, 1 + height_island), fontsize=font_axes)
+        im = self.ax4.imshow(herbis_dist, cmap='viridis')
+        self.ax4.set_title('Herbivore distribution', fontsize=self.font)
+        self.fig.colorbar(im, ax=self.ax4, orientation='vertical', max=cmax_animals['Herbivore'])
+        self.ax4.set_xticks(range(width_island))
+        self.ax4.set_xticklabels(range(1, 1 + width_island), fontsize=self.font_axes)
+        self.ax4.set_yticks(range(height_island))
+        self.ax4.set_yticklabels(range(1, 1 + height_island), fontsize=self.font_axes)
 
         # Carnivores distribution
-        im = ax6.imshow(carnis_dist, cmap='viridis')
-        ax6.set_title('Carnivore distribution', fontsize=font)
-        fig.colorbar(im, ax=ax6, orientation='vertical', max=cmax_animals['Carnivore'])
-        ax6.set_xticks(range(width_island))
-        ax6.set_xticklabels(range(1, 1 + width_island), fontsize=font_axes)
-        ax6.set_yticks(range(height_island))
-        ax6.set_yticklabels(range(1, 1 + height_island), fontsize=font_axes)
+        im = self.ax6.imshow(carnis_dist, cmap='viridis')
+        self.ax6.set_title('Carnivore distribution', fontsize=self.font)
+        self.fig.colorbar(im, ax=self.ax6, orientation='vertical', max=cmax_animals['Carnivore'])
+        self.ax6.set_xticks(range(width_island))
+        self.ax6.set_xticklabels(range(1, 1 + width_island), fontsize=self.font_axes)
+        self.ax6.set_yticks(range(height_island))
+        self.ax6.set_yticklabels(range(1, 1 + height_island), fontsize=self.font_axes)
 
     def histograms(self, herbi_properties, carni_properties, hist_specs):
         """
@@ -102,34 +100,32 @@ class Plotting():
         """
         for property, specs in hist_specs.items():
             if property == 'fitness':
-                ax7.hist(herbi_properties[0], binwith=specs['delta'], range=(0, specs['max']),
-                         histtype='stepfilled', fill=False, edgecolor='blue')
-                ax7.hist(carni_properties[0], binwith=specs['delta'], range=(0, specs['max']),
-                         histtype='stepfilled', fill=False, edgecolor='red')
-                ax7.set_title('Fitness', fontsize=font)
+                self.ax7.hist(herbi_properties[0], binwith=specs['delta'], range=(0, specs['max']),
+                              histtype='stepfilled', fill=False, edgecolor='blue')
+                self.ax7.hist(carni_properties[0], binwith=specs['delta'], range=(0, specs['max']),
+                              histtype='stepfilled', fill=False, edgecolor='red')
+                self.ax7.set_title('Fitness', fontsize=self.font)
                 xticks = np.linspace(0, specs['max'], 5)
-                ax7.set_xticks(xticks)
-                ax7.set_xticklabels(xticks, fontsize=font_axes)
+                self.ax7.set_xticks(xticks)
+                self.ax7.set_xticklabels(xticks, fontsize=self.font_axes)
             if property == 'age':
-                ax8.hist(herbi_properties[1], binwith=specs['delta'], range=(0, specs['max']),
-                         histtype='stepfilled', fill=False, edgecolor='blue')
-                ax8.hist(carni_properties[1], binwith=specs['delta'], range=(0, specs['max']),
-                         histtype='stepfilled', fill=False, edgecolor='red')
-                ax8.set_title('Age', fontsize=font)
+                self.ax8.hist(herbi_properties[1], binwith=specs['delta'], range=(0, specs['max']),
+                              histtype='stepfilled', fill=False, edgecolor='blue')
+                self.ax8.hist(carni_properties[1], binwith=specs['delta'], range=(0, specs['max']),
+                              histtype='stepfilled', fill=False, edgecolor='red')
+                self.ax8.set_title('Age', fontsize=self.font)
                 xticks = np.linspace(0, specs['max'], 4)
-                ax8.set_xticks(xticks)
-                ax8.set_xticklabels(xticks, fontsize=font_axes)
+                self.ax8.set_xticks(xticks)
+                self.ax8.set_xticklabels(xticks, fontsize=self.font_axes)
             if property == 'weight':
-                ax9.hist(herbi_properties[2], binwith=specs['delta'], range=(0, specs['max']),
-                         histtype='stepfilled', fill=False, edgecolor='blue')
-                ax9.hist(carni_properties[2], binwith=specs['delta'], range=(0, specs['max']),
-                         histtype='stepfilled', fill=False, edgecolor='red')
-                ax9.set_title('Weight', fontsize=font)
+                self.ax9.hist(herbi_properties[2], binwith=specs['delta'], range=(0, specs['max']),
+                              histtype='stepfilled', fill=False, edgecolor='blue')
+                self.ax9.hist(carni_properties[2], binwith=specs['delta'], range=(0, specs['max']),
+                              histtype='stepfilled', fill=False, edgecolor='red')
+                self.ax9.set_title('Weight', fontsize=self.font)
                 xticks = np.linspace(0, specs['max'], 4)
-                ax9.set_xticks(xticks)
-                ax9.set_xticklabels(xticks, fontsize=font_axes)
-
-
+                self.ax9.set_xticks(xticks)
+                self.ax9.set_xticklabels(xticks, fontsize=self.font_axes)
 
 
 if __name__ == '__main__':
