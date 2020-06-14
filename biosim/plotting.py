@@ -20,6 +20,36 @@ font = 8
 # Fontsizes to be used on the axes of all plots
 font_axes = 8
 
+
+def map_of_island(geogr):
+    """
+    Plotting a map of the island.
+    Initial code for this function was taken from Hans Ekkehard Plesser
+    from nmbu_inf200_june2020 repository inside the directories examples->plotting
+    filename: mapping.py
+
+    Parameters
+    ----------
+    geogr: [str] Multiline string representing the landscape on the island.
+    """
+    # Colors to be used for the different landscapes on the island
+    #                   R    G    B
+    rgb_value = {'W': (0.0, 0.0, 1.0),  # blue
+                 'L': (0.0, 0.6, 0.0),  # dark green
+                 'H': (0.5, 1.0, 0.5),  # light green
+                 'D': (1.0, 1.0, 0.5)}  # light yellow
+
+    geogr_rgb = [[rgb_value[column] for column in row]
+                 for row in geogr.splitlines()]
+
+    ax1.imshow(geogr_rgb)
+    ax1.set_xticks(range(len(geogr_rgb[0])))
+    ax1.set_xticklabels(range(1, 1 + len(geogr_rgb[0])), fontsize=font_axes)
+    ax1.set_yticks(range(len(geogr_rgb)))
+    ax1.set_yticklabels(range(1, 1 + len(geogr_rgb)), fontsize=font_axes)
+
+    ax1.set_title('The island', fontsize=font)
+
 def histograms(herbi_properties, carni_properties, hist_specs):
     """
     Makes histograms for the properties fitness, age and weight for herbivores and arnivores.
