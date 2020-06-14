@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from biosim.animals import Herbivores, Carnivores
 from biosim.cell import Water, Desert, Lowland, Highland
+from biosim.island import TheIsland
+import random
 
 
 class BioSim:
@@ -40,7 +42,14 @@ class BioSim:
         where img_no are consecutive image numbers starting from 0.
         img_base should contain a path and beginning of a file name.
         """
-        pass
+        self.isl = TheIsland(landscape_of_cells=island_map,
+                             animals_on_island=ini_pop)
+        random.seed(seed)
+        self.ymax_animals = ymax_animals
+        self.cmax_animals = cmax_animals
+        self.hist_specs = hist_specs  # should we check that only weight, age and fitness are given?
+        self.img_base = img_base
+        self.img_fmt = img_fmt
 
     @staticmethod
     def set_animal_parameters(species, params):
