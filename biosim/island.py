@@ -1,157 +1,171 @@
 # -*- coding: utf-8 -*-
-import numpy as np
-from biosim.cell import SingleCell, Highland, Lowland, Desert, Water
+from biosim.cell import Highland, Lowland, Desert, Water
 import textwrap
-import random
 
 
 class TheIsland:
-    """
-    Keeps control of the island.
-
-    Takes a matrix with the landscape types of each cell.
-    """
+    """ This class will represent an island. """
 
     def __init__(self, landscape_of_cells, animals_on_island=None):
         """
+        Create an island consisting of cells based on landscape-types.
+
         Parameters
         ----------
-        landscape_of_cells: multiline python string
-        animals_on_island: list of dictionaries
+        landscape_of_cells: [str] multiline python string representing the
+                            landscape of the island.
+        animals_on_island: [list of dicts] list of dictionaries with location
+                           of cell and population of animals in that cell.
         """
         # Check conditions for geography of island
         self.check_if_island_legal(landscape_of_cells)
-        # Turn into numpy array
-        self.landscape = self.landscape_to_array(land=landscape_of_cells)
+
+        # Make landscape into list of lists
+        self.landscape = self.landscape_to_list_of_lists(landscape_of_cells)
         self.row, self.colon = len(self.landscape), len(self.landscape[0])
 
-        self.island_cells = []
+        # Create empty island, then construction of cells
+        self.island_cells = [[[] for _ in range(self.colon)] for _ in range(self.row)]
+        self.construct_island_with_cells()
 
         if animals_on_island:
             self.animals_on_island = animals_on_island
         else:
             self.animals_on_island = []
 
-        self.construct_island_with_cells()
         self.add_animals_on_island(self.animals_on_island)
 
     @staticmethod
     def check_if_island_legal(geogr):
         """
-        Test if the island follows the specifications.
-        The string tha specify the island must only contain legal letters, i.e. L, H, W and D
-        All the outermost cells must be of the water type.
+        Checks if the landscape of the island follows the specifications.
+            - only have 'W' around edges
+            - no other characters than 'L', 'H', 'D' and 'W'
+            - all lines in the string must have equal length
 
-        Returns
+        Raises
         -------
-        Raises ValueError if any of the specifications is violated.
-
-        Todo: This might be better to do in the __init__ section, and/or in biosim
+        ValueError: if any of the specifications is violated.
         """
         geogr = textwrap.dedent(geogr)
         geogr_split = geogr.split('\n')
         len_first_line = len(geogr_split[0])
         for line in geogr_split:
             if len(line) != len_first_line:
-                raise ValueError("All lines must have same length")
+                raise ValueError("All lines must have the same length.")
 
         for top, bottom in zip(geogr_split[0], geogr_split[-1]):
             if top != 'W' or bottom != 'W':
-                raise ValueError("North and south of island is not only water")
+                raise ValueError("North or south of island is not only water.")
 
         for line in geogr_split:
             if line[0] != 'W' or line[-1] != 'W':
-                raise ValueError("West or east side of island is not only water")
+                raise ValueError("West or east side of island is not only water.")
 
         for line in geogr_split:
             for element in line:
                 if element not in ['W', 'D', 'L', 'H']:
-                    raise ValueError("Forbidden character, only 'W', 'D', 'L' and 'H' allowed")
+                    raise ValueError("Forbidden character, only 'W', 'D', 'L' and 'H' allowed.")
 
     @staticmethod
-    def landscape_to_array(land):
+    def landscape_to_list_of_lists(landscape):
         """
-        Takes in a multiline string and turns it into a nested list
-        """
-        land = textwrap.dedent(land)
-        land_split = land.split('\n')
-        return [list(line) for line in land_split]
+        Makes a landscape string into a nested list (list of lists).
 
-    def construct_island_with_cells(self):  # RENAME THIS ONE
+        Parameters
+        ----------
+        landscape: [str] multiline string representing the landscape of
+                   the island
+
+        Returns
+        -------
+        [list of lists] an inner list is a row and an element of an inner list
+        is the landscape of that cell.
         """
-        Sorting animals by location on the island
+        landscape = textwrap.dedent(landscape)
+        landscape_split = landscape.split('\n')
+        return [list(line) for line in landscape_split]
+
+    def construct_island_with_cells(self):
         """
-        self.island_cells = [[[] for _ in range(self.colon)] for _ in range(self.row)]
+        Construction the island by initialising a class for each of the
+        landscape types. For each cell the class is initialized with no
+        animals.
+
+        Returns
+        -------
+        None
+        """
         for x, row in enumerate(self.landscape):
-            for y, col in enumerate(row):
-                if col == 'W':
+            for y, cell in enumerate(row):
+                if cell == 'W':
                     self.island_cells[x][y] = Water(animals_list=None)
-                elif col == 'L':
+                elif cell == 'L':
                     self.island_cells[x][y] = Lowland(animals_list=None)
-                elif col == 'H':
+                elif cell == 'H':
                     self.island_cells[x][y] = Highland(animals_list=None)
-                elif col == 'D':
+                elif cell == 'D':
                     self.island_cells[x][y] = Desert(animals_list=None)
 
     def add_animals_on_island(self, new_animals):
         """
+        Add animals on island by adding animals to specified cells.
+
         Parameters
         ----------
-        new_animals: list of dict ->
-                    [{'loc': (2, 2), 'pop': [{'species': 'Herbivore', 'age': 5, 'weight': 25}, ... ]
+        new_animals: [list of dicts] list of dictionaries with location
+                     of cell and population of animals in that cell.
+
+        Returns
+        -------
+        None
+
+        Raises
+        ------
+        ValueError: if animals are being placed in water cells where they
+                    can't stay
         """
-        for place in new_animals:
-            x, y = place['loc']
-            landscape_type = self.landscape[x-1][y-1]
+        for dictionary in new_animals:
+            x, y = dictionary['loc']  # Location of a cell
+            landscape_type = self.landscape[x-1][y-1]  # Landscape type of cell
             if landscape_type == 'W':
-                # island_cells[x-1, y-1] = Water(animals_list=None)
                 raise ValueError("Animals can't stay in water")
             else:
-                self.island_cells[x-1][y-1].add_new_animals_to_cell(place['pop'])
+                self.island_cells[x-1][y-1].add_new_animals_to_cell(dictionary['pop'])
                 # add new animals to cell
 
     def all_animals_eat(self):
         """
-        Params
-        ------
-        herbis: [list]
-            list of dictionaries containing location of a cell and the
-            population of herbivores in that cell
-        carnis: [list]
-            list of dictionaries containing location of a cell and the
-            population of carnivores in that cell
-        landscape: [narray]
-            numpy array of the landscape of the island
-
-        """
-        for row in self.island_cells:
-            for cell in row:
-                if cell:  # if cell = [] it is a water cell, no animals eat
-                    cell.animals_in_cell_eat()
-
-    def animals_procreate(self):
-        """
-        Loops trough populated cells and animals in all cells have the change to procreate
-        Parameters
-        ----------
-        herbis
-        carnis
-
-        todo: carnis and herbis have same structure as described in the method above
+        Letting the animals on the island eat.
+        Looping through the cells of the island and letting the animals in
+        each cell eat.
 
         Returns
         -------
-
+        None
         """
         for row in self.island_cells:
             for cell in row:
-                if cell:  # nothing happens in water cell
-                    cell.birth()
+                cell.animals_in_cell_eat()
+
+    def animals_procreate(self):
+        """
+        Letting animals on the island procreate
+        Looping through the cells of the island and giving the animals in the
+        cells the change to procreate.
+
+        Returns
+        -------
+        None
+        """
+        for row in self.island_cells:
+            for cell in row:
+                cell.birth()
 
     def where_can_animals_migrate_to(self, row, col):
         """
         Check if any of the neighboring adjacent cells are water, and
-        returns the cells animals can move to.
+        returns the directions animals can migrate to.
 
         Parameters
         ----------
@@ -161,17 +175,22 @@ class TheIsland:
         Returns
         -------
         directions: [list] list with possible directions
-            - can move to east and south --> directions = ['E', 'S']
+            - can move in all directions: ['North', 'East', 'South', 'West']
+            - can only move to east and south: ['East', 'South']
         """
         directions = []
         if self.landscape[row-1][col] != 'W':
             directions.append('North')
+
         if self.landscape[row][col+1] != 'W':
             directions.append('East')
+
         if self.landscape[row+1][col] != 'W':
             directions.append('South')
+
         if self.landscape[row][col-1] != 'W':
             directions.append('West')
+
         return directions
 
     def migration(self):
