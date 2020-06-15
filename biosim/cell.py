@@ -29,49 +29,28 @@ class SingleCell:
 
         self.carni_list = []
         self.herbi_list = []
-        self.sort_animals_by_species()
+        self.add_animals_to_cell(self.animals_list)
 
-    def sort_animals_by_species(self):
+    def add_animals_to_cell(self, animals):
         """
-        Sorting the animals in lists of herbivores and carnivores.
-        This method is called in init, to make sure variables are updated.
+        Adding animals to the cell and sorting them into lists of herbivores
+        and carnivores, by appending the correct animal-class to the lists.
+
+        Parameters
+        ----------
+        animals: [list] List of animals that shall be added to the cell.
 
         Returns
         -------
         None
         """
-        for animal in self.animals_list:
+        for animal in animals:
             if animal['species'] == 'Herbivore':
                 self.herbi_list.append(Herbivores(age=animal['age'], weight=animal['weight']))
             if animal['species'] == 'Carnivore':
                 self.carni_list.append(Carnivores(age=animal['age'], weight=animal['weight']))
 
         self.animals_list = self.herbi_list + self.carni_list
-
-    def add_new_animals_to_cell(self, new_animals):
-        """
-        Makes i possible to add new animals to the cell. This method updates
-        the variables in init.
-
-
-        Todo: Combine this with the method sort_animals_by_species.
-
-        Parameters
-        ----------
-        new_animals: [list] List of new animals that shall be added to the cell.
-        """
-        # if new_animals:
-        #     animals = new_animals
-        # else:
-        #     animals = self.animals_list
-
-        for animal in new_animals:
-            if animal['species'] == 'Herbivore':
-                self.herbi_list.append(Herbivores(age=animal['age'], weight=animal['weight']))
-            if animal['species'] == 'Carnivore':
-                self.carni_list.append(Carnivores(age=animal['age'], weight=animal['weight']))
-
-        # self.animals_list = self.herbi_list + self.carni_list
 
     @classmethod
     def set_params(cls, new_params):

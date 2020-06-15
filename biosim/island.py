@@ -131,7 +131,7 @@ class TheIsland:
             if landscape_type == 'W':
                 raise ValueError("Animals can't stay in water")
             else:
-                self.island_cells[x-1][y-1].add_new_animals_to_cell(dictionary['pop'])
+                self.island_cells[x-1][y-1].add_animals_to_cell(dictionary['pop'])
                 # add new animals to cell
 
     def all_animals_eat(self):

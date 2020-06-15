@@ -22,10 +22,10 @@ if __name__ == "__main__":
     print("Number of animals after birth:", len(low.herbi_list + low.carni_list))
 
     north, east, south, west = low.animals_migrate()
-    print(north)
-    print(east)
-    print(south)
-    print(west)
+    print(f"North: {north}")
+    print(f"East: {east}")
+    print(f"South: {south}")
+    print(f"West: {west}")
 
     a_before = [ani.age for ani in (low.herbi_list+low.carni_list)]
     print("Age before:", a_before)
