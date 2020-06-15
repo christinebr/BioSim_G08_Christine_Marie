@@ -3,6 +3,8 @@ from biosim.animals import Herbivores, Carnivores
 from biosim.cell import Water, Desert, Lowland, Highland
 from biosim.island import TheIsland
 import random
+import matplotlib.pyplot as plt
+import numpy as np
 from biosim.plotting import Plotting
 
 
@@ -59,14 +61,15 @@ class BioSim:
 
         self._fig = None
         self._map_ax = None
-        self._ax1 = None
-        self._line = None
-        self._ax3 = None
-        self._ax4 = None
-        self._ax6 = None
-        self._ax7 = None
-        self._ax8 = None
-        self._ax9 = None
+        self._img_ax = None
+        self._line_ax = None
+        self._line_h = None
+        self._line_c = None
+        self._herb_ax = None
+        self._carn_ax = None
+        self._fitness_ax = None
+        self._age_ax = None
+        self._weight_ax = None
         self._axt = None
 
     @staticmethod
@@ -127,8 +130,6 @@ class BioSim:
             self._isl.annual_cycle()
             self._year += 1
 
-
-
         # plot = Plotting(num_years)
         # island_map = self.island_map.replace(' ', '') + '\n'
         # plot.map_of_island(island_map)
@@ -143,6 +144,58 @@ class BioSim:
         #     plot.histograms(herbi_prop, carni_prop, self.hist_specs)
         #     plot.text_axis()
         #     self.isl.annual_cycle()
+
+    def _setup_graphics(self):
+        """Creates subplots."""
+        # Create figure window
+        if self._fig is None:
+            self._fig = plt.figure()
+
+        # Add subplot for creating plot of island with imshow()
+        if self._map_ax is None:
+            self._map_ax = self._fig.add_subplot(3, 3, 1)
+            self._img_ax = None
+        
+        # Add subplot for animal count plot
+        if self._line_ax is None:
+            self._line_ax = self._fig.add_subplot(3, 3, 3)
+            # self._ax3.set_ylim(0, 10000)
+        
+        self._line_ax.set_xlim(0, self._final_year + 1)
+        
+        # Add subplots for heatmaps
+        if self._herb_ax is None and self._carn_ax is None:
+            self._herb_ax = self._fig.add_subplot(3, 3, 4)
+            self._carn_ax = self._fig.add_subplot(3, 3, 6)
+            # plan to use the same self._img_ax as for map of island
+        
+        # Add subplots for histograms
+        if self._fitness_ax is None and self._age_ax is None and self._weight_ax is None:
+            self._fitness_ax = self._fig.add_subplot(3, 3, 7)
+            self._age_ax = self._fig.add_subplot(3, 3, 8)
+            self._weight_ax = self._fig.add_subplot(3, 3, 9)
+
+    def _update_line_graph(self):
+        """Update the animal count graph."""
+        if self._line_h is None and self._line_c is None:
+            line_h = self._line_ax.plot(np.arange(0, self._final_year),
+                                        np.full(self._final_year, np.nan),
+                                        'b-')
+            line_c = self._line_ax.plot(np.arange(0, self._final_year),
+                                        np.full(self._final_year, np.nan),
+                                        'r-')
+            self._line_h = line_h[0]
+            self._line_c = line_c[0]
+        else:
+            xdata_h, ydata_h = self._line_h.get_data()
+            xdata_c, ydata_c = self._line_c.get_data()
+            xnew = np.arange(xdata_h[-1] + 1, self._final_year)
+            if len(xnew) > 0:
+                ynew = np.full(xnew.shape, np.nan)
+                self._line_h.set_data(np.hstack((xdata_h, xnew)),
+                                      np.vstack((ydata_h, ynew)))
+                self._line_c.set_data(np.hstack((xdata_c, xnew)),
+                                      np.vstack((ydata_c, ynew)))
 
     def add_population(self, population):
         """
