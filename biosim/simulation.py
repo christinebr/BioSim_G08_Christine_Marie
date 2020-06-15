@@ -181,6 +181,11 @@ class BioSim:
         if self._map_ax is None:
             self._map_ax = self._fig.add_subplot(3, 3, 1)
             self._img_ax = None
+
+        # Add count for years
+        if self._axt is None:
+            self._axt = self._fig.add_axes([0.4, 0.8, 0.2, 0.2])  # llx, lly, w, h
+            self._axt.axis('off')  # turn off coordinate system
         
         # Add subplot for animal count plot
         if self._line_ax is None:
@@ -262,8 +267,17 @@ class BioSim:
                 self._line_c.set_data(np.hstack((xdata_c, xnew)),
                                       np.vstack((ydata_c, ynew)))
 
-    def _histograms_setup_graph(self):
-        pass
+    def _update_count(self):
+        """Updates the counter."""
+        self._axt.cla()
+        self._axt.axis('off')
+        template = '\n\nYear: {:5d}\n\nHerbivores - blue\nCarnivores - red'
+        txt = self._axt.text(0.5, 0.5, template.format(0),
+                             horizontalalignment='center',
+                             verticalalignment='center',
+                             transform=self._axt.transAxes)  # relative coordinates
+
+        txt.set_text(template.format(self._year))
 
     def _update_heatmaps(self, herbi_map, carni_map):
         """Updates heatmaps of island."""
@@ -324,6 +338,7 @@ class BioSim:
         carn_properties = self._isl.collect_fitness_age_weight_carni()
         self._update_histograms(herb_prop=herb_properties,
                                 carn_prob=carn_properties)
+        self._update_count()
         plt.pause(1e-6)
 
     def add_population(self, population):
