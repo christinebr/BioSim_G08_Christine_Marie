@@ -164,7 +164,7 @@ class TestSingleCell:
             cars.append(isinstance(carni, Carnivores))
 
         assert herbis == [True]*len(self.cell.herbi_list) and \
-               cars == [True]*len(self.cell.carni_list)
+            cars == [True]*len(self.cell.carni_list)
 
     def test_possible_no_animals(self):
         """
@@ -476,18 +476,12 @@ class TestDesert:
         assert carni_before == carni_after
         assert herbi_before > herbi_after
 
+
 class TestWater:
 
     def test_make_water_instance(self):
         """
-        Makes sure it is (not?) possible to make a water-instance.
+        Makes sure it is possible to make a water-instance.
         """
-        animals = [{'species': 'Herbivore', 'age': 10, 'weight': 15},
-                   {'species': 'Herbivore', 'age': 40, 'weight': 20},
-                   {'species': 'Herbivore', 'age': 2, 'weight': 8},
-                   {'species': 'Carnivore', 'age': 30, 'weight': 8},
-                   {'species': 'Carnivore', 'age': 5, 'weight': 3.5},
-                   {'species': 'Carnivore', 'age': 37, 'weight': 5.7}
-                   ]
-        w = Water(animals_list = animals)
+        w = Water(animals_list=None)
         assert isinstance(w, Water)
