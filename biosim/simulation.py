@@ -57,7 +57,21 @@ class BioSim:
             self.vmax_h = cmax_animals['Herbivore']
             self.vmax_c = cmax_animals['Carnivore']
 
-        self.cmax_animals = cmax_animals
+        if hist_specs is None:
+            self._fit_max = 1.0
+            self._fit_bins = int(self._fit_max/0.05)
+            self._age_max = 60
+            self._age_bins = int(self._age_max/2)
+            self._weight_max = 60
+            self._weight_bins = int(self._weight_max/2)
+        else:
+            self._fit_max = hist_specs['fitness']['max']
+            self._fit_bins = int(self._fit_max/hist_specs['fitness']['delta'])
+            self._age_max = hist_specs['age']['max']
+            self._age_bins = int(self._age_max/hist_specs['age']['delta'])
+            self._weight_max = hist_specs['weight']['max']
+            self._weight_bins = int(self._weight_max/hist_specs['weight']['delta'])
+
         self.hist_specs = hist_specs  # should we check that only weight, age and fitness are given?
         self._img_base = img_base
         self._img_fmt = img_fmt
@@ -207,6 +221,8 @@ class BioSim:
                 self._line_c.set_data(np.hstack((xdata_c, xnew)),
                                       np.vstack((ydata_c, ynew)))
 
+    def _histograms_setup_graph(self):
+
     def _update_heatmaps(self, herbi_map, carni_map):
         """Updates heatmaps of island."""
         if self._img_ax_heat1 is not None:
@@ -227,6 +243,28 @@ class BioSim:
                                                       vmax=self.vmax_c)
             plt.colorbar(self._img_ax_heat2, ax=self._carn_ax, orientation='vertical')
 
+    def _update_histograms(self, herb_prop, carn_prob):
+        """Update histograms."""
+        self._fitness_ax.hist(herb_prop[0], bins=self._fit_bins,
+                              range=(0, self._fit_max), fill=False,
+                              edgecolor='blue')
+        self._age_ax.hist(herb_prop[1], bins=self._age_bins,
+                          range=(0, self._age_max), fill=False,
+                          edgecolor='blue')
+        self._weight_ax.hist(herb_prop[2], bins=self._weight_bins,
+                             range=(0, self._weight_max), fill=False,
+                             edgecolor='blue')
+
+        self._fitness_ax.hist(carn_prob[0], bins=self._fit_bins,
+                              range=(0, self._fit_max), fill=False,
+                              edgecolor='red')
+        self._age_ax.hist(carn_prob[1], bins=self._age_bins,
+                          range=(0, self._age_max), fill=False,
+                          edgecolor='red')
+        self._weight_ax.hist(carn_prob[2], bins=self._weight_bins,
+                             range=(0, self._weight_max), fill=False,
+                             edgecolor='red')
+
     def _update_line_graph(self, num_herb=0, num_carn=0):
         """Update the line graph/the animal count graph."""
         ydata_h = self._line_h.get_ydata()
@@ -243,6 +281,10 @@ class BioSim:
         self._update_line_graph(num_herb=h, num_carn=c)
         h_map, c_map = self._isl.herbis_and_carnis_on_island()
         self._update_heatmaps(herbi_map=h_map, carni_map=c_map)
+        herb_properties = self._isl.collect_fitness_age_weight_herbi()
+        carn_properties = self._isl.collect_fitness_age_weight_carni()
+        self._update_histograms(herb_prop=herb_properties,
+                                carn_prob=carn_properties)
         plt.pause(1e-6)
 
     def add_population(self, population):

@@ -7,15 +7,25 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.gridspec import GridSpec
 
+# fig = plt.figure()
+# grid = fig.add_gridspec(ncols=3, nrows=3, wspace=0.2, hspace=0.4)
+# ax1 = fig.add_subplot(grid[0, 0])
+# ax3 = fig.add_subplot(grid[0, 2])
+# ax4 = fig.add_subplot(grid[1, 0], anchor='E')
+# ax6 = fig.add_subplot(grid[1, 2], anchor='W')
+# ax7 = fig.add_subplot(grid[2, 0])
+# ax8 = fig.add_subplot(grid[2, 1])
+# ax9 = fig.add_subplot(grid[2, 2])
+# fig.show()
+
 fig = plt.figure()
-grid = fig.add_gridspec(ncols=3, nrows=3, wspace=0.2, hspace=0.4)
-ax1 = fig.add_subplot(grid[0, 0])
-ax3 = fig.add_subplot(grid[0, 2])
-ax4 = fig.add_subplot(grid[1, 0], anchor='E')
-ax6 = fig.add_subplot(grid[1, 2], anchor='W')
-ax7 = fig.add_subplot(grid[2, 0])
-ax8 = fig.add_subplot(grid[2, 1])
-ax9 = fig.add_subplot(grid[2, 2])
+ax1 = fig.add_subplot(3, 3, 1)
+ax3 = fig.add_subplot(3, 3, 3)
+ax4 = fig.add_subplot(3, 3, 4)
+ax6 = fig.add_subplot(3, 3, 6)
+ax7 = fig.add_subplot(3, 3, 7)
+ax8 = fig.add_subplot(3, 3, 8)
+ax9 = fig.add_subplot(3, 3, 9)
 fig.show()
 
 # # Making the island, with some animals
@@ -32,7 +42,7 @@ geogr_island = """\
            WDDLW
            WWWWW"""
 
-# New and bigger island
+# # New and bigger island
 # geogr = """WWWWWWWWW
 # WWLHLLDDW
 # WDDLDHHLW
