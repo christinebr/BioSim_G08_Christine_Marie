@@ -17,6 +17,10 @@ class SingleCell:
         Parameters
         ----------
         animals_list: [list] List of animals, default-value is None
+
+        Returns
+        -------
+        None
         """
         if animals_list:
             self.animals_list = animals_list
@@ -31,6 +35,10 @@ class SingleCell:
         """
         Sorting the animals in lists of herbivores and carnivores.
         This method is called in init, to make sure variables are updated.
+
+        Returns
+        -------
+        None
         """
         for animal in self.animals_list:
             if animal['species'] == 'Herbivore':
@@ -77,6 +85,14 @@ class SingleCell:
         ----------
         new_params: [dict]
             Dictionary with new parameter values
+
+        Returns
+        -------
+        None
+
+        Raises
+        ------
+        KeyError if given an invalid parameter name.
         """
         for key in new_params:
             if key not in cls._params:
@@ -88,6 +104,7 @@ class SingleCell:
     def get_params(cls):
         """
         Makes it possible to get the parameter values
+
         Returns
         -------
         _params: [dict] Dictionary of parameter values.
@@ -143,6 +160,10 @@ class SingleCell:
         to update the herbivore list in init. Carnivores in init are also updated.
 
         Todo: This is a little to long.
+
+        Returns
+        -------
+        None
         """
         # Herbivores eats
         random.shuffle(self.herbi_list)  # Shuffles the herbivores, they eat in random order
@@ -176,6 +197,10 @@ class SingleCell:
         Decides if animals are born and updates the animal_list.
         Makes sure the mother loses weight and assigns a weight and specie to
         the newborn animals.
+
+        Returns
+        -------
+        None
         """
         num_herbi = len(self.herbi_list)
         num_carni = len(self.carni_list)
@@ -262,7 +287,15 @@ class SingleCell:
         return north, east, south, west
 
     def add_animals_after_migration(self, animals_migrated):
-        """ Adds animals to cell after migration """
+        """
+        Adds animals to cell after migration. Updates the attributes of the
+        class in the end.
+
+        Returns
+        _______
+        None
+
+        """
         for animal in animals_migrated:
             if isinstance(animal, Herbivores):
                 self.herbi_list.append(animal)
@@ -270,7 +303,13 @@ class SingleCell:
                 self.carni_list.append(animal)
 
     def aging_of_animals(self):
-        """Makes sure animals ages"""
+        """
+        Makes sure animals ages. Updates the attributes of the class.
+
+        Returns
+        -------
+        None
+        """
         for herbi in self.herbi_list:
             herbi.update_age()
 
@@ -280,7 +319,11 @@ class SingleCell:
     def weight_loss_end_of_year(self):
         """
         Makes all the animals loose weight according to their start-weight and
-        the constant eta.
+        the constant eta. Updates the class attributes.
+
+        Returns
+        -------
+        None
         """
         for herbi in self.herbi_list:
             herbi.update_weight()
@@ -291,6 +334,10 @@ class SingleCell:
         """
         Decides which of the animals that dies and updates the animal_list
         accordingly.
+
+        Returns
+        -------
+        None
         """
         survived_herbis = []
         for herbi in self.herbi_list:
@@ -331,7 +378,8 @@ class SingleCell:
     def collect_fitness_age_weight_carni(self):
         """
         Collects the fitness, age and weight for all carnivores and returns
-        it in three lists, one fitness, one for age and one for weight
+        it in three lists, one fitness, one for age and one for weight.
+
         Returns
         -------
         fitness: [list] fitness of carnivores in cell
