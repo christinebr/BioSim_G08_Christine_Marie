@@ -32,10 +32,6 @@ class Animal:
         """
         Set parameters for class.
 
-        todo: DeltaPhiMax shall be strictly positive (>0)
-              required that eta <= 1
-              Should we implement this?
-
         Parameters
         ----------
         new_params: [dict] dictionary with new parameter values
@@ -52,7 +48,7 @@ class Animal:
                 raise ValueError(f"Parameter value for {key} must be positive.")
             if key == 'DeltaPhiMax' and value <= 0:
                 raise ValueError(f"{key} must be strictly positive.")
-            if key == 'eta' and value >= 1:
+            if key == 'eta' and value > 1:
                 raise ValueError(f"Value of {key} can't be higher than 1.")
 
         cls._params.update(new_params)
