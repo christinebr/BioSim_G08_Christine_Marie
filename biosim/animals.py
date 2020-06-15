@@ -47,9 +47,13 @@ class Animal:
         """
         for key, value in new_params.items():
             if key not in cls._params:
-                raise KeyError(f"Invalid parameter name: {key}")
+                raise KeyError(f"Invalid parameter name: {key}.")
             if value < 0:
-                raise ValueError(f"Parameter value for {key} must be positive")
+                raise ValueError(f"Parameter value for {key} must be positive.")
+            if key == 'DeltaPhiMax' and value <= 0:
+                raise ValueError(f"{key} must be strictly positive.")
+            if key == 'eta' and value >= 1:
+                raise ValueError(f"Value of {key} can't be higher than 1.")
 
         cls._params.update(new_params)
 
