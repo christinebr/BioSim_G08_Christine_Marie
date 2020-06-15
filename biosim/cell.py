@@ -102,19 +102,14 @@ class SingleCell:
         sorted_carnis: [list of class-instances]
             List of herbivores sorted from highest to lowest fitness.
         """
-        # Sorting the herbivores
-        # finding the fitness of each herbi and placing them in a list
+        # Sorting the herbivores from low to high fitness
         fitness_herbi = [herbi.fitness() for herbi in self.herbi_list]
-        # the first element is the herbi with the lowest fitness
         zip_fitness_herbis = zip(fitness_herbi, self.herbi_list)
         sorted_herbi_after_fitness = sorted(zip_fitness_herbis, key=itemgetter(0))
         sorted_herbis = [herb for _, herb in sorted_herbi_after_fitness]
 
-        # Sorting the carnivores
-        # finding the fitness of each herbi and placing them in a list
+        # Sorting the carnivores from high to low fitness
         fitness_carni = [carni.fitness() for carni in self.carni_list]
-        # sorting the self.carni_list after the fitness_carni
-        # the first element is the carni with the highest fitness
         zip_fitness_carnis = zip(fitness_carni, self.carni_list)
         sorted_carni_after_fitness = sorted(zip_fitness_carnis, key=itemgetter(0), reverse=True)
         sorted_carnis = [carn for _, carn in sorted_carni_after_fitness]
@@ -144,8 +139,28 @@ class SingleCell:
         -------
         None
         """
-        # Herbivores eats
-        random.shuffle(self.herbi_list)  # Shuffles the herbivores, they eat in random order
+        # If there are herbivores in the cell, they eat
+        if self.herbi_list:
+            self.herbivores_eats()
+
+        # If there are herbivores and carnivores in the cell, the carnivores
+        # eats by trying to kill herbivores
+        if self.herbi_list and self.carni_list:
+            self.carnivores_eats()
+
+    def herbivores_eats(self):
+        """
+        The herbivores eat in random order and each herbivore wants to eat a
+        fixed amount of fodder. The herbivores eats as long as there is
+        available fodder in the cell. Each time a herbivore eats, it's weight
+        is updated.
+
+        Returns
+        -------
+        None
+        """
+        # Shuffles the herbivores, they eat in random order
+        random.shuffle(self.herbi_list)
         fodder_in_cell = self._params['f_max']
         for herbi in self.herbi_list:
             fodder = herbi.get_params()['F']
@@ -156,14 +171,37 @@ class SingleCell:
                 herbi.update_weight(amount_fodder_eaten=fodder_in_cell)
                 fodder_in_cell = 0
 
-        # Carnivores eats
+    def carnivores_eats(self):
+        """
+        The carnivores eats by killing herbivores. The carnivores and
+        herbivores are sorted after fitness. The fittest carnivore eats first
+        and each carnivore tries to eat the herbivore with lowest fitness. One
+        carnivore eats at a time and it stops to ea
+
+        Then the carnivores eat. The fittest carnivore eats first, it tries to
+        kill the least fit herbivores until it is filled or there are no more
+        herbivores that's week enough for it to kill. Then the next carnivore
+        kills and eat, and so on until there are no more herbivores week enough
+        to be killed by the hungry carnivores or all carnivores are stuffed. If
+        a carnivore kills a herbivore that weights more than what the carnivore
+        wants to eat, the remainders of the herbivore are lost.
+
+        The surviving herbivores are stored in a list that's in the end used
+        to update the herbivore list in init. Carnivores in init are also updated.
+
+        Returns
+        -------
+        None
+        """
         sorted_herbi, sorted_carni = self.sort_animals_after_fitness()
         for carni in sorted_carni:  # first carni has the highest fitness
+            appetite = carni.get_params()['F']
             not_killed_herbis = []
             for herbi in sorted_herbi:  # first herbi has the lowest fitness
                 prob_kill = carni.probability_of_killing_herbivore(fitness_herbi=herbi.fitness())
-                if random.random() < prob_kill:  # carni kills herbi
+                if random.random() < prob_kill and appetite > 0:  # carni kills herbi
                     carni.update_weight_after_kill(weight_herbi=herbi.weight)
+                    appetite -= herbi.weight
                 else:
                     not_killed_herbis.append(herbi)
             sorted_herbi = not_killed_herbis
