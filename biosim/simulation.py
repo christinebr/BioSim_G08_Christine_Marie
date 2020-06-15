@@ -95,6 +95,12 @@ class BioSim:
         self._weight_ax = None
         self._axt = None
 
+        # General stuff for the plot
+        # Fontsizes to be used on the titles of all plots
+        self.font = 8
+        # Fontsizes to be used on the axes of all plots
+        self.font_axes = 8
+
     @staticmethod
     def set_animal_parameters(species, params):
         """
@@ -142,6 +148,7 @@ class BioSim:
 
         self._final_year = self._year + num_years
         self._setup_graphics()
+        self._plot_island()
 
         while self._year < self._final_year:
             if self._year % vis_years == 0:
@@ -151,21 +158,6 @@ class BioSim:
                 # self._save_graphics()
             self._isl.annual_cycle()
             self._year += 1
-
-        # plot = Plotting(num_years)
-        # island_map = self.island_map.replace(' ', '') + '\n'
-        # plot.map_of_island(island_map)
-        # for year in num_years:
-        #     herb = self.isl.total_num_animals_on_island[1]
-        #     carn = self.isl.total_num_animals_on_island[2]
-        #     plot.update_animal_count(num_years, herb, carn)
-        #     animals = self.isl.herbis_and_carnis_on_island()
-        #     plot.heatmaps_sepcies_dist(animals[0], animals[1], self.cmax_animals)
-        #     herbi_prop = self.isl.collect_fitness_age_weight_herbi()
-        #     carni_prop = self.isl.collect_fitness_age_weight_carni()
-        #     plot.histograms(herbi_prop, carni_prop, self.hist_specs)
-        #     plot.text_axis()
-        #     self.isl.annual_cycle()
 
     def _setup_graphics(self):
         """Creates subplots."""
@@ -181,7 +173,7 @@ class BioSim:
         # Add subplot for animal count plot
         if self._line_ax is None:
             self._line_ax = self._fig.add_subplot(3, 3, 3)
-            # self._ax3.set_ylim(0, 10000)
+            self._line_ax.set_ylim(0, 10000)
         
         self._line_ax.set_xlim(0, self._final_year + 1)
         self._line_setup_graph()
@@ -196,8 +188,45 @@ class BioSim:
         # Add subplots for histograms
         if self._fitness_ax is None and self._age_ax is None and self._weight_ax is None:
             self._fitness_ax = self._fig.add_subplot(3, 3, 7)
+            self._fitness_ax.set_xlim([0, self._fit_max])
+            self._fitness_ax.set_ylim([0, 2000])
             self._age_ax = self._fig.add_subplot(3, 3, 8)
+            self._age_ax.set_xlim([0, self._age_max])
+            self._age_ax.set_ylim([0, 2000])
             self._weight_ax = self._fig.add_subplot(3, 3, 9)
+            self._weight_ax.set_xlim([0, self._weight_max])
+            self._weight_ax.set_ylim([0, 2000])
+
+    def _plot_island(self):
+        """Create a map of the island."""
+        """
+        Plotting a map of the island.
+        Initial code for this function was taken from Hans Ekkehard Plesser
+        from nmbu_inf200_june2020 repository inside the directories examples->plotting
+        filename: mapping.py
+
+        Parameters
+        ----------
+        geogr: [str] Multiline string representing the landscape on the island.
+        """
+        island_map = self.island_map.replace(' ', '') + '\n'
+        # Colors to be used for the different landscapes on the island
+        #                   R    G    B
+        rgb_value = {'W': (0.0, 0.0, 1.0),  # blue
+                     'L': (0.0, 0.6, 0.0),  # dark green
+                     'H': (0.5, 1.0, 0.5),  # light green
+                     'D': (1.0, 1.0, 0.5)}  # light yellow
+
+        geogr_rgb = [[rgb_value[column] for column in row]
+                     for row in island_map.splitlines()]
+
+        self._img_ax = self._map_ax.imshow(geogr_rgb)
+        self._map_ax.set_xticks(range(len(geogr_rgb[0])))
+        self._map_ax.set_xticklabels(range(1, 1 + len(geogr_rgb[0])), fontsize=self.font_axes)
+        self._map_ax.set_yticks(range(len(geogr_rgb)))
+        self._map_ax.set_yticklabels(range(1, 1 + len(geogr_rgb)), fontsize=self.font_axes)
+
+        self._map_ax.set_title('The island', fontsize=self.font)
 
     def _line_setup_graph(self):
         """Create the line graph/the animal count graph setup."""
@@ -222,6 +251,7 @@ class BioSim:
                                       np.vstack((ydata_c, ynew)))
 
     def _histograms_setup_graph(self):
+        pass
 
     def _update_heatmaps(self, herbi_map, carni_map):
         """Updates heatmaps of island."""
@@ -245,25 +275,22 @@ class BioSim:
 
     def _update_histograms(self, herb_prop, carn_prob):
         """Update histograms."""
+        self._fitness_ax.cla()
+        self._age_ax.cla()
+        self._weight_ax.cla()
         self._fitness_ax.hist(herb_prop[0], bins=self._fit_bins,
-                              range=(0, self._fit_max), fill=False,
-                              edgecolor='blue')
+                              fill=False, edgecolor='blue')
         self._age_ax.hist(herb_prop[1], bins=self._age_bins,
-                          range=(0, self._age_max), fill=False,
-                          edgecolor='blue')
+                          fill=False, edgecolor='blue')
         self._weight_ax.hist(herb_prop[2], bins=self._weight_bins,
-                             range=(0, self._weight_max), fill=False,
-                             edgecolor='blue')
+                             fill=False, edgecolor='blue')
 
         self._fitness_ax.hist(carn_prob[0], bins=self._fit_bins,
-                              range=(0, self._fit_max), fill=False,
-                              edgecolor='red')
+                              fill=False, edgecolor='red')
         self._age_ax.hist(carn_prob[1], bins=self._age_bins,
-                          range=(0, self._age_max), fill=False,
-                          edgecolor='red')
+                          fill=False, edgecolor='red')
         self._weight_ax.hist(carn_prob[2], bins=self._weight_bins,
-                             range=(0, self._weight_max), fill=False,
-                             edgecolor='red')
+                             fill=False, edgecolor='red')
 
     def _update_line_graph(self, num_herb=0, num_carn=0):
         """Update the line graph/the animal count graph."""
