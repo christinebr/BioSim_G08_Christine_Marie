@@ -73,10 +73,6 @@ class Plotting:
         year
         tot_herbi
         tot_carni
-
-        Returns
-        -------
-
         """
         y_herbis = self.herbis_line.get_ydata()
         y_carnis = self.carnis_line.get_ydata()

@@ -43,15 +43,31 @@ class BioSim:
         where img_no are consecutive image numbers starting from 0.
         img_base should contain a path and beginning of a file name.
         """
-        self.isl = TheIsland(landscape_of_cells=island_map,
-                             animals_on_island=ini_pop)
+        self._isl = TheIsland(landscape_of_cells=island_map,
+                              animals_on_island=ini_pop)
         self.island_map = island_map
         random.seed(seed)
         self.ymax_animals = ymax_animals
         self.cmax_animals = cmax_animals
         self.hist_specs = hist_specs  # should we check that only weight, age and fitness are given?
-        self.img_base = img_base
-        self.img_fmt = img_fmt
+        self._img_base = img_base
+        self._img_fmt = img_fmt
+
+        self._year = 0
+        self._final_year = None
+        self._img_counter = 0
+
+        self._fig = None
+        self._map_ax = None
+        self._ax1 = None
+        self._line = None
+        self._ax3 = None
+        self._ax4 = None
+        self._ax6 = None
+        self._ax7 = None
+        self._ax8 = None
+        self._ax9 = None
+        self._axt = None
 
     @staticmethod
     def set_animal_parameters(species, params):
@@ -95,20 +111,38 @@ class BioSim:
 
         Image files will be numbered consecutively
         """
-        plot = Plotting(num_years)
-        island_map = self.island_map.replace(' ', '') + '\n'
-        plot.map_of_island(island_map)
-        for year in num_years:
-            herb = self.isl.total_num_animals_on_island[1]
-            carn = self.isl.total_num_animals_on_island[2]
-            plot.update_animal_count(num_years, herb, carn)
-            animals = self.isl.herbis_and_carnis_on_island()
-            plot.heatmaps_sepcies_dist(animals[0], animals[1], self.cmax_animals)
-            herbi_prop = self.isl.collect_fitness_age_weight_herbi()
-            carni_prop = self.isl.collect_fitness_age_weight_carni()
-            plot.histograms(herbi_prop, carni_prop, self.hist_specs)
-            plot.text_axis()
-            self.isl.annual_cycle()
+        if img_years is None:
+            img_years = vis_years
+
+        self._final_year = self._year + num_years
+        self._setup_graphics()
+
+        while self._year < self._final_year:
+            if self._year % vis_years == 0:
+                self._update_graphics()
+
+            if self._year % img_years == 0:
+                self._save_graphics()
+
+            self._isl.annual_cycle()
+            self._year += 1
+
+
+
+        # plot = Plotting(num_years)
+        # island_map = self.island_map.replace(' ', '') + '\n'
+        # plot.map_of_island(island_map)
+        # for year in num_years:
+        #     herb = self.isl.total_num_animals_on_island[1]
+        #     carn = self.isl.total_num_animals_on_island[2]
+        #     plot.update_animal_count(num_years, herb, carn)
+        #     animals = self.isl.herbis_and_carnis_on_island()
+        #     plot.heatmaps_sepcies_dist(animals[0], animals[1], self.cmax_animals)
+        #     herbi_prop = self.isl.collect_fitness_age_weight_herbi()
+        #     carni_prop = self.isl.collect_fitness_age_weight_carni()
+        #     plot.histograms(herbi_prop, carni_prop, self.hist_specs)
+        #     plot.text_axis()
+        #     self.isl.annual_cycle()
 
     def add_population(self, population):
         """
