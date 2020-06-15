@@ -6,6 +6,8 @@
 Welcome to BioSim's documentation!
 ==================================
 
+This is a simulation of ecosystem of an island.
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
