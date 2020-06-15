@@ -50,6 +50,13 @@ class BioSim:
         self.island_map = island_map
         random.seed(seed)
         self.ymax_animals = ymax_animals
+        if cmax_animals is None:
+            self.vmax_h = 200
+            self.vmax_c = 50
+        else:
+            self.vmax_h = cmax_animals['Herbivore']
+            self.vmax_c = cmax_animals['Carnivore']
+
         self.cmax_animals = cmax_animals
         self.hist_specs = hist_specs  # should we check that only weight, age and fitness are given?
         self._img_base = img_base
@@ -126,9 +133,8 @@ class BioSim:
             if self._year % vis_years == 0:
                 self._update_graphics()
 
-            if self._year % img_years == 0:
-                self._save_graphics()
-
+            # if self._year % img_years == 0:
+                # self._save_graphics()
             self._isl.annual_cycle()
             self._year += 1
 
@@ -164,7 +170,7 @@ class BioSim:
             # self._ax3.set_ylim(0, 10000)
         
         self._line_ax.set_xlim(0, self._final_year + 1)
-        self._update_line_graph()
+        self._line_setup_graph()
 
         # Add subplots for heatmaps
         if self._herb_ax is None and self._carn_ax is None:
@@ -179,8 +185,8 @@ class BioSim:
             self._age_ax = self._fig.add_subplot(3, 3, 8)
             self._weight_ax = self._fig.add_subplot(3, 3, 9)
 
-    def _update_line_graph(self):
-        """Update the animal count graph."""
+    def _line_setup_graph(self):
+        """Create the line graph/the animal count graph setup."""
         if self._line_h is None and self._line_c is None:
             line_h = self._line_ax.plot(np.arange(0, self._final_year),
                                         np.full(self._final_year, np.nan),
@@ -209,7 +215,7 @@ class BioSim:
             self._img_ax_heat1 = self._herb_ax.imshow(herbi_map,
                                                       interpolation='nearest',
                                                       vmin=0,
-                                                      vmax=self.cmax_animals['Herbivore'])
+                                                      vmax=self.vmax_h)
             plt.colorbar(self._img_ax_heat1, ax=self._herb_ax, orientation='vertical')
 
         if self._img_ax_heat2 is not None:
@@ -218,9 +224,26 @@ class BioSim:
             self._img_ax_heat2 = self._herb_ax.imshow(carni_map,
                                                       interpolation='nearest',
                                                       vmin=0,
-                                                      vmax=self.cmax_animals['Carnivore'])
+                                                      vmax=self.vmax_c)
             plt.colorbar(self._img_ax_heat2, ax=self._carn_ax, orientation='vertical')
 
+    def _update_line_graph(self, num_herb=0, num_carn=0):
+        """Update the line graph/the animal count graph."""
+        ydata_h = self._line_h.get_ydata()
+        ydata_h[self._year] = num_herb
+        self._line_h.set_ydata(ydata_h)
+
+        ydata_c = self._line_c.get_ydata()
+        ydata_c[self._year] = num_carn
+        self._line_c.set_ydata(ydata_c)
+
+    def _update_graphics(self):
+        """Updates graphics each year."""
+        _, h, c = self._isl.total_num_animals_on_island()
+        self._update_line_graph(num_herb=h, num_carn=c)
+        h_map, c_map = self._isl.herbis_and_carnis_on_island()
+        self._update_heatmaps(herbi_map=h_map, carni_map=c_map)
+        plt.pause(1e-6)
 
     def add_population(self, population):
         """
@@ -230,7 +253,7 @@ class BioSim:
         ----------
         population: List of dictionaries specifying population
         """
-        self.isl.add_animals_on_island(new_animals=population)
+        self._isl.add_animals_on_island(new_animals=population)
 
     @property
     def year(self):
@@ -240,13 +263,13 @@ class BioSim:
     @property
     def num_animals(self):
         """Total number of animals on island."""
-        return self.isl.total_num_animals_on_island()[0]
+        return self._isl.total_num_animals_on_island()[0]
 
     @property
     def num_animals_per_species(self):
         """Number of animals per species in island, as dictionary."""
-        herbis = self.isl.total_num_animals_on_island()[1]
-        carnis = self.isl.total_num_animals_on_island()[2]
+        herbis = self._isl.total_num_animals_on_island()[1]
+        carnis = self._isl.total_num_animals_on_island()[2]
         return {'Herbivore': herbis, 'Carnivore': carnis}
 
     def make_movie(self):
