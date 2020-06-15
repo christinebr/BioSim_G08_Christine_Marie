@@ -118,22 +118,7 @@ class SingleCell:
 
     def animals_in_cell_eat(self):
         """
-        First the herbivores eat, they eat in random order. Shuffle the
-        herbivores list, then let the first animal eat and gain weigh. This
-        goes on until there are no fodder left in the cell.
-
-        Then the carnivores eat. The fittest carnivore eats first, it tries to
-        kill the least fit herbivores until it is filled or there are no more
-        herbivores that's week enough for it to kill. Then the next carnivore
-        kills and eat, and so on until there are no more herbivores week enough
-        to be killed by the hungry carnivores or all carnivores are stuffed. If
-        a carnivore kills a herbivore that weights more than what the carnivore
-        wants to eat, the remainders of the herbivore are lost.
-
-        The surviving herbivores are stored in a list that's in the end used
-        to update the herbivore list in init. Carnivores in init are also updated.
-
-        Todo: This is a little to long.
+        Animals in the cell eats, first herbivores and then carnivores.
 
         Returns
         -------
@@ -152,8 +137,8 @@ class SingleCell:
         """
         The herbivores eat in random order and each herbivore wants to eat a
         fixed amount of fodder. The herbivores eats as long as there is
-        available fodder in the cell. Each time a herbivore eats, it's weight
-        is updated.
+        available fodder in the cell. Each time a herbivore eats, the weight
+        of that herbivore is updated.
 
         Returns
         -------
@@ -176,18 +161,12 @@ class SingleCell:
         The carnivores eats by killing herbivores. The carnivores and
         herbivores are sorted after fitness. The fittest carnivore eats first
         and each carnivore tries to eat the herbivore with lowest fitness. One
-        carnivore eats at a time and it stops to ea
+        carnivore eats at a time and it stops to eat when the desired amount of
+        fodder is reached. Each time a carnivore eats, the weight of that
+        carnivore is updated.
 
-        Then the carnivores eat. The fittest carnivore eats first, it tries to
-        kill the least fit herbivores until it is filled or there are no more
-        herbivores that's week enough for it to kill. Then the next carnivore
-        kills and eat, and so on until there are no more herbivores week enough
-        to be killed by the hungry carnivores or all carnivores are stuffed. If
-        a carnivore kills a herbivore that weights more than what the carnivore
-        wants to eat, the remainders of the herbivore are lost.
-
-        The surviving herbivores are stored in a list that's in the end used
-        to update the herbivore list in init. Carnivores in init are also updated.
+        The surviving herbivores are stored in a list which in the end is used
+        to update the herbivore list.
 
         Returns
         -------
