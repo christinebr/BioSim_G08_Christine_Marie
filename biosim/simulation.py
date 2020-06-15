@@ -65,12 +65,24 @@ class BioSim:
             self._weight_max = 60
             self._weight_bins = int(self._weight_max/2)
         else:
-            self._fit_max = hist_specs['fitness']['max']
-            self._fit_bins = int(self._fit_max/hist_specs['fitness']['delta'])
-            self._age_max = hist_specs['age']['max']
-            self._age_bins = int(self._age_max/hist_specs['age']['delta'])
-            self._weight_max = hist_specs['weight']['max']
-            self._weight_bins = int(self._weight_max/hist_specs['weight']['delta'])
+            if 'fitness' in hist_specs.keys():
+                self._fit_max = hist_specs['fitness']['max']
+                self._fit_bins = int(self._fit_max/hist_specs['fitness']['delta'])
+            else:
+                self._fit_max = 1.0
+                self._fit_bins = int(self._fit_max/0.05)
+            if 'age' in hist_specs.keys():
+                self._age_max = hist_specs['age']['max']
+                self._age_bins = int(self._age_max/hist_specs['age']['delta'])
+            else:
+                self._age_max = 60
+                self._age_bins = int(self._age_max/2)
+            if 'weight' in hist_specs.keys():
+                self._weight_max = hist_specs['weight']['max']
+                self._weight_bins = int(self._weight_max/hist_specs['weight']['delta'])
+            else:
+                self._weight_max = 60
+                self._weight_bins = int(self._weight_max / 2)
 
         self.hist_specs = hist_specs  # should we check that only weight, age and fitness are given?
         self._img_base = img_base
@@ -267,7 +279,7 @@ class BioSim:
         if self._img_ax_heat2 is not None:
             self._img_ax_heat2.set_data(carni_map)
         else:
-            self._img_ax_heat2 = self._herb_ax.imshow(carni_map,
+            self._img_ax_heat2 = self._carn_ax.imshow(carni_map,
                                                       interpolation='nearest',
                                                       vmin=0,
                                                       vmax=self.vmax_c)
@@ -327,7 +339,7 @@ class BioSim:
     @property
     def year(self):
         """Last year simulated."""
-        pass
+        return self._year
 
     @property
     def num_animals(self):
