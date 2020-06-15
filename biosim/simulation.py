@@ -12,7 +12,6 @@ class BioSim:
                  ymax_animals=None, cmax_animals=None, hist_specs=None,
                  img_base=None, img_fmt='png'):
         """
-
         Parameters
         ----------
         island_map: Multi-line string specifying island geography
@@ -238,13 +237,14 @@ class BioSim:
 
         self._img_ax = self._map_ax.imshow(geogr_rgb)
         self._map_ax.set_xticks(np.arange(1, len(geogr_rgb[0]) + 1, 5))
-        #self._map_ax.set_xticks(range(len(geogr_rgb[0])))
+        # self._map_ax.set_xticks(range(len(geogr_rgb[0])))
         self._map_ax.set_xticklabels(np.arange(1, 1 + len(geogr_rgb[0]), 5),
-        fontsize=self.font_axes)
+                                     fontsize=self.font_axes)
         # self._map_ax.set_xticklabels(range(1, 1 + len(geogr_rgb[0])), fontsize=self.font_axes)
         self._map_ax.set_yticks(np.arange(1, len(geogr_rgb) + 1, 5))
         # self._map_ax.set_yticks(range(len(geogr_rgb)))
-        self._map_ax.set_yticklabels(np.arange(1, 2 + len(geogr_rgb), 5), fontsize=self.font_axes)
+        self._map_ax.set_yticklabels(np.arange(1, 2 + len(geogr_rgb), 5),
+                                     fontsize=self.font_axes)
 
         self._map_ax.set_title('The island', fontsize=self.font)
 
