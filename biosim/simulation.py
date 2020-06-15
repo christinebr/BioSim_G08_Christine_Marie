@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 from biosim.animals import Herbivores, Carnivores
-from biosim.cell import Water, Desert, Lowland, Highland
+from biosim.cell import Lowland, Highland
 from biosim.island import TheIsland
 import random
 import matplotlib.pyplot as plt
 import numpy as np
-from biosim.plotting import Plotting
 
 
 class BioSim:
@@ -212,13 +211,7 @@ class BioSim:
             self._fitness_ax.set_ylim([0, 2000])
             self._fitness_ax.set_title('Fitness', fontsize=self.font)
             self._age_ax = self._fig.add_subplot(3, 3, 8)
-            self._age_ax.set_xlim([0, self._age_max])
-            self._age_ax.set_ylim([0, 2000])
-            self._age_ax.set_title('Age', fontsize=self.font)
             self._weight_ax = self._fig.add_subplot(3, 3, 9)
-            self._weight_ax.set_xlim([0, self._weight_max])
-            self._weight_ax.set_ylim([0, 2000])
-            self._weight_ax.set_title('Weight', fontsize=self.font)
 
     def _plot_island(self):
         """Create a map of the island."""
@@ -292,8 +285,7 @@ class BioSim:
         else:
             self._img_ax_heat1 = self._herb_ax.imshow(herbi_map,
                                                       interpolation='nearest',
-                                                      vmin=0,
-                                                      vmax=self.vmax_h)
+                                                      vmin=0, vmax=self.vmax_h)
             plt.colorbar(self._img_ax_heat1, ax=self._herb_ax, orientation='vertical')
 
         if self._img_ax_heat2 is not None:
@@ -301,28 +293,40 @@ class BioSim:
         else:
             self._img_ax_heat2 = self._carn_ax.imshow(carni_map,
                                                       interpolation='nearest',
-                                                      vmin=0,
-                                                      vmax=self.vmax_c)
+                                                      vmin=0, vmax=self.vmax_c)
             plt.colorbar(self._img_ax_heat2, ax=self._carn_ax, orientation='vertical')
 
     def _update_histograms(self, herb_prop, carn_prob):
         """Update histograms."""
         self._fitness_ax.cla()
         self._age_ax.cla()
+        self._age_ax.set_xlim([0, self._age_max])
+        self._age_ax.set_ylim([0, 2000])
+        self._age_ax.set_title('Age', fontsize=self.font)
         self._weight_ax.cla()
+        self._weight_ax.set_xlim([0, self._weight_max])
+        self._weight_ax.set_ylim([0, 2000])
+        self._weight_ax.set_title('Weight', fontsize=self.font)
+
         self._fitness_ax.hist(herb_prop[0], bins=self._fit_bins,
-                              fill=False, edgecolor='blue')
+                              histtype='stepfilled', fill=False,
+                              edgecolor='blue')
         self._age_ax.hist(herb_prop[1], bins=self._age_bins,
-                          fill=False, edgecolor='blue')
+                          histtype='stepfilled', fill=False,
+                          edgecolor='blue')
         self._weight_ax.hist(herb_prop[2], bins=self._weight_bins,
-                             fill=False, edgecolor='blue')
+                             histtype='stepfilled', fill=False,
+                             edgecolor='blue')
 
         self._fitness_ax.hist(carn_prob[0], bins=self._fit_bins,
-                              fill=False, edgecolor='red')
+                              histtype='stepfilled', fill=False,
+                              edgecolor='red')
         self._age_ax.hist(carn_prob[1], bins=self._age_bins,
-                          fill=False, edgecolor='red')
+                          histtype='stepfilled', fill=False,
+                          edgecolor='red')
         self._weight_ax.hist(carn_prob[2], bins=self._weight_bins,
-                             fill=False, edgecolor='red')
+                             histtype='stepfilled', fill=False,
+                             edgecolor='red')
 
     def _update_line_graph(self, num_herb=0, num_carn=0):
         """Update the line graph/the animal count graph."""
