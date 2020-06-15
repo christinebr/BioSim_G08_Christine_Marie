@@ -67,6 +67,8 @@ class BioSim:
         self._line_c = None
         self._herb_ax = None
         self._carn_ax = None
+        self._img_ax_heat1 = None
+        self._img_ax_heat2 = None
         self._fitness_ax = None
         self._age_ax = None
         self._weight_ax = None
@@ -162,12 +164,14 @@ class BioSim:
             # self._ax3.set_ylim(0, 10000)
         
         self._line_ax.set_xlim(0, self._final_year + 1)
-        
+        self._update_line_graph()
+
         # Add subplots for heatmaps
         if self._herb_ax is None and self._carn_ax is None:
             self._herb_ax = self._fig.add_subplot(3, 3, 4)
             self._carn_ax = self._fig.add_subplot(3, 3, 6)
-            # plan to use the same self._img_ax as for map of island
+            self._img_ax_heat1 = None
+            self._img_ax_heat2 = None
         
         # Add subplots for histograms
         if self._fitness_ax is None and self._age_ax is None and self._weight_ax is None:
@@ -196,6 +200,27 @@ class BioSim:
                                       np.vstack((ydata_h, ynew)))
                 self._line_c.set_data(np.hstack((xdata_c, xnew)),
                                       np.vstack((ydata_c, ynew)))
+
+    def _update_heatmaps(self, herbi_map, carni_map):
+        """Updates heatmaps of island."""
+        if self._img_ax_heat1 is not None:
+            self._img_ax_heat1.set_data(herbi_map)
+        else:
+            self._img_ax_heat1 = self._herb_ax.imshow(herbi_map,
+                                                      interpolation='nearest',
+                                                      vmin=0,
+                                                      vmax=self.cmax_animals['Herbivore'])
+            plt.colorbar(self._img_ax_heat1, ax=self._herb_ax, orientation='vertical')
+
+        if self._img_ax_heat2 is not None:
+            self._img_ax_heat2.set_data(carni_map)
+        else:
+            self._img_ax_heat2 = self._herb_ax.imshow(carni_map,
+                                                      interpolation='nearest',
+                                                      vmin=0,
+                                                      vmax=self.cmax_animals['Carnivore'])
+            plt.colorbar(self._img_ax_heat2, ax=self._carn_ax, orientation='vertical')
+
 
     def add_population(self, population):
         """
