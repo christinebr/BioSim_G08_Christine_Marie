@@ -186,14 +186,15 @@ class BioSim:
         if self._axt is None:
             self._axt = self._fig.add_axes([0.4, 0.8, 0.2, 0.2])  # llx, lly, w, h
             self._axt.axis('off')  # turn off coordinate system
-        
+
         # Add subplot for animal count plot
         if self._line_ax is None:
             self._line_ax = self._fig.add_subplot(3, 3, 3)
             self._line_ax.set_ylim(0, 10000)
-        
+
         self._line_ax.set_xlim(0, self._final_year + 1)
         self._line_setup_graph()
+        self._line_ax.set_title('Animal count', fontsize=self.font)
 
         # Add subplots for heatmaps
         if self._herb_ax is None and self._carn_ax is None:
@@ -201,18 +202,23 @@ class BioSim:
             self._carn_ax = self._fig.add_subplot(3, 3, 6)
             self._img_ax_heat1 = None
             self._img_ax_heat2 = None
-        
+            self._herb_ax.set_title('Herbivore distribution', fontsize=self.font)
+            self._carn_ax.set_title('Carnivore distribution', fontsize=self.font)
+
         # Add subplots for histograms
         if self._fitness_ax is None and self._age_ax is None and self._weight_ax is None:
             self._fitness_ax = self._fig.add_subplot(3, 3, 7)
             self._fitness_ax.set_xlim([0, self._fit_max])
             self._fitness_ax.set_ylim([0, 2000])
+            self._fitness_ax.set_title('Fitness', fontsize=self.font)
             self._age_ax = self._fig.add_subplot(3, 3, 8)
             self._age_ax.set_xlim([0, self._age_max])
             self._age_ax.set_ylim([0, 2000])
+            self._age_ax.set_title('Age', fontsize=self.font)
             self._weight_ax = self._fig.add_subplot(3, 3, 9)
             self._weight_ax.set_xlim([0, self._weight_max])
             self._weight_ax.set_ylim([0, 2000])
+            self._weight_ax.set_title('Weight', fontsize=self.font)
 
     def _plot_island(self):
         """Create a map of the island."""
