@@ -266,9 +266,9 @@ class BioSim:
             if len(xnew) > 0:
                 ynew = np.full(xnew.shape, np.nan)
                 self._line_h.set_data(np.hstack((xdata_h, xnew)),
-                                      np.vstack((ydata_h, ynew)))
+                                      np.hstack((ydata_h, ynew)))
                 self._line_c.set_data(np.hstack((xdata_c, xnew)),
-                                      np.vstack((ydata_c, ynew)))
+                                      np.hstack((ydata_c, ynew)))
 
     def _update_count(self):
         """Updates the counter."""
