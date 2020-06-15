@@ -97,7 +97,7 @@ class Animal:
         if weight_of_newborn and amount_fodder_eaten:
             raise ValueError('No animal could give birth and eat at the same time')
         elif amount_fodder_eaten:
-            self.weight += round(self._params['beta']*amount_fodder_eaten, 2)
+            self.weight += round(self._params['beta'] * amount_fodder_eaten, 2)
         elif weight_of_newborn:
             self.weight -= round(self._params['xi'] * weight_of_newborn, 2)
         else:

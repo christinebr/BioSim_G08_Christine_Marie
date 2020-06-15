@@ -95,6 +95,7 @@ class SingleCell:
         Sorting the animals after fitness
             - herbivores are sorted from lowest to highest fitness.
             - carnivores are sorted from highest to lowest fitness.
+
         Returns
         -------
         sorted_herbis: [list of class-instances]
@@ -190,9 +191,9 @@ class SingleCell:
 
     def birth(self):
         """
-        Decides if animals are born and updates the animal_list.
-        Makes sure the mother loses weight and assigns a weight and specie to
-        the newborn animals.
+        Decides if animals are born and updates lists of herbivores and
+        carnivores. The animal giving birth, the mother, loses weight and a
+        new animal (herbivore or carnivore) is added.
 
         Returns
         -------
@@ -222,13 +223,14 @@ class SingleCell:
 
     def animals_stay_or_move(self):
         """
-        Check if animals stay in a cell or migrate to another cell. The method
-        also updates lists of herbivores and carnivores in the init.
+        Check if animals stay in a cell or wants migrate to another cell.
+        The method updates the list of herbivores and carnivores to only
+        include the animals wanting to stay in the cell.
 
         Returns
         -------
         animals_move: [list]
-            list of animals that moves out of the cell
+            list of animals that wants to migrate from the cell
         """
         animals_stay = []
         animals_move = []
@@ -254,15 +256,19 @@ class SingleCell:
 
     def animals_migrate(self):
         """
-        Sorts animals that wants to move in list showing the direction they
-        wants to move in.
+        Sorts animals that wants to migrate from the cell in lists
+        representing the direction they wants to move in.
 
         Returns
         -------
-        north: [list] Animals who wants to move to the north.
-        east: [list] Animals who wants to move to the east.
-        south: [list] Animals who wants to move to the south.
-        west: [list] Animals who wants to move to the west.
+        north: [list]
+            Animals who wants to move to the north.
+        east: [list]
+            Animals who wants to move to the east.
+        south: [list]
+            Animals who wants to move to the south.
+        west: [list]
+            Animals who wants to move to the west.
         """
         animals_move = self.animals_stay_or_move()
         north = []
@@ -287,8 +293,13 @@ class SingleCell:
         Adds animals to cell after migration. Updates the attributes of the
         class in the end.
 
+        Parameters
+        ----------
+        animals_migrated: [list]
+            list with animals to be added to either herbivore or carnivore list
+
         Returns
-        _______
+        -------
         None
 
         """
@@ -300,7 +311,7 @@ class SingleCell:
 
     def aging_of_animals(self):
         """
-        Makes sure animals ages. Updates the attributes of the class.
+        Makes sure animals ages. Updates the age attribute of each animals.
 
         Returns
         -------
@@ -314,8 +325,8 @@ class SingleCell:
 
     def weight_loss_end_of_year(self):
         """
-        Makes all the animals loose weight according to their start-weight and
-        the constant eta. Updates the class attributes.
+        Makes all the animals loose weight at the end of a year. Updates the
+        weight attribute of each animal.
 
         Returns
         -------
@@ -323,6 +334,7 @@ class SingleCell:
         """
         for herbi in self.herbi_list:
             herbi.update_weight()
+
         for carni in self.carni_list:
             carni.update_weight()
 
@@ -338,13 +350,15 @@ class SingleCell:
         survived_herbis = []
         for herbi in self.herbi_list:
             if random.random() > herbi.probability_death():
-                # Tests if the animal survives, not if it dies. That's why we use > instead of <
+                # Tests if the animal survives, not if it dies.
+                # That's why we use > instead of <
                 survived_herbis.append(herbi)
 
         survived_carnis = []
         for carni in self.carni_list:
             if random.random() > carni.probability_death():
-                # Testing if the animal survives, not if it dies. That's why we use > instead of <
+                # Testing if the animal survives, not if it dies.
+                # That's why we use > instead of <
                 survived_carnis.append(carni)
 
         self.herbi_list = survived_herbis
@@ -357,9 +371,12 @@ class SingleCell:
 
         Returns
         -------
-        fitness: [list] fitness of herbivores in cell
-        age:     [list] age of herbivores in cell
-        weight:  [list] weight of herbivores in cell
+        fitness: [list]
+            fitness of herbivores in cell
+        age: [list]
+            age of herbivores in cell
+        weight: [list]
+            weight of herbivores in cell
         """
         fitness = []
         age = []
@@ -378,9 +395,12 @@ class SingleCell:
 
         Returns
         -------
-        fitness: [list] fitness of carnivores in cell
-        age:     [list] age of carnivores in cell
-        weight:  [list] weight of carnivores in cell
+        fitness: [list]
+            fitness of carnivores in cell
+        age: [list]
+            age of carnivores in cell
+        weight: [list]
+            weight of carnivores in cell
         """
         fitness = []
         age = []
@@ -394,36 +414,33 @@ class SingleCell:
 
 
 class Water(SingleCell):
+    """Represents the water-landscape."""
     _params = {'f_max': 0.0}
-    """
-    Represents the water-landscape.
-    """
+
     def __init__(self, animals_list):
         super().__init__(animals_list)
 
 
 class Desert(SingleCell):
+    """Represents the desert-landscape."""
     _params = {'f_max': 0.0}
-    """
-    Represents the desert-landscape.
-    """
+
     def __init__(self, animals_list):
         super().__init__(animals_list)
 
 
 class Lowland(SingleCell):
+    """Represents the lowland-landscape."""
     _params = {'f_max': 800.0}
-    """
-    Represents the lowland-landscape.
-    """
+
     def __init__(self, animals_list):
         super().__init__(animals_list)
 
 
 class Highland(SingleCell):
+    """Represents the highland_landscape."""
+
     _params = {'f_max': 300.0}
-    """
-    Represents the highland_landscape.
-    """
+
     def __init__(self, animals_list):
         super().__init__(animals_list)

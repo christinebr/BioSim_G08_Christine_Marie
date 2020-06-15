@@ -12,10 +12,11 @@ class TheIsland:
 
         Parameters
         ----------
-        landscape_of_cells: [str] multiline python string representing the
-                            landscape of the island.
-        animals_on_island: [list of dicts] list of dictionaries with location
-                           of cell and population of animals in that cell.
+        landscape_of_cells: [str]
+            multiline python string representing the landscape of the island.
+        animals_on_island: [list of dicts]
+            list of dictionaries with location of cell and population of
+            animals in that cell.
         """
         # Check conditions for geography of island
         self.check_if_island_legal(landscape_of_cells)
@@ -45,7 +46,8 @@ class TheIsland:
 
         Raises
         -------
-        ValueError: if any of the specifications is violated.
+        ValueError:
+            if any of the specifications is violated.
         """
         geogr = textwrap.dedent(geogr)
         geogr_split = geogr.split('\n')
@@ -74,13 +76,14 @@ class TheIsland:
 
         Parameters
         ----------
-        landscape: [str] multiline string representing the landscape of
-                   the island
+        landscape: [str]
+            multiline string representing the landscape of the island
 
         Returns
         -------
-        [list of lists] an inner list is a row and an element of an inner list
-        is the landscape of that cell.
+        [list of lists]
+            an inner list is a row and an element of an inner list is the
+            landscape of that cell.
         """
         landscape = textwrap.dedent(landscape)
         landscape_split = landscape.split('\n')
@@ -113,8 +116,9 @@ class TheIsland:
 
         Parameters
         ----------
-        new_animals: [list of dicts] list of dictionaries with location
-                     of cell and population of animals in that cell.
+        new_animals: [list of dicts]
+            list of dictionaries with location of cell and population of
+            animals in that cell.
 
         Returns
         -------
@@ -122,8 +126,8 @@ class TheIsland:
 
         Raises
         ------
-        ValueError: if animals are being placed in water cells where they
-                    can't stay
+        ValueError:
+            if animals are being placed in water cells where they can't stay
         """
         for dictionary in new_animals:
             x, y = dictionary['loc']  # Location of a cell
@@ -169,12 +173,15 @@ class TheIsland:
 
         Parameters
         ----------
-        row: [int] row number as python uses it
-        col: [int] column number as python uses it
+        row: [int]
+            row number as python uses it
+        col: [int]
+            column number as python uses it
 
         Returns
         -------
-        directions: [list] list with possible directions
+        directions: [list]
+            list with possible directions
             - can move in all directions: ['North', 'East', 'South', 'West']
             - can only move to east and south: ['East', 'South']
         """
@@ -232,20 +239,29 @@ class TheIsland:
 
         Parameters
         ----------
-        x: [int] row of original cell
-        y: [int] column of original cell
-        pos_dir: [list] possible directions animals can move along
-        north: [list] animals wanting to move north
-        east:  [list] animals wanting to move east
-        south: [list] animals wanting to move south
-        west:  [list] animals wanting to move west
-        ghost_island: [list of lists] a replicate of the island, but an
-                      element in an inner row contains list of animals
+        x: [int]
+            row of original cell
+        y: [int]
+            column of original cell
+        pos_dir: [list]
+            possible directions animals can move along
+        north: [list]
+            animals wanting to move north
+        east: [list]
+            animals wanting to move east
+        south: [list]
+            animals wanting to move south
+        west: [list]
+            animals wanting to move west
+        ghost_island: [list of lists]
+            a replicate of the island, but an element in an inner row contains
+            list of animals
 
         Returns
         -------
-        ghost_island: [list of lists] updated ghost island with the animals
-                      added to cells for which they were allowed to move to.
+        ghost_island: [list of lists]
+            updated ghost island with the animals added to cells for which
+            they were allowed to move to.
         """
         if 'North' in pos_dir:
             ghost_island[x - 1][y] += north
@@ -341,13 +357,17 @@ class TheIsland:
 
         Parameters
         ----------
-        row: [int] row number for cell
-        col: [int] column number for cell
+        row: [int]
+            row number for cell
+        col: [int]
+            column number for cell
 
         Returns
         -------
-        herbis: [list] list of herbivores in cell
-        carnis: [list] list of carnivores in cell
+        herbis: [list]
+            list of herbivores in cell
+        carnis: [list]
+            list of carnivores in cell
         """
         herbis = self.island_cells[row-1][col-1].herbi_list
         carnis = self.island_cells[row-1][col-1].carni_list
@@ -360,8 +380,10 @@ class TheIsland:
 
         Returns
         -------
-        herbi_island: [list] island with number of herbivores in each cell
-        carni_island: [list] island with number of carnivores in each cell
+        herbi_island: [list]
+            island with number of herbivores in each cell
+        carni_island: [list]
+            island with number of carnivores in each cell
         """
         herbi_island = [[[] for _ in range(self.col)] for _ in range(self.row)]
         carni_island = [[[] for _ in range(self.col)] for _ in range(self.row)]
@@ -380,9 +402,12 @@ class TheIsland:
 
         Returns:
         ----------
-        tot_animal: [int] total number of animals on the island
-        tot_herbi:  [int] total number of herbivores on the island
-        tot_carni : [int] total number of carnivores on the island
+        tot_animal: [int]
+            total number of animals on the island
+        tot_herbi: [int]
+            total number of herbivores on the island
+        tot_carni : [int]
+            total number of carnivores on the island
         """
         tot_herbi = 0
         tot_carni = 0
@@ -400,9 +425,12 @@ class TheIsland:
 
         Returns
         -------
-        fitness_herbi: [list] fitness for all herbivores on the island
-        age_herbi: [list] age for all herbivores on the island
-        weight_herbi: [list] weight for all herbivores on the island
+        fitness_herbi: [list]
+            fitness for all herbivores on the island
+        age_herbi: [list]
+            age for all herbivores on the island
+        weight_herbi: [list]
+            weight for all herbivores on the island
         """
         fitness_herbi = []
         age_herbi = []
@@ -423,10 +451,12 @@ class TheIsland:
 
         Returns
         -------
-        fitness_carni: [list] fitness for all carnivores on the island
-        age_carni: [list] age for all carnivores on the island
-        weight_carni: [list] weight for all carnivores on the island
-
+        fitness_carni: [list]
+            fitness for all carnivores on the island
+        age_carni: [list]
+            age for all carnivores on the island
+        weight_carni: [list]
+            weight for all carnivores on the island
         """
         fitness_carni = []
         age_carni = []
