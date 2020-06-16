@@ -3,7 +3,9 @@
 from biosim.cell import SingleCell, Lowland, Desert, Water
 from biosim.animals import Herbivores, Carnivores
 import pytest
+from scipy.stats import binom_test
 
+alpha = 0.01  # Significant level for statistical tests
 
 class TestSingleCell:
 
@@ -295,6 +297,22 @@ class TestSingleCell:
         assert len(east) == 0
         assert len(south) == 0
         assert len(west) == num_animals_before
+
+    def test_probability_of_migration(self):
+        """
+        Statistically tests if migration distributes the animals as excepted.
+        """
+        animals = [{'species': 'Herbivore', 'age': 5, 'weight': 20}
+                   ]
+        cell = SingleCell(animals_list=animals)
+        prob_migration = cell.herbi_list[0].probability_of_migration()
+        # The probability is the same every time, because the animal does not age, nor get hungry.
+        number_of_runs = 300
+        num_migrate = 0
+        for _ in range(number_of_runs):
+            cell = SingleCell(animals_list=animals)
+            num_migrate += len(cell.animals_stay_or_move())
+        assert binom_test(num_migrate, number_of_runs, prob_migration) > alpha
 
 
 class TestLowland:

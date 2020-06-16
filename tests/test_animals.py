@@ -8,7 +8,7 @@ class TestHerbivores:
 
     @pytest.fixture()
     def initial_herbivore_class(self):
-        self.h = Herbivores(weight=20)
+        self.h = Herbivores(age=5, weight=20)
         return self.h
 
     def test_constructor_default(self, initial_herbivore_class):
@@ -41,14 +41,15 @@ class TestHerbivores:
         assert param['beta'] == 0.8
         assert param['w_half'] == 2.0
 
-    def test_default_value_for_age(self, initial_herbivore_class):
+    def test_default_value_for_age(self):
         """
         Testing default value for age and that it is possible to assign
         a different value also.
         """
-        assert self.h.age == 0
-        h = Herbivores(age=3, weight=20)
-        assert h.age != 0
+        h1 = Herbivores(weight=20)
+        assert h1.age == 0
+        h2 = Herbivores(age=3, weight=20)
+        assert h2.age != 0
 
     def test_age_not_negative(self):
         """
