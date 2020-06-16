@@ -16,7 +16,7 @@ class TestSingleCell:
 
         Returns
         -------
-        cell: [class instance] A cell with animals
+        None
         """
         animals = [{'species': 'Herbivore', 'age': 10, 'weight': 40},
                    {'species': 'Herbivore', 'age': 40, 'weight': 20},
@@ -26,7 +26,18 @@ class TestSingleCell:
                    {'species': 'Carnivore', 'age': 37, 'weight': 3.5}
                    ]
         self.cell = SingleCell(animals_list=animals)
-        return self.cell
+
+    @pytest.fixture()
+    def initial_statistic_cell(self):
+        """
+        Makes a single cell with animals to use as test-cell for statistic tests.
+
+        Returns
+        -------
+        None
+        """
+        self.one_herbivore = [{'species': 'Herbivore', 'age': 5, 'weight': 20}]
+        self.stat_cell = SingleCell(animals_list=self.one_herbivore)
 
     def test_empty_animal_list(self):
         """
@@ -298,21 +309,37 @@ class TestSingleCell:
         assert len(south) == 0
         assert len(west) == num_animals_before
 
-    def test_probability_of_migration(self):
+    def test_stat_probability_of_migration(self, initial_statistic_cell):
         """
         Statistically tests if migration distributes the animals as excepted.
         """
-        animals = [{'species': 'Herbivore', 'age': 5, 'weight': 20}
-                   ]
-        cell = SingleCell(animals_list=animals)
-        prob_migration = cell.herbi_list[0].probability_of_migration()
+        prob_migration = self.stat_cell.herbi_list[0].probability_of_migration()
         # The probability is the same every time, because the animal does not age, nor get hungry.
         number_of_runs = 300
         num_migrate = 0
         for _ in range(number_of_runs):
-            cell = SingleCell(animals_list=animals)
-            num_migrate += len(cell.animals_stay_or_move())
+            # Our method animals_stay_or_move deletes the moved animals from the lists in the cell
+            # Therefore we have to remake the cell every time.
+            self.stat_cell = SingleCell(animals_list=self.one_herbivore)
+            num_migrate += len(self.stat_cell.animals_stay_or_move())
         assert binom_test(num_migrate, number_of_runs, prob_migration) > alpha
+
+    def test_stat_probability_of_death(self, initial_statistic_cell):
+        """
+        Statistically tests if animals dies with the expected probability.
+        """
+        prob_death = self.stat_cell.herbi_list[0].probability_death()
+        # The probability is the same every time, because the animal does not age, nor get hungry.
+        number_of_runs = 300
+        num_dead = 0
+        for _ in range(number_of_runs):
+            # Our method animals_stay_or_move deletes the moved animals from the lists in the cell
+            # Therefore we have to remake the cell every time.
+            self.stat_cell = SingleCell(animals_list=self.one_herbivore)
+            self.stat_cell.death()
+            num_dead += 1 - len(self.stat_cell.herbi_list)
+
+        assert binom_test(num_dead, number_of_runs, prob_death) > alpha
 
 
 class TestLowland:
