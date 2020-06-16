@@ -3,15 +3,15 @@
 """
 Taken directly from:https://github.com/heplesser/nmbu_inf200_june2020/blob/7240186b0a97b24a325fa68280be344e5e49a9da/examples/randvis_project/randvis/simulation.py#L234
 
-todo: MUST MAKE SOME CHANGES HERE!!!
+todo: MUST MAKE SOME CHANGES HERE!!! made some changed -> more or not?
 
-:mod:`randvis.simulation` provides the user interface to the package.
-Each simulation is represented by a :class:`DVSim` instance. On each
-instance, the :meth:`DVSim.simulate` method can be called as often as
-you like to simulate a given number of steps.
+:mod:`biosim.simulation` provides the user interface to the package.
+Each simulation is represented by a :class:`BioSim` instance. On each
+instance, the :meth:`BioSim.simulate` method can be called as often as
+you like to simulate a given number of years.
 The state of the system is visualized as the simulation runs, at intervals
 that can be chosen. The graphics can also be saved to file at regular
-intervals. By calling :meth:`DVSim.make_movie` after a simulation is complete,
+intervals. By calling :meth:`BioSim.make_movie` after a simulation is complete,
 individual graphics files can be combined into an animation.
 .. note::
    * This module requires the program ``ffmpeg`` or ``convert``
@@ -25,17 +25,22 @@ individual graphics files can be combined into an animation.
 Example
 --------
 ::
-    sim = DVSim((10, 15), 0.1, 12345, '../data')
-    sim.simulate(50, 1, 5)
+    sim = BioSim(island_map, ini_pop, seed, ymax_animals, cmax_animals,
+                 hist_specs, img_base, img_fmt='png')
+    sim.simulate(num_years, vis_years, img_years)
     sim.make_movie()
+
 This code
-#. creates a system with a 10x15 matrix, sets the noise level to 0.1,
-   the random number generator seed to 12345 and specifies the filename
-   for output;
-#. performs a simulation of 50 steps, updating the graphics after each
-   step and saving a figure after each 5th step;
+#. creates a island according to the ``island_map``, which contain different
+   types of landscape. the initial population is placed on the island, and it
+   can consist of two types of animals: herbivores and carnivores. the random
+   number generator uses the seed given.;
+#. performs a simulation of the ecosystem on the island for ``num_years``
+   years. the graphics is updated after number of years given to ``vis_years``,
+   and the figure are saved after every ``img_years``;
 #. creates a movie from the individual figures saved.
 """
+
 from biosim.animals import Herbivores, Carnivores
 from biosim.cell import Lowland, Highland
 from biosim.island import TheIsland
@@ -435,7 +440,6 @@ class BioSim:
         if num_herb > self.ymax_animals or num_carn > self.ymax_animals:
             new_ymax = max(num_herb, num_carn) + 2000
             self._line_ax.set_ylim(0, round(new_ymax, -3))
-
 
     def _update_graphics(self):
         """Updates graphics each year."""
