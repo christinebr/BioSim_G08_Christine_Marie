@@ -395,23 +395,29 @@ class BioSim:
         self._weight_ax.set_title('Weight')
 
         self._fitness_ax.hist(herb_prop[0], bins=self._fit_bins,
+                              range=(0, self._fit_max),
                               histtype='stepfilled', fill=False,
                               edgecolor='blue')
         self._age_ax.hist(herb_prop[1], bins=self._age_bins,
                           histtype='stepfilled', fill=False,
+                          range=(0, self._age_max),
                           edgecolor='blue')
         self._weight_ax.hist(herb_prop[2], bins=self._weight_bins,
                              histtype='stepfilled', fill=False,
+                             range=(0, self._weight_max),
                              edgecolor='blue')
 
         self._fitness_ax.hist(carn_prob[0], bins=self._fit_bins,
                               histtype='stepfilled', fill=False,
+                              range=(0, self._fit_max),
                               edgecolor='red')
         self._age_ax.hist(carn_prob[1], bins=self._age_bins,
                           histtype='stepfilled', fill=False,
+                          range=(0, self._age_max),
                           edgecolor='red')
         self._weight_ax.hist(carn_prob[2], bins=self._weight_bins,
                              histtype='stepfilled', fill=False,
+                             range=(0, self._weight_max),
                              edgecolor='red')
 
     def _update_line_graph(self, num_herb=0, num_carn=0):
