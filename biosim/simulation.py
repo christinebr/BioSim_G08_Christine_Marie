@@ -58,13 +58,12 @@ _DEFAULT_GRAPHICS_DIR = os.path.join('..', 'data')
 _DEFAULT_GRAPHICS_NAME = 'dv'
 _DEFAULT_MOVIE_FORMAT = 'mp4'   # alternatives: mp4, gif
 
-font_size = 8
 # https://stackoverflow.com/questions/3899980/how-to-change-the-font-size-on-a-matplotlib-plot
 # Set fontsize for text, axes title and tick labels
-plt.rc('font', size=font_size)
-plt.rc('axes', titlesize=font_size)
-plt.rc('xtick', labelsize=font_size)
-plt.rc('ytick', labelsize=font_size)
+plt.rc('font', size=8)
+plt.rc('axes', titlesize=8)
+plt.rc('xtick', labelsize=5)
+plt.rc('ytick', labelsize=5)
 
 
 class BioSim:
@@ -107,6 +106,8 @@ class BioSim:
                               animals_on_island=ini_pop)
         self.island_map = island_map
         random.seed(seed)
+        self.width = 0
+        self.height = 0
         self.ymax_animals = ymax_animals
 
         if cmax_animals is None:
@@ -261,8 +262,8 @@ class BioSim:
 
         # Add subplots for heatmaps
         if self._herb_ax is None and self._carn_ax is None:
-            self._herb_ax = self._fig.add_axes([0.15, 0.26, 0.32, 0.3])
-            self._carn_ax = self._fig.add_axes([0.6, 0.26, 0.32, 0.3])
+            self._herb_ax = self._fig.add_axes([0.15, 0.26, 0.34, 0.3])
+            self._carn_ax = self._fig.add_axes([0.6, 0.26, 0.34, 0.3])
             self._img_ax_heat1 = None
             self._img_ax_heat2 = None
             self._herb_ax.set_title('Herbivore distribution')
@@ -270,9 +271,9 @@ class BioSim:
 
         # Add subplots for histograms
         if self._fitness_ax is None and self._age_ax is None and self._weight_ax is None:
-            self._fitness_ax = self._fig.add_axes([0.1, 0.1, 0.23, 0.1])
-            self._age_ax = self._fig.add_axes([0.4, 0.1, 0.23, 0.1])
-            self._weight_ax = self._fig.add_axes([0.7, 0.1, 0.23, 0.1])
+            self._fitness_ax = self._fig.add_axes([0.1, 0.08, 0.23, 0.1])
+            self._age_ax = self._fig.add_axes([0.4, 0.08, 0.23, 0.1])
+            self._weight_ax = self._fig.add_axes([0.7, 0.08, 0.23, 0.1])
 
     def _plot_island(self):
         """Create a map of the island."""
@@ -296,16 +297,13 @@ class BioSim:
 
         geogr_rgb = [[rgb_value[column] for column in row]
                      for row in island_map.splitlines()]
-
+        self.width = len(geogr_rgb[0])
+        self.height = len(geogr_rgb)
         self._img_ax = self._map_ax.imshow(geogr_rgb)
-        self._map_ax.set_xticks(np.arange(1, len(geogr_rgb[0]) + 1, 5))
-        # self._map_ax.set_xticks(range(len(geogr_rgb[0])))
-        self._map_ax.set_xticklabels(np.arange(1, 1 + len(geogr_rgb[0]), 5))
-        # self._map_ax.set_xticklabels(range(1, 1 + len(geogr_rgb[0])), fontsize=self.font_axes)
-        self._map_ax.set_yticks(np.arange(1, len(geogr_rgb) + 1, 5))
-        # self._map_ax.set_yticks(range(len(geogr_rgb)))
-        self._map_ax.set_yticklabels(np.arange(1, 2 + len(geogr_rgb), 5))
-
+        self._map_ax.set_xticks(range(self.width))
+        self._map_ax.set_xticklabels(range(1, 1 + self.width))
+        self._map_ax.set_yticks(range(self.height))
+        self._map_ax.set_yticklabels(range(1, 1 + self.height))
         self._map_ax.set_title('The island')
 
     def _line_setup_graph(self):
@@ -352,6 +350,10 @@ class BioSim:
                                                       vmin=0, vmax=self.vmax_h)
             plt.colorbar(self._img_ax_heat1, ax=self._herb_ax,
                          shrink=0.7, orientation='vertical')
+            self._herb_ax.set_xticks(range(self.width))
+            self._herb_ax.set_xticklabels(range(1, 1 + self.width))
+            self._herb_ax.set_yticks(range(self.height))
+            self._herb_ax.set_yticklabels(range(1, 1 + self.height))
 
         if self._img_ax_heat2 is not None:
             self._img_ax_heat2.set_data(carni_map)
@@ -361,6 +363,10 @@ class BioSim:
                                                       vmin=0, vmax=self.vmax_c)
             plt.colorbar(self._img_ax_heat2, ax=self._carn_ax,
                          shrink=0.7, orientation='vertical')
+            self._carn_ax.set_xticks(range(self.width))
+            self._carn_ax.set_xticklabels(range(1, 1 + self.width))
+            self._carn_ax.set_yticks(range(self.height))
+            self._carn_ax.set_yticklabels(range(1, 1 + self.height))
 
     def _update_histograms(self, herb_prop, carn_prob):
         """Update histograms."""
