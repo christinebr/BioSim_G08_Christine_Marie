@@ -334,6 +334,8 @@ class TestSingleCell:
     def test_stat_probability_of_death(self, initial_statistic_cell):
         """
         Statistically tests if animals dies with the expected probability.
+        The number of runs are the number of animals in the initial statistic
+        cell.
         """
         number_of_runs = len(self.herbivores)
         prob_death = self.stat_cell.herbi_list[0].probability_death()
