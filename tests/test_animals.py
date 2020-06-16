@@ -34,6 +34,11 @@ class TestHerbivores:
         with pytest.raises(ValueError):
             self.h.set_params({'gamma': -0.8})
 
+    def test_invalid_value_eta(self, initial_herbivore_class):
+        """Test that eta < 1."""
+        with pytest.raises(ValueError):
+            self.h.set_params({'eta': 1.2})
+
     def test_update_parameters(self):
         """Test if parameters is updated correctly."""
         h1 = Herbivores(weight=20)
@@ -100,6 +105,8 @@ class TestHerbivores:
         prob, newborn_weight = h.birth(num=10)
         assert prob != 0
         assert newborn_weight != 0
+        h.update_weight(weight_of_newborn=newborn_weight)
+        assert h.weight < 35
 
     def test_fitness_between_0_and_1(self, initial_herbivore_class):
         """Testing if value of fitness is between 0 and 1."""
@@ -110,6 +117,11 @@ class TestHerbivores:
         """Test if value of fitness is 0 when weight is zero or less."""
         self.h.weight = 0
         assert self.h.fitness() == 0
+
+    def test_probability_of_migration(self, initial_herbivore_class):
+        """Test that probability of migration is between 0 and 1."""
+        prob_migration = self.h.probability_of_migration()
+        assert 0 <= prob_migration <= 1
 
     def test_death_when_zero_weight(self, initial_herbivore_class):
         """
@@ -190,6 +202,13 @@ class TestCarnivores:
         """
         self.c = Carnivores(weight=20, )
         return self.c
+
+    def test_invalid_value_deltaphimax(self, initial_carnivore_class):
+        """Test that DeltaPhiMax is strictly positive (>0)."""
+        with pytest.raises(ValueError):
+            self.c.set_params({'DeltaPhiMax': -0.7})
+        with pytest.raises(ValueError):
+            self.c.set_params({'DeltaPhiMax': 0})
 
     def test_prob_kill_0_when_large_herbi_fitness(self):
         """
