@@ -49,9 +49,9 @@ if __name__ == '__main__':
     sim = BioSim(island_map=geogr, ini_pop=ini_herbs,
                  img_base='img_test',
                  seed=123456,
-                 hist_specs = {'fitness': {'max': 1.0, 'delta': 0.05},
-                               'age': {'max': 60.0, 'delta': 2},
-                               'weight': {'max': 60, 'delta': 2}},
+                 hist_specs={'fitness': {'max': 1.0, 'delta': 0.05},
+                              'age': {'max': 60.0, 'delta': 2},
+                              'weight': {'max': 60, 'delta': 2}},
                  )
 
     sim.set_animal_parameters('Herbivore', {'zeta': 3.2, 'xi': 1.8})
