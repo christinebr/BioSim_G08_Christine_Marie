@@ -191,7 +191,7 @@ class BioSim:
 
         # Add subplot for creating plot of island with imshow()
         if self._map_ax is None:
-            self._map_ax = self._fig.add_subplot(3, 3, 1)
+            self._map_ax = self._fig.add_axes([0.1, 0.6, 0.3, 0.3])
             self._img_ax = None
 
         # Add count for years
@@ -202,7 +202,7 @@ class BioSim:
         # Add subplot for animal count plot
         if self._line_ax is None:
             self._line_ax = self._fig.add_subplot(3, 3, 3)
-            self._line_ax.set_ylim(0, 10000)
+            self._line_ax.set_ylim(0, 15000)
 
         self._line_ax.set_xlim(0, self._final_year + 1)
         self._line_setup_graph()
@@ -210,8 +210,8 @@ class BioSim:
 
         # Add subplots for heatmaps
         if self._herb_ax is None and self._carn_ax is None:
-            self._herb_ax = self._fig.add_subplot(3, 3, 4)
-            self._carn_ax = self._fig.add_subplot(3, 3, 6)
+            self._herb_ax = self._fig.add_axes([0.15, 0.26, 0.32, 0.3])
+            self._carn_ax = self._fig.add_axes([0.6, 0.26, 0.32, 0.3])
             self._img_ax_heat1 = None
             self._img_ax_heat2 = None
             self._herb_ax.set_title('Herbivore distribution')
@@ -219,9 +219,9 @@ class BioSim:
 
         # Add subplots for histograms
         if self._fitness_ax is None and self._age_ax is None and self._weight_ax is None:
-            self._fitness_ax = self._fig.add_subplot(3, 3, 7)
-            self._age_ax = self._fig.add_subplot(3, 3, 8)
-            self._weight_ax = self._fig.add_subplot(3, 3, 9)
+            self._fitness_ax = self._fig.add_axes([0.1, 0.1, 0.23, 0.1])
+            self._age_ax = self._fig.add_axes([0.4, 0.1, 0.23, 0.1])
+            self._weight_ax = self._fig.add_axes([0.7, 0.1, 0.23, 0.1])
 
     def _plot_island(self):
         """Create a map of the island."""
@@ -367,7 +367,7 @@ class BioSim:
         self._update_histograms(herb_prop=herb_properties,
                                 carn_prob=carn_properties)
         self._update_count()
-        plt.pause(1e-6)
+        plt.pause(1e-3)
 
     def add_population(self, population):
         """
