@@ -7,6 +7,15 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
+font_size = 8
+# https://stackoverflow.com/questions/3899980/how-to-change-the-font-size-on-a-matplotlib-plot
+# Set fontsize for text, axes title and tick labels
+plt.rc('font', size=font_size)
+plt.rc('axes', titlesize=font_size)
+plt.rc('xtick', labelsize=font_size)
+plt.rc('ytick', labelsize=font_size)
+
+
 class BioSim:
     def __init__(self, island_map, ini_pop, seed,
                  ymax_animals=None, cmax_animals=None, hist_specs=None,
@@ -88,13 +97,15 @@ class BioSim:
         self._weight_ax = None
         self._axt = None
 
-        # General stuff for the plot
-        # Fontsizes to be used on the titles of all plots
-        self.font = 8
-        # Fontsizes to be used on the axes of all plots
-        self.font_axes = 8
-
     def set_hist_specs(self, hist_specs):
+        """
+        Setting maximum value and the bin width for histograms if provided
+        in hist_specs
+        
+        Returns
+        -------
+        None
+        """
         if 'fitness' in hist_specs.keys():
             self._fit_max = hist_specs['fitness']['max']
             self._fit_bins = int(self._fit_max / hist_specs['fitness']['delta'])
@@ -195,7 +206,7 @@ class BioSim:
 
         self._line_ax.set_xlim(0, self._final_year + 1)
         self._line_setup_graph()
-        self._line_ax.set_title('Animal count', fontsize=self.font)
+        self._line_ax.set_title('Animal count')
 
         # Add subplots for heatmaps
         if self._herb_ax is None and self._carn_ax is None:
@@ -203,15 +214,15 @@ class BioSim:
             self._carn_ax = self._fig.add_subplot(3, 3, 6)
             self._img_ax_heat1 = None
             self._img_ax_heat2 = None
-            self._herb_ax.set_title('Herbivore distribution', fontsize=self.font)
-            self._carn_ax.set_title('Carnivore distribution', fontsize=self.font)
+            self._herb_ax.set_title('Herbivore distribution')
+            self._carn_ax.set_title('Carnivore distribution')
 
         # Add subplots for histograms
         if self._fitness_ax is None and self._age_ax is None and self._weight_ax is None:
             self._fitness_ax = self._fig.add_subplot(3, 3, 7)
             self._fitness_ax.set_xlim([0, self._fit_max])
             self._fitness_ax.set_ylim([0, 2000])
-            self._fitness_ax.set_title('Fitness', fontsize=self.font)
+            self._fitness_ax.set_title('Fitness')
             self._age_ax = self._fig.add_subplot(3, 3, 8)
             self._weight_ax = self._fig.add_subplot(3, 3, 9)
 
@@ -241,15 +252,13 @@ class BioSim:
         self._img_ax = self._map_ax.imshow(geogr_rgb)
         self._map_ax.set_xticks(np.arange(1, len(geogr_rgb[0]) + 1, 5))
         # self._map_ax.set_xticks(range(len(geogr_rgb[0])))
-        self._map_ax.set_xticklabels(np.arange(1, 1 + len(geogr_rgb[0]), 5),
-                                     fontsize=self.font_axes)
+        self._map_ax.set_xticklabels(np.arange(1, 1 + len(geogr_rgb[0]), 5))
         # self._map_ax.set_xticklabels(range(1, 1 + len(geogr_rgb[0])), fontsize=self.font_axes)
         self._map_ax.set_yticks(np.arange(1, len(geogr_rgb) + 1, 5))
         # self._map_ax.set_yticks(range(len(geogr_rgb)))
-        self._map_ax.set_yticklabels(np.arange(1, 2 + len(geogr_rgb), 5),
-                                     fontsize=self.font_axes)
+        self._map_ax.set_yticklabels(np.arange(1, 2 + len(geogr_rgb), 5))
 
-        self._map_ax.set_title('The island', fontsize=self.font)
+        self._map_ax.set_title('The island')
 
     def _line_setup_graph(self):
         """Create the line graph/the animal count graph setup."""
@@ -293,7 +302,8 @@ class BioSim:
             self._img_ax_heat1 = self._herb_ax.imshow(herbi_map,
                                                       interpolation='nearest',
                                                       vmin=0, vmax=self.vmax_h)
-            plt.colorbar(self._img_ax_heat1, ax=self._herb_ax, orientation='vertical')
+            plt.colorbar(self._img_ax_heat1, ax=self._herb_ax,
+                         shrink=0.7, orientation='vertical')
 
         if self._img_ax_heat2 is not None:
             self._img_ax_heat2.set_data(carni_map)
@@ -301,7 +311,8 @@ class BioSim:
             self._img_ax_heat2 = self._carn_ax.imshow(carni_map,
                                                       interpolation='nearest',
                                                       vmin=0, vmax=self.vmax_c)
-            plt.colorbar(self._img_ax_heat2, ax=self._carn_ax, orientation='vertical')
+            plt.colorbar(self._img_ax_heat2, ax=self._carn_ax,
+                         shrink=0.7, orientation='vertical')
 
     def _update_histograms(self, herb_prop, carn_prob):
         """Update histograms."""
@@ -309,11 +320,11 @@ class BioSim:
         self._age_ax.cla()
         self._age_ax.set_xlim([0, self._age_max])
         self._age_ax.set_ylim([0, 2000])
-        self._age_ax.set_title('Age', fontsize=self.font)
+        self._age_ax.set_title('Age')
         self._weight_ax.cla()
         self._weight_ax.set_xlim([0, self._weight_max])
         self._weight_ax.set_ylim([0, 2000])
-        self._weight_ax.set_title('Weight', fontsize=self.font)
+        self._weight_ax.set_title('Weight')
 
         self._fitness_ax.hist(herb_prop[0], bins=self._fit_bins,
                               histtype='stepfilled', fill=False,
