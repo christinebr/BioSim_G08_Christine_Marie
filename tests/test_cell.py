@@ -333,8 +333,8 @@ class TestSingleCell:
         number_of_runs = 300
         num_dead = 0
         for _ in range(number_of_runs):
-            # Our method animals_stay_or_move deletes the moved animals from the lists in the cell
-            # Therefore we have to remake the cell every time.
+            # Our method death removes dead animals. Therefore we have to
+            # remake the cell every time.
             self.stat_cell = SingleCell(animals_list=self.one_herbivore)
             self.stat_cell.death()
             num_dead += 1 - len(self.stat_cell.herbi_list)
