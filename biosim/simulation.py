@@ -48,6 +48,7 @@ class BioSim:
         self.island_map = island_map
         random.seed(seed)
         self.ymax_animals = ymax_animals
+
         if cmax_animals is None:
             self.vmax_h = 200
             self.vmax_c = 50
@@ -63,26 +64,8 @@ class BioSim:
             self._weight_max = 60
             self._weight_bins = int(self._weight_max/2)
         else:
-            if 'fitness' in hist_specs.keys():
-                self._fit_max = hist_specs['fitness']['max']
-                self._fit_bins = int(self._fit_max/hist_specs['fitness']['delta'])
-            else:
-                self._fit_max = 1.0
-                self._fit_bins = int(self._fit_max/0.05)
-            if 'age' in hist_specs.keys():
-                self._age_max = hist_specs['age']['max']
-                self._age_bins = int(self._age_max/hist_specs['age']['delta'])
-            else:
-                self._age_max = 60
-                self._age_bins = int(self._age_max/2)
-            if 'weight' in hist_specs.keys():
-                self._weight_max = hist_specs['weight']['max']
-                self._weight_bins = int(self._weight_max/hist_specs['weight']['delta'])
-            else:
-                self._weight_max = 60
-                self._weight_bins = int(self._weight_max / 2)
+            self.set_hist_specs(hist_specs)
 
-        self.hist_specs = hist_specs  # should we check that only weight, age and fitness are given?
         self._img_base = img_base
         self._img_fmt = img_fmt
 
@@ -110,6 +93,26 @@ class BioSim:
         self.font = 8
         # Fontsizes to be used on the axes of all plots
         self.font_axes = 8
+
+    def set_hist_specs(self, hist_specs):
+        if 'fitness' in hist_specs.keys():
+            self._fit_max = hist_specs['fitness']['max']
+            self._fit_bins = int(self._fit_max / hist_specs['fitness']['delta'])
+        else:
+            self._fit_max = 1.0
+            self._fit_bins = int(self._fit_max / 0.05)
+        if 'age' in hist_specs.keys():
+            self._age_max = hist_specs['age']['max']
+            self._age_bins = int(self._age_max / hist_specs['age']['delta'])
+        else:
+            self._age_max = 60
+            self._age_bins = int(self._age_max / 2)
+        if 'weight' in hist_specs.keys():
+            self._weight_max = hist_specs['weight']['max']
+            self._weight_bins = int(self._weight_max / hist_specs['weight']['delta'])
+        else:
+            self._weight_max = 60
+            self._weight_bins = int(self._weight_max / 2)
 
     @staticmethod
     def set_animal_parameters(species, params):
