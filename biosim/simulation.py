@@ -189,9 +189,9 @@ class BioSim:
         if self._fig is None:
             self._fig = plt.figure()
 
-        # Add subplot for creating plot of island with imshow()
+        # Add subplot for creating plot of island
         if self._map_ax is None:
-            self._map_ax = self._fig.add_axes([0.1, 0.6, 0.3, 0.3])
+            self._map_ax = self._fig.add_axes([0.1, 0.63, 0.3, 0.3])
             self._img_ax = None
 
         # Add count for years
