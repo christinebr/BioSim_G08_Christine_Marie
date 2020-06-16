@@ -2,6 +2,9 @@
 
 from biosim.animals import Herbivores, Carnivores
 import pytest
+from scipy.stats import normaltest
+
+alpha = 0.01  # Significant level for statistical tests
 
 
 class TestHerbivores:
@@ -166,6 +169,17 @@ class TestHerbivores:
         h = Herbivores(age=1000, weight=100)
         prob_death = h.probability_death()
         assert prob_death <= 1
+
+    def test_stat_birth_weight(self, initial_herbivore_class):
+        """
+        Tests if the birth weight of a herbivore is drawn from a normal
+        distribution.
+        """
+        num_of_runs = 300
+        array_birth_weight = []
+        for _ in range(num_of_runs):
+            array_birth_weight.append(self.h.birth_weight())
+        assert normaltest(array_birth_weight)[1] > alpha
 
 
 class TestCarnivores:
