@@ -375,11 +375,3 @@ class TestingTheIsland:
         assert sum_herbi == tot_h
         assert sum_carni == tot_c
         assert sum_herbi + sum_carni == tot_animas
-
-    def test_complete_cycle(self, initial_island, mocker):
-        """
-        Checks that all steps in the annual cycle are made.
-
-        Todo: Do this later, possibly by statistic testing.
-        """
-        pass
