@@ -41,6 +41,7 @@ from biosim.cell import Lowland, Highland
 from biosim.island import TheIsland
 import random
 import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
 import numpy as np
 import subprocess
 import os
@@ -295,6 +296,11 @@ class BioSim:
                      'H': (0.5, 1.0, 0.5),  # light green
                      'D': (1.0, 1.0, 0.5)}  # light yellow
 
+        labels = {'W': 'Water', 'L': 'Lowland', 'H': 'Highland', 'D': 'Desert'}
+        # create patches as legend
+        patches = [mpatches.Patch(color=rgb_value[key], label=labels[key])
+                   for key in rgb_value.keys()]
+
         geogr_rgb = [[rgb_value[column] for column in row]
                      for row in island_map.splitlines()]
         self.width = len(geogr_rgb[0])
@@ -305,6 +311,8 @@ class BioSim:
         self._map_ax.set_yticks(range(self.height))
         self._map_ax.set_yticklabels(range(1, 1 + self.height))
         self._map_ax.set_title('The island')
+        self._map_ax.legend(handles=patches, loc=4, borderaxespad=0.,
+                            fontsize=4)
 
     def _line_setup_graph(self):
         """Create the line graph/the animal count graph setup."""
@@ -315,6 +323,9 @@ class BioSim:
             line_c = self._line_ax.plot(np.arange(0, self._final_year),
                                         np.full(self._final_year, np.nan),
                                         'r-')
+            self._line_ax.legend(['Herbivore', 'Carnivore'],
+                                 loc='upper left', fontsize=4)
+
             self._line_h = line_h[0]
             self._line_c = line_c[0]
         else:
