@@ -26,7 +26,7 @@ class TheIsland:
         self.row, self.col = len(self.landscape), len(self.landscape[0])
 
         # Create empty island, then construction of cells
-        self.island_cells = [[[] for _ in range(self.col)] for _ in range(self.row)]
+        self.island_cells = None
         self.construct_island_with_cells()
 
         if animals_on_island:
@@ -99,16 +99,17 @@ class TheIsland:
         -------
         None
         """
+        self.island_cells = [[] for _ in range(self.row)]
         for x, row in enumerate(self.landscape):
-            for y, cell in enumerate(row):
+            for cell in row:
                 if cell == 'W':
-                    self.island_cells[x][y] = Water(animals_list=None)
+                    self.island_cells[x].append(Water(animals_list=None))
                 elif cell == 'L':
-                    self.island_cells[x][y] = Lowland(animals_list=None)
+                    self.island_cells[x].append(Lowland(animals_list=None))
                 elif cell == 'H':
-                    self.island_cells[x][y] = Highland(animals_list=None)
+                    self.island_cells[x].append(Highland(animals_list=None))
                 elif cell == 'D':
-                    self.island_cells[x][y] = Desert(animals_list=None)
+                    self.island_cells[x].append(Desert(animals_list=None))
 
     def add_animals_on_island(self, new_animals):
         """
@@ -385,12 +386,12 @@ class TheIsland:
         carni_island: [list]
             island with number of carnivores in each cell
         """
-        herbi_island = [[[] for _ in range(self.col)] for _ in range(self.row)]
-        carni_island = [[[] for _ in range(self.col)] for _ in range(self.row)]
+        herbi_island = [[] for _ in range(self.row)]
+        carni_island = [[] for _ in range(self.row)]
         for x, row in enumerate(self.island_cells):
-            for y, cell in enumerate(row):
-                herbi_island[x][y] = len(cell.herbi_list)
-                carni_island[x][y] = len(cell.carni_list)
+            for cell in row:
+                herbi_island[x].append(len(cell.herbi_list))
+                carni_island[x].append(len(cell.carni_list))
         return herbi_island, carni_island
 
     def total_num_animals_on_island(self):
