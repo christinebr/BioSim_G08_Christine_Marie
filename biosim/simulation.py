@@ -1,11 +1,62 @@
 # -*- coding: utf-8 -*-
+
+"""
+Taken directly from:https://github.com/heplesser/nmbu_inf200_june2020/blob/7240186b0a97b24a325fa68280be344e5e49a9da/examples/randvis_project/randvis/simulation.py#L234
+
+todo: MUST MAKE SOME CHANGES HERE!!!
+
+:mod:`randvis.simulation` provides the user interface to the package.
+Each simulation is represented by a :class:`DVSim` instance. On each
+instance, the :meth:`DVSim.simulate` method can be called as often as
+you like to simulate a given number of steps.
+The state of the system is visualized as the simulation runs, at intervals
+that can be chosen. The graphics can also be saved to file at regular
+intervals. By calling :meth:`DVSim.make_movie` after a simulation is complete,
+individual graphics files can be combined into an animation.
+.. note::
+   * This module requires the program ``ffmpeg`` or ``convert``
+     available from `<http://ffmpeg.org>` and `<http://imagemagick.org>`.
+   * You can also install ``ffmpeg`` using ``conda install ffmpeg``
+   * You need to set the  :const:`_FFMPEG_BINARY` and :const:`_CONVERT_BINARY`
+     constants below to the command required to invoke the programs
+   * You need to set the :const:`_DEFAULT_FILEBASE` constant below to the
+     directory and file-name start you want to use for the graphics output
+     files.
+Example
+--------
+::
+    sim = DVSim((10, 15), 0.1, 12345, '../data')
+    sim.simulate(50, 1, 5)
+    sim.make_movie()
+This code
+#. creates a system with a 10x15 matrix, sets the noise level to 0.1,
+   the random number generator seed to 12345 and specifies the filename
+   for output;
+#. performs a simulation of 50 steps, updating the graphics after each
+   step and saving a figure after each 5th step;
+#. creates a movie from the individual figures saved.
+"""
 from biosim.animals import Herbivores, Carnivores
 from biosim.cell import Lowland, Highland
 from biosim.island import TheIsland
 import random
 import matplotlib.pyplot as plt
 import numpy as np
+import subprocess
+import os
 
+# Update these variables to point to your ffmpeg and convert binaries
+# If you installed ffmpeg using conda or installed both softwares in
+# standard ways on your computer, no changes should be required.
+# _CONVERT_BINARY/magick is only needed if you want to create animated GIFs.
+_FFMPEG_BINARY = 'ffmpeg'
+_CONVERT_BINARY = 'magick'
+
+# update this to the directory and file-name beginning
+# for the graphics files
+_DEFAULT_GRAPHICS_DIR = os.path.join('..', 'data')
+_DEFAULT_GRAPHICS_NAME = 'dv'
+_DEFAULT_MOVIE_FORMAT = 'mp4'   # alternatives: mp4, gif
 
 font_size = 8
 # https://stackoverflow.com/questions/3899980/how-to-change-the-font-size-on-a-matplotlib-plot
@@ -80,7 +131,7 @@ class BioSim:
 
         self._year = 0
         self._final_year = None
-        self._img_counter = 0
+        self._img_no = 0
 
         self._fig = None
         self._map_ax = None
@@ -178,8 +229,8 @@ class BioSim:
             if self._year % vis_years == 0:
                 self._update_graphics()
 
-            # if self._year % img_years == 0:
-                # self._save_graphics()
+            if self._year % img_years == 0:
+                self._save_graphics()
             self._isl.annual_cycle()
             self._year += 1
 
@@ -369,6 +420,15 @@ class BioSim:
         self._update_count()
         plt.pause(1e-3)
 
+    def _save_graphics(self):
+        """Saves the figure/graphics to file."""
+
+        if self._img_base is None:
+            return
+
+        plt.savefig('{}_{:05d}.{}'.format(self._img_base, self._img_no, self._img_fmt))
+        self._img_no += 1
+
     def add_population(self, population):
         """
         Add a population to the island
@@ -396,6 +456,39 @@ class BioSim:
         carnis = self._isl.total_num_animals_on_island()[2]
         return {'Herbivore': herbis, 'Carnivore': carnis}
 
-    def make_movie(self):
-        """Create MPEG4 movie from visualization images saved."""
-        pass
+    def make_movie(self, movie_fmt=_DEFAULT_MOVIE_FORMAT):
+        """
+        Create MPEG4 movie from visualization images saved.
+
+        .. :note:
+            Requires ffmpeg
+
+        The movie is stored as img_base + movie_fmt
+        """
+        if self._img_base is None:
+            raise RuntimeError("No filename defined.")
+
+        if movie_fmt == 'mp4':
+            try:
+                subprocess.check_call([_FFMPEG_BINARY,
+                                       '-i', '{}_%05d.png'.format(self._img_base),
+                                       '-y',
+                                       '-profile:v', 'baseline',
+                                       '-level', '3.0',
+                                       '-pix_fmt', 'yuv420p',
+                                       '{}.{}'.format(self._img_base,
+                                                      movie_fmt)])
+            except subprocess.CalledProcessError as err:
+                raise RuntimeError(f"ERROR: ffmpeg failed with: {err}")
+        elif movie_fmt == 'gif':
+            try:
+                subprocess.check_call([_CONVERT_BINARY,
+                                       '-delay', '1',
+                                       '-loop', '0',
+                                       '{}_*.png'.format(self._img_base),
+                                       '{}.{}'.format(self._img_base,
+                                                      movie_fmt)])
+            except subprocess.CalledProcessError as err:
+                raise RuntimeError(f"ERROR: convert failed with: {err}")
+        else:
+            raise ValueError(f"Unknown movie format: {movie_fmt}")
