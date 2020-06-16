@@ -101,7 +101,7 @@ class BioSim:
         """
         Setting maximum value and the bin width for histograms if provided
         in hist_specs
-        
+
         Returns
         -------
         None
@@ -220,9 +220,6 @@ class BioSim:
         # Add subplots for histograms
         if self._fitness_ax is None and self._age_ax is None and self._weight_ax is None:
             self._fitness_ax = self._fig.add_subplot(3, 3, 7)
-            self._fitness_ax.set_xlim([0, self._fit_max])
-            self._fitness_ax.set_ylim([0, 2000])
-            self._fitness_ax.set_title('Fitness')
             self._age_ax = self._fig.add_subplot(3, 3, 8)
             self._weight_ax = self._fig.add_subplot(3, 3, 9)
 
@@ -317,6 +314,9 @@ class BioSim:
     def _update_histograms(self, herb_prop, carn_prob):
         """Update histograms."""
         self._fitness_ax.cla()
+        self._fitness_ax.set_xlim([0, self._fit_max])
+        self._fitness_ax.set_ylim([0, 2000])
+        self._fitness_ax.set_title('Fitness')
         self._age_ax.cla()
         self._age_ax.set_xlim([0, self._age_max])
         self._age_ax.set_ylim([0, 2000])
