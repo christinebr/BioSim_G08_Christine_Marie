@@ -109,7 +109,10 @@ class BioSim:
         random.seed(seed)
         self.width = 0
         self.height = 0
-        self.ymax_animals = ymax_animals
+        if ymax_animals is None:
+            self.ymax_animals = 5000
+        else:
+            self.ymax_animals = ymax_animals
 
         if cmax_animals is None:
             self.vmax_h = 200
@@ -255,7 +258,7 @@ class BioSim:
         # Add subplot for animal count plot
         if self._line_ax is None:
             self._line_ax = self._fig.add_subplot(3, 3, 3)
-            self._line_ax.set_ylim(0, 15000)
+            self._line_ax.set_ylim(0, self.ymax_animals)
 
         self._line_ax.set_xlim(0, self._final_year + 1)
         self._line_setup_graph()
@@ -429,6 +432,10 @@ class BioSim:
         ydata_c = self._line_c.get_ydata()
         ydata_c[self._year] = num_carn
         self._line_c.set_ydata(ydata_c)
+        if num_herb > self.ymax_animals or num_carn > self.ymax_animals:
+            new_ymax = max(num_herb, num_carn) + 2000
+            self._line_ax.set_ylim(0, round(new_ymax, -3))
+
 
     def _update_graphics(self):
         """Updates graphics each year."""

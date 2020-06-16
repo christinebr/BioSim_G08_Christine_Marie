@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from biosim.simulation import BioSim
 
 """
-Island in the task description
+Island in the task description.
 """
 
 
