@@ -16,7 +16,27 @@ out of the cells, only animals who don't want to migrate stays
 in the cell. Animals who wants to migrate, but are not allowed
 to has to be added once more.
 
-The Cell module
-_________________
-.. automodule:: biosim.cell
+The SingleCell class
+___________________
+.. autoclass:: biosim.cell.SingleCell
+   :members:
+
+The Water subclass
+________________________
+.. autoclass:: biosim.cell.Water
+   :members:
+
+The Desert subclass
+_______________________
+.. autoclass:: biosim.cell.Desert
+   :members:
+
+The Lowland subclass
+________________________
+.. autoclass:: biosim.cell.Lowland
+   :members:
+
+The Highland subclass
+_______________________
+.. autoclass:: biosim.cell.Highland
    :members:

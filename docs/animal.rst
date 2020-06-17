@@ -9,7 +9,17 @@ provides data on the probability for dying, giving birth and
 migrating, it also keeps track of weight, age and fitness
 of animals.
 
-The Animal module
+The Animal class
 ___________________
-.. automodule:: biosim.animals
+.. autoclass:: biosim.animals.Animal
+   :members:
+
+The Herbiovores subclass
+________________________
+.. autoclass:: biosim.animals.Herbivores
+   :members:
+
+The Carnivores subclass
+_______________________
+.. autoclass:: biosim.animals.Carnivores
    :members:
