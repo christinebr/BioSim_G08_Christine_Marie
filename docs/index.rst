@@ -6,7 +6,12 @@
 Welcome to BioSim's documentation!
 ===================================
 
-This is a simulation of the ecosystem on an island.
+We made this as the exam project in the course INF200, advanced programing at NMBU.
+
+BioSim simulates the population dynamics on the fictional island Rossumøya.
+Rossumøya has two species of animals, herbivores and carnivores, and four different
+types of landscape, lowland, highland, desert an water. The goal of the project
+is to test if animals will go extinct in different scenarios. 
 
 .. toctree::
    :maxdepth: 2
