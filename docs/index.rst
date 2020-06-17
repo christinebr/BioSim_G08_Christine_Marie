@@ -12,6 +12,8 @@ This is a simulation of the ecosystem on an island.
    :maxdepth: 2
    :caption: Contents:
 
+   animal
+   cell
    island
    simulation
 
