@@ -30,7 +30,7 @@ class TestingTheIsland:
                         ]
 
         self.island = TheIsland(landscape_of_cells=test_island, animals_on_island=test_animals)
-        herbis, carnis = self.island._give_animals_in_cell(2, 3)
+        herbis, carnis = self.island.give_animals_in_cell(2, 3)
         self.animals = herbis + carnis
         return self.island, self.animals
 
@@ -230,9 +230,9 @@ class TestingTheIsland:
         number_of_animals_before = self.isl_mig.total_num_animals_on_island()[0]
         # All animals are in the first cell at the beginning
         self.isl_mig.migration()
-        herbis, carnis = self.isl_mig._give_animals_in_cell(3, 3)
+        herbis, carnis = self.isl_mig.give_animals_in_cell(3, 3)
         number_old_cell = len(herbis + carnis)
-        herbis, carnis = self.isl_mig._give_animals_in_cell(3, 2)
+        herbis, carnis = self.isl_mig.give_animals_in_cell(3, 2)
         number_new_cell = len(herbis + carnis)
         assert number_old_cell == 0
         assert number_new_cell == number_of_animals_before
@@ -250,9 +250,9 @@ class TestingTheIsland:
         number_of_animals_before = self.isl_mig.total_num_animals_on_island()[0]
         # All animals are in the first cell at the beginning
         self.isl_mig.migration()
-        herbis1, carnis1 = self.isl_mig._give_animals_in_cell(3, 3)
+        herbis1, carnis1 = self.isl_mig.give_animals_in_cell(3, 3)
         number_old_cell = len(herbis1 + carnis1)
-        herbis, carnis = self.isl_mig._give_animals_in_cell(3, 4)
+        herbis, carnis = self.isl_mig.give_animals_in_cell(3, 4)
         number_new_cell = len(herbis + carnis)
         assert number_old_cell == 0
         assert number_new_cell == number_of_animals_before
@@ -270,9 +270,9 @@ class TestingTheIsland:
         number_of_animals_before = self.isl_mig.total_num_animals_on_island()[0]
         # All animals are in the first cell at the beginning
         self.isl_mig.migration()
-        herbis1, carnis1 = self.isl_mig._give_animals_in_cell(3, 3)
+        herbis1, carnis1 = self.isl_mig.give_animals_in_cell(3, 3)
         number_old_cell = len(herbis1 + carnis1)
-        herbis, carnis = self.isl_mig._give_animals_in_cell(4, 3)
+        herbis, carnis = self.isl_mig.give_animals_in_cell(4, 3)
         number_new_cell = len(herbis + carnis)
         assert number_old_cell == 0
         assert number_new_cell == number_of_animals_before
@@ -292,9 +292,9 @@ class TestingTheIsland:
         number_of_animals_before = self.isl_mig.total_num_animals_on_island()[0]
         # All animals are in the first cell at the beginning
         self.isl_mig.migration()
-        herbis1, carnis1 = self.isl_mig._give_animals_in_cell(3, 3)
+        herbis1, carnis1 = self.isl_mig.give_animals_in_cell(3, 3)
         number_old_cell = len(herbis1 + carnis1)
-        herbis, carnis = self.isl_mig._give_animals_in_cell(2, 3)
+        herbis, carnis = self.isl_mig.give_animals_in_cell(2, 3)
         number_new_cell = len(herbis + carnis)
         assert number_old_cell == 0
         assert number_new_cell == number_of_animals_before
@@ -316,9 +316,9 @@ class TestingTheIsland:
         number_of_animals_before = len(self.animals)
         # All animals are in the first cell at the beginning
         self.island.migration()
-        herbis, carnis = self.island._give_animals_in_cell(1, 3)
+        herbis, carnis = self.island.give_animals_in_cell(1, 3)
         number_new_cell = len(herbis + carnis)
-        herbis, carnis = self.island._give_animals_in_cell(2, 3)
+        herbis, carnis = self.island.give_animals_in_cell(2, 3)
         number_old_cell = len(herbis + carnis)
         assert number_new_cell == 0
         assert number_old_cell == number_of_animals_before

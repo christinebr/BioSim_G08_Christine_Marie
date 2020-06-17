@@ -28,14 +28,14 @@ ax8 = fig.add_subplot(3, 3, 8)
 ax9 = fig.add_subplot(3, 3, 9)
 fig.show()
 
-# # Making the island, with some animals
+# Making the island, with some animals
 geogr = """WWWWW
 WWLHW
 WDDLW
 WWWWW
 """
 
-# ############## Same island, different parts of the code needs the island in different form, fix this later #########
+# Same island, different parts of the code needs the island in different form, fix this later
 geogr_island = """\
            WWWWW
            WWLHW
@@ -61,21 +61,21 @@ geogr_island = """\
 
 
 ini_animals = [{'loc': (2, 4),
-                 'pop': [{'species': 'Herbivore',
-                          'age': 5,
-                          'weight': 20} for _ in range(200)]
-                        + [{'species': 'Carnivore',
-                            'age': 5,
-                            'weight': 20} for _ in range(20)]
-                },
-               {'loc': (3,3),
                 'pop': [{'species': 'Herbivore',
-                          'age': 5,
-                          'weight': 20} for _ in range(200)]
-                        + [{'species': 'Carnivore',
-                            'age': 5,
-                            'weight': 20} for _ in range(20)]}
-                ]
+                         'age': 5,
+                         'weight': 20} for _ in range(200)]
+                + [{'species': 'Carnivore',
+                    'age': 5,
+                    'weight': 20} for _ in range(20)]
+                },
+               {'loc': (3, 3),
+                'pop': [{'species': 'Herbivore',
+                         'age': 5,
+                         'weight': 20} for _ in range(200)]
+                + [{'species': 'Carnivore',
+                    'age': 5,
+                    'weight': 20} for _ in range(20)]}
+               ]
 
 island = TheIsland(geogr_island, ini_animals)
 num_of_years = 100
@@ -95,7 +95,8 @@ rgb_value = {'W': (0.0, 0.0, 1.0),  # blue
 geogr_rgb = [[rgb_value[column] for column in row]
              for row in geogr.splitlines()]
 
-
+# ax1
+# ===========
 # ax1 = fig.add_axes([0.1, 0.1, 0.7, 0.8])  # llx, lly, w, h
 ax1.imshow(geogr_rgb)
 ax1.set_xticks(range(len(geogr_rgb[0])))
@@ -103,11 +104,12 @@ ax1.set_xticklabels(range(1, 1 + len(geogr_rgb[0])), fontsize=font_axes)
 ax1.set_yticks(range(len(geogr_rgb)))
 ax1.set_yticklabels(range(1, 1 + len(geogr_rgb)), fontsize=font_axes)
 
-#ax1 = fig.add_axes([0.85, 0.1, 0.1, 0.8])  # llx, lly, w, h
-#ax1.axis('off')
+# ax1 = fig.add_axes([0.85, 0.1, 0.1, 0.8])  # llx, lly, w, h
+# ax1.axis('off')
 ax1.set_title('The island', fontsize=font)
 
-### ax3
+# ax3
+# ===========
 years = list(range(num_of_years))
 # Makes list of years
 herbi_count = []
@@ -123,24 +125,25 @@ for year in years:
 
 ax3.plot(years, herbi_count, label='Herbivores')
 ax3.plot(years, carni_count, label='Carnivores')
-#ax3.legend()
+# ax3.legend()
 
 ax3.set_title('Animals count', fontsize=font)
 list_xticks = [0, int(num_of_years/4), int(num_of_years/2), int(num_of_years*3/4), num_of_years]
-#list_xticks = [0, 25, 50, 75, 100]
+# list_xticks = [0, 25, 50, 75, 100]
 ax3.set_xticks(list_xticks)
 ax3.set_xticklabels(list_xticks, fontsize=font_axes)
 # ax3.set_xlabel('Years')
 # ax3.set_ylabel('Number of animals')
 
-### ax4
+# ax4
+# =============
 herbis_lists = []
 carnis_lists = []
 for row in range(island.row):
     herbis_row = []
     carnis_row = []
     for col in range(island.col):
-        herbis, carnis = island._give_animals_in_cell(row + 1, col + 1)
+        herbis, carnis = island.give_animals_in_cell(row + 1, col + 1)
         herbis_row.append(len(herbis))
         carnis_row.append(len(carnis))
     herbis_lists.append(herbis_row)
@@ -154,7 +157,8 @@ ax4.set_xticklabels(range(1, 1 + len(geogr_rgb[0])), fontsize=font_axes)
 ax4.set_yticks(range(len(geogr_rgb)))
 ax4.set_yticklabels(range(1, 1 + len(geogr_rgb)), fontsize=font_axes)
 
-### ax6
+# ax6
+# ===============
 im = ax6.imshow(carnis_lists, cmap='viridis')
 ax6.set_title('Carnivore distribution', fontsize=font)
 fig.colorbar(im, ax=ax6, orientation='vertical')
@@ -163,8 +167,8 @@ ax6.set_xticklabels(range(1, 1 + len(geogr_rgb[0])), fontsize=font_axes)
 ax6.set_yticks(range(len(geogr_rgb)))
 ax6.set_yticklabels(range(1, 1 + len(geogr_rgb)), fontsize=font_axes)
 
-#### ax7
-
+# ax7
+# =================
 herbi_fitness = island.collect_fitness_age_weight_herbi()[0]
 carni_fitness = island.collect_fitness_age_weight_carni()[0]
 
@@ -177,8 +181,8 @@ ax7.set_xticks(xticks)
 ax7.set_xticklabels(xticks, fontsize=font_axes)
 # ax7.set_yticklabels(fontsize=font_axes)
 
-#### ax8
-
+# ax8
+# ==========
 herbi_age = island.collect_fitness_age_weight_herbi()[1]
 carni_age = island.collect_fitness_age_weight_carni()[1]
 
@@ -186,13 +190,13 @@ ax8.hist(herbi_age, bins=20, histtype='stepfilled', fill=False, edgecolor='blue'
 ax8.hist(carni_age, bins=20, histtype='stepfilled', fill=False, edgecolor='red')
 ax8.set_title('Age', fontsize=font)
 
-#### ax9
-
+# ax9
+# ============
 herbi_weight = island.collect_fitness_age_weight_herbi()[2]
 carni_weight = island.collect_fitness_age_weight_carni()[2]
 
 ax9.hist(herbi_weight, bins=20, histtype='stepfilled', fill=False, edgecolor='blue')
-ax9.hist(carni_weight, bins=20, range=(0,40), histtype='stepfilled', fill=False, edgecolor='red')
+ax9.hist(carni_weight, bins=20, range=(0, 40), histtype='stepfilled', fill=False, edgecolor='red')
 ax9.set_title('Weight', fontsize=font)
 
 

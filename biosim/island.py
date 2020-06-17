@@ -316,7 +316,7 @@ class TheIsland:
         self.all_animals_losses_weight()
         self.animals_die()
 
-    def _give_animals_in_cell(self, row, col):
+    def give_animals_in_cell(self, row, col):
         """
         Give lists of herbivores and carnivores in a given cell
 
