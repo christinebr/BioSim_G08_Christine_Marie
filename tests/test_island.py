@@ -128,9 +128,8 @@ class TestingTheIsland:
                             WLDLW
                             WWWWW"""
         isl = TheIsland(landscape_of_cells=test_island)
-        num_animals = isl.total_num_animals_on_island()[0]
-        assert isl.animals_on_island == []
-        assert num_animals == 0
+        tot_num_animals = isl.total_num_animals_on_island()[0]
+        assert tot_num_animals == 0
 
     def test_adding_animals_to_water_cell(self, initial_island):
         """

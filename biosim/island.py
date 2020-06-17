@@ -30,19 +30,16 @@ class TheIsland:
         self.landscape = self.landscape_to_list_of_lists(landscape_of_cells)
         self.row, self.col = len(self.landscape), len(self.landscape[0])
 
-        # Create empty island, then construction of cells
+        # Create island attribute, then construction of cells
         self.island_cells = None
         self.construct_island_with_cells()
 
+        # Add animals to island
         if animals_on_island:
-            self.animals_on_island = animals_on_island
-        else:
-            self.animals_on_island = []
-
-        self.add_animals_on_island(self.animals_on_island)
+            self.add_animals_on_island(animals_on_island)
 
     @staticmethod
-    def check_if_island_legal(geogr):
+    def check_if_island_legal(geography):
         """
         Checks if the landscape of the island follows the specifications.
             - only have 'W' around edges
@@ -55,22 +52,23 @@ class TheIsland:
         ValueError
             if any of the specifications is violated.
         """
-        geogr = textwrap.dedent(geogr)
-        geogr_split = geogr.split('\n')
-        len_first_line = len(geogr_split[0])
-        for line in geogr_split:
+        geography = textwrap.dedent(geography)
+        geography_split = geography.split('\n')
+
+        len_first_line = len(geography_split[0])
+        for line in geography_split:
             if len(line) != len_first_line:
                 raise ValueError("All lines must have the same length.")
 
-        for top, bottom in zip(geogr_split[0], geogr_split[-1]):
+        for top, bottom in zip(geography_split[0], geography_split[-1]):
             if top != 'W' or bottom != 'W':
                 raise ValueError("North or south of island is not only water.")
 
-        for line in geogr_split:
+        for line in geography_split:
             if line[0] != 'W' or line[-1] != 'W':
                 raise ValueError("West or east side of island is not only water.")
 
-        for line in geogr_split:
+        for line in geography_split:
             for element in line:
                 if element not in ['W', 'D', 'L', 'H']:
                     raise ValueError("Forbidden character, only 'W', 'D', 'L' and 'H' allowed.")
@@ -97,11 +95,12 @@ class TheIsland:
 
     def construct_island_with_cells(self):
         """
-        Construction the island by initialising a class for each of the
-        landscape types. For each cell the class is initialized without
+        Construction of the island by initialising a class for each of the
+        landscape types. For each cell the class is initialized without any
         animals.
         """
         self.island_cells = [[] for _ in range(self.row)]
+
         for x, row in enumerate(self.landscape):
             for cell in row:
                 if cell == 'W':
@@ -115,7 +114,7 @@ class TheIsland:
 
     def add_animals_on_island(self, new_animals):
         """
-        Insert animals on island by adding animals to specified cells.
+        Inserting animals on island by adding animals to specified cells.
 
         Parameters
         ----------
@@ -126,7 +125,7 @@ class TheIsland:
         Raises
         ------
         ValueError
-            if animals are being placed in water cells where they can't stay
+            if animals are being placed in water cells where they can't stay.
         """
         for dictionary in new_animals:
             x, y = dictionary['loc']  # Location of a cell
@@ -134,8 +133,8 @@ class TheIsland:
             if landscape_type == 'W':
                 raise ValueError("Animals can't stay in water")
             else:
-                self.island_cells[x-1][y-1].add_animals_to_cell(dictionary['pop'])
                 # add new animals to cell
+                self.island_cells[x-1][y-1].add_animals_to_cell(dictionary['pop'])
 
     def all_animals_eat(self):
         """
@@ -149,7 +148,7 @@ class TheIsland:
 
     def animals_procreate(self):
         """
-        Letting animals on the island procreate
+        Letting animals on the island procreate.
         Looping through the cells of the island and giving the animals in the
         cells the change to procreate.
         """
@@ -177,6 +176,7 @@ class TheIsland:
                 - can only move to east and south: ``['East', 'South']``
         """
         directions = []
+        # if adjacent cell is not water the direction is added
         if self.landscape[row-1][col] != 'W':
             directions.append('North')
 
@@ -212,7 +212,7 @@ class TheIsland:
                     ghost_island = self.relocated_animals(x, y, pos_dir, north,
                                                           east, south, west,
                                                           ghost_island)
-        # Adding migrating animals to cells
+        # Adding migrating animals to the 'real' island
         for x, row in enumerate(self.island_cells):
             for y, cell in enumerate(row):
                 cell.add_animals_after_migration(ghost_island[x][y])
@@ -305,7 +305,8 @@ class TheIsland:
 
     def annual_cycle(self):
         """
-        The annual cycle on the island:
+        This method represents a year on the island. The annual cycle (one
+        year) on the island follows this order:
             1. Animals eats
             2. Animals procreates
             3. Animals migrates
@@ -357,10 +358,12 @@ class TheIsland:
         """
         herbi_island = [[] for _ in range(self.row)]
         carni_island = [[] for _ in range(self.row)]
+
         for x, row in enumerate(self.island_cells):
             for cell in row:
                 herbi_island[x].append(len(cell.herbi_list))
                 carni_island[x].append(len(cell.carni_list))
+
         return herbi_island, carni_island
 
     def total_num_animals_on_island(self):
@@ -381,11 +384,14 @@ class TheIsland:
         """
         tot_herbi = 0
         tot_carni = 0
+
         for row in self.island_cells:
             for cell in row:
                 tot_herbi += len(cell.herbi_list)
                 tot_carni += len(cell.carni_list)
+
         tot_animal = tot_herbi + tot_carni
+
         return tot_animal, tot_herbi, tot_carni
 
     def collect_fitness_age_weight_herbi(self):
@@ -405,6 +411,7 @@ class TheIsland:
         fitness_herbi = []
         age_herbi = []
         weight_herbi = []
+
         for row in self.island_cells:
             for cell in row:
                 fitness, age, weight = cell.collect_fitness_age_weight_herbi()
@@ -431,6 +438,7 @@ class TheIsland:
         fitness_carni = []
         age_carni = []
         weight_carni = []
+
         for row in self.island_cells:
             for cell in row:
                 fitness, age, weight = cell.collect_fitness_age_weight_carni()
