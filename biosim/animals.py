@@ -69,7 +69,7 @@ class Animal:
 
         Returns
         -------
-        _params: dict
+        _params : dict
             dictionary with class parameters
         """
         return cls._params
@@ -88,7 +88,7 @@ class Animal:
 
         Parameters
         ----------
-        amount_fodder_eaten: float
+        amount_fodder_eaten : float
             the amount of fodder eaten by an animal
         """
         self.weight += round(self._params['beta'] * amount_fodder_eaten, 2)
@@ -142,6 +142,8 @@ class Animal:
             - If num = 1 (only one animal) the probability of giving birth is 0.
             - If the weight of an animal is less than a weight limit, the
               probability of giving birth is also 0.
+            - If the animal giving birth will lose more that it's weight, the
+              probability of giving birth is also 0.
 
         Parameters
         ----------
@@ -155,19 +157,22 @@ class Animal:
         float
             weight of the newborn animal
         """
+        if num == 1:  # only one animal, no birth
+            return 0., 0.
+
         weight_limit = self._params['zeta'] * (self._params['w_birth']
                                                + self._params['sigma_birth'])
-        if num == 1:  # only one animal
+
+        if self.weight < weight_limit:  # weight below weight limit, no birth
             return 0., 0.
-        elif self.weight < weight_limit:
+
+        birth_weight_newborn = self.birth_weight()
+        weight_loss = birth_weight_newborn*self._params['xi']
+        if weight_loss > self.weight:  # animal loses to much weight, no birth
             return 0., 0.
-        else:
-            birth_weight_newborn = self.birth_weight()
-            if self.weight <= birth_weight_newborn:
-                return 0., 0.
-            else:
-                return min(1, self._params['gamma'] * self.fitness() * (num - 1)),\
-                       round(birth_weight_newborn, 2)
+        else:  # animal gives birth
+            prob_birth = min(1, self._params['gamma'] * self.fitness() * (num - 1))
+            return prob_birth, birth_weight_newborn
 
     def birth_weight(self):
         """
@@ -176,11 +181,12 @@ class Animal:
 
         Returns
         -------
-        float
+        birth_weight : float
             the weight of a newborn animal
         """
-        return round(random.gauss(self._params['w_birth'],
-                                  self._params['sigma_birth']), 2)
+        birth_weight = random.gauss(self._params['w_birth'],
+                                    self._params['sigma_birth'])
+        return round(birth_weight, 2)
 
     def update_weight_after_birth(self, weight_of_newborn):
         """
@@ -189,17 +195,17 @@ class Animal:
 
         Parameters
         ----------
-        weight_of_newborn: float
+        weight_of_newborn : float
             the weight of a newborn animal
         """
         self.weight -= round(self._params['xi'] * weight_of_newborn, 2)
 
     def probability_death(self):
         """
-        The probability of death for an animal lies between 0 and 1
-            - If the animals weight is zero, the probability of death is 1
-            - Otherwise the probability of death is calculated from the weight
-              and the fitness of the animal.
+        The probability of death for an animal lies between 0 and 1. If the
+        animals weight is zero, the probability of death is 1. Otherwise the
+        probability of death is calculated from the weight and the fitness of
+        the animal.
 
         Returns
         -------

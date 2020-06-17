@@ -155,14 +155,6 @@ class TestHerbivores:
         """
         assert self.h.birth(num=2)[0] == 0
 
-    # def test_not_eating_and_feeding_at_once(self, initial_herbivore_class):
-    #     """
-    #     Checks that the update_weight method raises a ValueError if an animal
-    #     tries to eat and get a child at the same moment
-    #     """
-    #     with pytest.raises(ValueError):
-    #         self.h.update_weight(weight_of_newborn=10, amount_fodder_eaten=3)
-
     def test_fitness_update_with_weight(self, initial_herbivore_class):
         """
         Tests that the fitness of the animal updates automatically when the
