@@ -5,16 +5,17 @@ import matplotlib.pyplot as plt
 
 from biosim.simulation import BioSim
 
+__author__ = "Marie Kolvik Valøy, Christine Brinchmann"
+__email__ = "mvaloy@nmbu.no, christibr@nmbu.no"
+
 """
-Compatibility check for BioSim simulations.
+Checking that it's possible to store pictures and make a movie. Remember to
+activate ffmpeg before trying.
 
-This script shall function with biosim packages written for
-the INF200 project June 2020.
+The main setup was copypasted from check_sim.py, a test from the project 
+description, which could be found at:
+https://github.com/heplesser/nmbu_inf200_june2020/blob/master/project_description/check_sim.py
 """
-
-__author__ = "Hans Ekkehard Plesser, NMBU"
-__email__ = "hans.ekkehard.plesser@nmbu.no"
-
 
 if __name__ == '__main__':
     plt.ion()

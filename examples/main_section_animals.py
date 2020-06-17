@@ -1,4 +1,14 @@
+# -*- coding: utf-8 -*-
+
 from biosim.animals import Herbivores, Carnivores
+
+__author__ = "Marie Kolvik Valøy, Christine Brinchmann"
+__email__ = "mvaloy@nmbu.no, christibr@nmbu.no"
+
+"""
+This was the main block of animals.py. We used to test the outputs of our new
+methods.
+"""
 
 if __name__ == "__main__":
 

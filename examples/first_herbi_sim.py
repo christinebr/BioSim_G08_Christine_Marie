@@ -4,6 +4,13 @@ from biosim.cell import Lowland
 import matplotlib.pyplot as plt
 import textwrap
 
+__author__ = "Marie Kolvik Valøy, Christine Brinchmann"
+__email__ = "mvaloy@nmbu.no, christibr@nmbu.no"
+
+"""
+Our first test run on herbivores on an island. Checking that our programing 
+gives the excepted results.
+"""
 
 if __name__ == "__main__":
     geogr = """\

@@ -5,6 +5,9 @@ import matplotlib.pyplot as plt
 
 from biosim.simulation import BioSim
 
+__author__ = "Marie Kolvik Valøy, Christine Brinchmann"
+__email__ = "mvaloy@nmbu.no, christibr@nmbu.no"
+
 """
 The checkerboard test 
 Check to see if migration of animals works as intended.

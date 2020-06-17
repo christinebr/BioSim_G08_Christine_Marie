@@ -5,15 +5,18 @@ import matplotlib.pyplot as plt
 
 from biosim.simulation import BioSim
 
+__author__ = "Marie Kolvik Valøy, Christine Brinchmann"
+__email__ = "mvaloy@nmbu.no, christibr@nmbu.no"
+
 """
-Test how things go with an island with the form of an ø.
+Test how things go with an island with the form of an ø. The circle is higland,
+the line is lowland, and there are two lakes. The main point of the island is
+to observe how animals migrate around the lakes. 
 
-
+The main setup was copypasted from check_sim.py, a test from the project 
+description, which could be found at:
+https://github.com/heplesser/nmbu_inf200_june2020/blob/master/project_description/check_sim.py
 """
-
-__author__ = ""
-__email__ = ""
-
 
 if __name__ == '__main__':
     plt.ion()
@@ -68,7 +71,5 @@ if __name__ == '__main__':
 
     sim.add_population(population=ini_carns)
     sim.simulate(num_years=150, vis_years=1, img_years=2000)
-
-    # plt.savefig('check_sim.pdf')
 
     input('Press ENTER')

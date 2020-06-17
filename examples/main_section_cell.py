@@ -1,4 +1,15 @@
+# -*- coding: utf-8 -*-
+
 from biosim.cell import Lowland
+
+__author__ = "Marie Kolvik Valøy, Christine Brinchmann"
+__email__ = "mvaloy@nmbu.no, christibr@nmbu.no"
+
+"""
+This was the main block of cell.py. We used to test the outputs of our new
+methods.
+"""
+
 
 if __name__ == "__main__":
     animals = [{'species': 'Herbivore', 'age': 1, 'weight': 5},

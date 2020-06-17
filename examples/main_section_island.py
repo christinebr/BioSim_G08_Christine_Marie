@@ -1,4 +1,14 @@
+# -*- coding: utf-8 -*-
+
 from biosim.island import TheIsland
+
+__author__ = "Marie Kolvik Valøy, Christine Brinchmann"
+__email__ = "mvaloy@nmbu.no, christibr@nmbu.no"
+
+"""
+This was the main block of island.py. We used to test the outputs of our new
+methods.
+"""
 
 if __name__ == "__main__":
     ini_herbs = [{'loc': (2, 2),

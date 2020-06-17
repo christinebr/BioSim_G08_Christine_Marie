@@ -1,6 +1,13 @@
 # -*- coding: utf-8 -*-
 from biosim.cell import Lowland
 
+__author__ = "Marie Kolvik Valøy, Christine Brinchmann"
+__email__ = "mvaloy@nmbu.no, christibr@nmbu.no"
+
+"""
+Making sure the method for making carnivores eat works as supposed.
+"""
+
 if __name__ == "__main__":
     animals = [{'species': 'Herbivore', 'age': 1, 'weight': 21},
                {'species': 'Herbivore', 'age': 1, 'weight': 27},
