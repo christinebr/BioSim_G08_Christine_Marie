@@ -4,6 +4,9 @@ from biosim.island import TheIsland
 import matplotlib.pyplot as plt
 import numpy as np
 
+__author__ = "Marie Kolvik Valøy, Christine Brinchmann"
+__email__ = "mvaloy@nmbu.no, christibr@nmbu.no"
+
 """
 This is where we test out plotting with subplots, and how they work together. 
 Copy-pasting from different other sections.

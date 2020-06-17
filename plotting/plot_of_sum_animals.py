@@ -3,6 +3,9 @@
 import matplotlib.pyplot as plt
 from biosim.island import TheIsland
 
+__author__ = "Marie Kolvik Valøy, Christine Brinchmann"
+__email__ = "mvaloy@nmbu.no, christibr@nmbu.no"
+
 """
 This is where we test how to make the plot of the number of herbivores and 
 carnivores on the island and tests changes before implementing into the main 

@@ -4,6 +4,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 from biosim.island import TheIsland
 
+__author__ = "Marie Kolvik Valøy, Christine Brinchmann"
+__email__ = "mvaloy@nmbu.no, christibr@nmbu.no"
+
 """
 We considered making a separate class for plotting, but then decided against it.
 This is our try, it has not been updated, nor tested.

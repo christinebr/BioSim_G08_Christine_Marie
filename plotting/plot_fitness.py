@@ -3,6 +3,9 @@
 import matplotlib.pyplot as plt
 from biosim.island import TheIsland
 
+__author__ = "Marie Kolvik Valøy, Christine Brinchmann"
+__email__ = "mvaloy@nmbu.no, christibr@nmbu.no"
+
 """
 This is where we test how to make histograms and changes in histograms before 
 implementing changes into the main plot section. We test for fitness, but the
