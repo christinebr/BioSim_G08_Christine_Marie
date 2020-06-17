@@ -444,8 +444,8 @@ class BioSim:
         ydata_c[self._year] = num_carn
         self._line_c.set_ydata(ydata_c)
         if num_herb > self.ymax_animals or num_carn > self.ymax_animals:
-            new_ymax = max(num_herb, num_carn) + 2000
-            self._line_ax.set_ylim(0, round(new_ymax, -3))
+            self.ymax_animals = max(num_herb, num_carn) + 2000
+            self._line_ax.set_ylim(0, round(self.ymax_animals, -3))
 
     def _update_graphics(self):
         """
