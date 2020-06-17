@@ -1,44 +1,12 @@
 # -*- coding: utf-8 -*-
 
 """
-Taken directly from:https://github.com/heplesser/nmbu_inf200_june2020/blob/7240186b0a97b24a325fa68280be344e5e49a9da/examples/randvis_project/randvis/simulation.py#L234
+Initial code taken from:
+https://github.com/heplesser/nmbu_inf200_june2020/blob/7240186b0a97b24a325fa68280be344e5e49a9da/
+examples/randvis_project/randvis/simulation.py#L234
+and the project descriptions.
 
-todo: MUST MAKE SOME CHANGES HERE!!! made some changed -> more or not?
-
-:mod:`biosim.simulation` provides the user interface to the package.
-Each simulation is represented by a :class:`BioSim` instance. On each
-instance, the :meth:`BioSim.simulate` method can be called as often as
-you like to simulate a given number of years.
-The state of the system is visualized as the simulation runs, at intervals
-that can be chosen. The graphics can also be saved to file at regular
-intervals. By calling :meth:`BioSim.make_movie` after a simulation is complete,
-individual graphics files can be combined into an animation.
-.. note::
-   * This module requires the program ``ffmpeg`` or ``convert``
-     available from `<http://ffmpeg.org>` and `<http://imagemagick.org>`.
-   * You can also install ``ffmpeg`` using ``conda install ffmpeg``
-   * You need to set the  :const:`_FFMPEG_BINARY` and :const:`_CONVERT_BINARY`
-     constants below to the command required to invoke the programs
-   * You need to set the :const:`_DEFAULT_FILEBASE` constant below to the
-     directory and file-name start you want to use for the graphics output
-     files.
-Example
---------
-::
-    sim = BioSim(island_map, ini_pop, seed, ymax_animals, cmax_animals,
-                 hist_specs, img_base, img_fmt='png')
-    sim.simulate(num_years, vis_years, img_years)
-    sim.make_movie()
-
-This code
-#. creates a island according to the ``island_map``, which contain different
-   types of landscape. the initial population is placed on the island, and it
-   can consist of two types of animals: herbivores and carnivores. the random
-   number generator uses the seed given.;
-#. performs a simulation of the ecosystem on the island for ``num_years``
-   years. the graphics is updated after number of years given to ``vis_years``,
-   and the figure are saved after every ``img_years``;
-#. creates a movie from the individual figures saved.
+Done a lot of modifications. 
 """
 
 from biosim.animals import Herbivores, Carnivores
@@ -64,7 +32,6 @@ _DEFAULT_GRAPHICS_DIR = os.path.join('..', 'data')
 _DEFAULT_GRAPHICS_NAME = 'dv'
 _DEFAULT_MOVIE_FORMAT = 'mp4'   # alternatives: mp4, gif
 
-# https://stackoverflow.com/questions/3899980/how-to-change-the-font-size-on-a-matplotlib-plot
 # Set fontsize for text, axes title and tick labels
 plt.rc('font', size=8)
 plt.rc('axes', titlesize=8)
