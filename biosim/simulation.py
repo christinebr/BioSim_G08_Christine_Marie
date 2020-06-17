@@ -19,6 +19,9 @@ import numpy as np
 import subprocess
 import os
 
+__author__ = "Marie Kolvik Valøy, Christine Brinchmann"
+__email__ = "mvaloy@nmbu.no, christibr@nmbu.no"
+
 # Update these variables to point to your ffmpeg and convert binaries
 # If you installed ffmpeg using conda or installed both softwares in
 # standard ways on your computer, no changes should be required.

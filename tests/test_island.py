@@ -3,6 +3,8 @@
 from biosim.island import TheIsland
 import pytest
 
+__author__ = "Marie Kolvik Valøy, Christine Brinchmann"
+__email__ = "mvaloy@nmbu.no, christibr@nmbu.no"
 
 class TestingTheIsland:
 

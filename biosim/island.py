@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
+
 from biosim.cell import Highland, Lowland, Desert, Water
 import textwrap
 
+__author__ = "Marie Kolvik Valøy, Christine Brinchmann"
+__email__ = "mvaloy@nmbu.no, christibr@nmbu.no"
 
 class TheIsland:
     """ This class will represent an island. """
