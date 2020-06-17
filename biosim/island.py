@@ -183,8 +183,8 @@ class TheIsland:
         -------
         directions: [list]
             list with possible directions
-            - can move in all directions: ['North', 'East', 'South', 'West']
-            - can only move to east and south: ['East', 'South']
+                - can move in all directions: ``['North', 'East', 'South', 'West']``
+                - can only move to east and south: ``['East', 'South']``
         """
         directions = []
         if self.landscape[row-1][col] != 'W':
@@ -401,13 +401,13 @@ class TheIsland:
             - herbivores on the island
             - carnivores on the island
 
-        Returns:
-        ----------
+        Returns
+        -------
         tot_animal: [int]
             total number of animals on the island
         tot_herbi: [int]
             total number of herbivores on the island
-        tot_carni : [int]
+        tot_carni: [int]
             total number of carnivores on the island
         """
         tot_herbi = 0
