@@ -134,7 +134,7 @@ class BioSim:
             self._weight_max = 60
             self._weight_bins = int(self._weight_max/2)
         else:
-            self.set_hist_specs(hist_specs)
+            self._set_hist_specs(hist_specs)
 
         self._img_base = img_base
         self._img_fmt = img_fmt
@@ -158,10 +158,16 @@ class BioSim:
         self._weight_ax = None
         self._axt = None
 
-    def set_hist_specs(self, hist_specs):
+    def _set_hist_specs(self, hist_specs):
         """
         Setting maximum value and the bin width for histograms if provided
-        in hist_specs
+        in hist_specs. Init calls this method for sorting out this.
+
+        Parameters
+        ----------
+        hist_specs: [dict]
+            Specifications for histograms, for more information, see the
+            general documentation for the class.
 
         Returns
         -------
@@ -193,8 +199,14 @@ class BioSim:
 
         Parameters
         ----------
-        species: String, name of animal species
-        params: Dict with valid parameter specification for species
+        species: [str]
+            Name of animal species, 'Herbivore' or 'Carnivore'
+        params: [dict]
+            Dictionary with valid parameter specification for species
+
+        Returns
+        -------
+        None
         """
         if species == "Herbivore":
             Herbivores.set_params(params)
@@ -208,8 +220,10 @@ class BioSim:
 
         Parameters
         ----------
-        landscape: String, code letter for landscape
-        params: Dict with valid parameter specification for landscape
+        landscape: [str]
+            Code letters for landscape, 'L' or 'H'
+        params: [dict]
+            Dictionary with valid parameter specification for landscape
         """
         if landscape == 'L':
             Lowland.set_params(params)
@@ -222,11 +236,18 @@ class BioSim:
 
         Parameters
         ----------
-        num_years: number of years to simulate
-        vis_years: years between visualization updates
-        img_years: years between visualizations saved to files (default: vis_years)
+        num_years: [int]
+            number of years to simulate
+        vis_years: [int]
+            years between visualization updates
+        img_years: [int]
+            years between visualizations saved to files (default: vis_years)
 
         Image files will be numbered consecutively
+
+        Returns
+        -------
+        None
         """
         if img_years is None:
             img_years = vis_years
@@ -245,7 +266,18 @@ class BioSim:
             self._year += 1
 
     def _setup_graphics(self):
-        """Creates subplots."""
+        """
+        Creates the figure with different subplots. Subplots are:
+            - Map of island
+            - Counting years
+            - Plot of number of animals on the island
+            - Heatmaps for distribution of herbivores and carnivores
+            - Histograms showing distribution of animals fitness, age and weight.
+
+        Returns
+        _______
+        None
+        """
         # Create figure window
         if self._fig is None:
             self._fig = plt.figure()
@@ -285,16 +317,20 @@ class BioSim:
             self._weight_ax = self._fig.add_axes([0.7, 0.08, 0.23, 0.1])
 
     def _plot_island(self):
-        """Create a map of the island."""
         """
-        Plotting a map of the island.
+        Plots a map of the island.
         Initial code for this function was taken from Hans Ekkehard Plesser
         from nmbu_inf200_june2020 repository inside the directories examples->plotting
         filename: mapping.py
 
         Parameters
         ----------
-        geogr: [str] Multiline string representing the landscape on the island.
+        geogr:
+            [str] Multiline string representing the landscape on the island.
+
+        Returns
+        -------
+        None
         """
         island_map = self.island_map.replace(' ', '') + '\n'
         # Colors to be used for the different landscapes on the island

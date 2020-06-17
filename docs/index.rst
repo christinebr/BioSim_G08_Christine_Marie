@@ -7,7 +7,7 @@ Welcome to BioSim's documentation!
 ===================================
 
 We made this as the exam project in the course INF200, advanced programing,
-at NMBU.
+at NMBU, in june 2020.
 
 BioSim simulates the population dynamics on the fictional island Rossumøya.
 Rossumøya has two species of animals, herbivores and carnivores, and four different
