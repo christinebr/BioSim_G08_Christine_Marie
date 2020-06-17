@@ -13,7 +13,7 @@ value is one. The different plots show how the animal population of the island
 changes with time.
 
 If wanted the module can store pictures at specified intervals,
-then the user has to provide specifications for this. If no
+if so the user has to provide specifications for this. If no
 specifications are given, the module will not store any pictures.
 It's also possible to make the module make a movie from the
 stored pictures.
