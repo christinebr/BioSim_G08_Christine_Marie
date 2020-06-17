@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from biosim.cell import SingleCell, Lowland, Desert, Water
+__author__ = "Marie Kolvik Valøy, Christine Brinchmann"
+__email__ = "mvaloy@nmbu.no, christibr@nmbu.no"
+
+from biosim.cell import SingleCell, Lowland, Desert, Water, Highland
 from biosim.animals import Herbivores, Carnivores
 import pytest
 from scipy.stats import binom_test
@@ -14,10 +17,6 @@ class TestSingleCell:
     def initial_cell_class(self):
         """
         Makes a single cell with animals to use as test-cell.
-
-        Returns
-        -------
-        None
         """
         animals = [{'species': 'Herbivore', 'age': 10, 'weight': 40},
                    {'species': 'Herbivore', 'age': 40, 'weight': 20},
@@ -29,13 +28,18 @@ class TestSingleCell:
         self.cell = SingleCell(animals_list=animals)
 
     @pytest.fixture()
+    def initial_two_herbivore_cell(self):
+        """
+        Makes a single cell with animals to use as test-cell for statistic tests.
+        """
+        two_herbivores = [{'species': 'Herbivore', 'age': 5, 'weight': 40}
+                          for _ in range(2)]
+        self.herbi_cell = SingleCell(animals_list=two_herbivores)
+
+    @pytest.fixture()
     def initial_statistic_cell(self):
         """
         Makes a single cell with animals to use as test-cell for statistic tests.
-
-        Returns
-        -------
-        None
         """
         self.herbivores = [{'species': 'Herbivore', 'age': 5, 'weight': 20}
                            for _ in range(100)]
@@ -44,16 +48,37 @@ class TestSingleCell:
     def test_empty_animal_list(self):
         """
         Check that it's possible to call SingleCell without supplying any
-        animals (i.e. with animals_list=None).
+        animals.
         """
-        cell = SingleCell(animals_list=None)
+        cell = SingleCell()
         assert cell.animals_list == []
+
+    def test_add_animals_after_migration(self, initial_two_herbivore_cell):
+        """
+        Test that it is possible to add animals to cell. The animals added is
+        either a class instance of Herbivores or Carnivores. Check this by
+        adding three carnivores to the cell first, and then adding two
+        herbivores.
+        """
+        # Before: 2 herbis and 0 carnis
+        assert len(self.herbi_cell.herbi_list) == 2
+        assert len(self.herbi_cell.carni_list) == 0
+        new_carnis = [Carnivores(age=9, weight=10) for _ in range(3)]
+        self.herbi_cell.add_animals_after_migration(new_carnis)
+        # After: 2 herbis and 3 carnis
+        assert len(self.herbi_cell.herbi_list) == 2
+        assert len(self.herbi_cell.carni_list) == 3
+        new_herbis = [Herbivores(age=3, weight=20) for _ in range(2)]
+        self.herbi_cell.add_animals_after_migration(new_herbis)
+        # After: 4 herbis and 3 carnis
+        assert len(self.herbi_cell.herbi_list) == 4
+        assert len(self.herbi_cell.carni_list) == 3
 
     def test_that_all_animals_age(self, initial_cell_class):
         """
         Tests that method age makes all animals get one year older.
-        The sum of the age in the test-sett increases with a number equal to
-        the number of animals every year.
+        The sum of the age in the test-set increases with a number equal to
+        the number of animals in the cell.
         """
         sum_old = 0
         for animal in self.cell.herbi_list + self.cell.carni_list:
@@ -99,46 +124,32 @@ class TestSingleCell:
 
         assert nonexsistent_newborns == 0
 
-    def test_that_mother_looses_weight(self, initial_cell_class, mocker):
+    def test_that_mother_looses_weight(self, initial_two_herbivore_cell, mocker):
         """
         Tests that the birth method makes the mother loose the correct amount
         of weight.
+        The two herbivores in 'initial_two_herbivore_cell' have weight 40,
+        which is above the weight limit to give birth for herbivores
+            3.5 * (8 + 1.5) = 33.25
+        This, in addition to the mocker of random.random(), makes sure that
+        both herbivores gives birth.
         """
         # Makes sure that there will be newborns
         mocker.patch('random.random', return_value=0)
         weight_newborn = 7
-        correct_weights = []
-        for herbi in self.cell.herbi_list:
-            if herbi.weight > 3.5 * (8 + 1.5):  # Tests against the weight limit for herbivores
-                correct_weights.append(herbi.weight - 1.2 * weight_newborn)
-            else:
-                correct_weights.append(herbi.weight)
+        correct_weights_after_birth = []
+        for herbi in self.herbi_cell.herbi_list:
+            correct_weights_after_birth.append(herbi.weight - 1.2 * weight_newborn)
 
-        for carni in self.cell.carni_list:
-            if carni.weight > 3.5 * (6 + 1.):  # Tests against the weight limit for carnivores
-                correct_weights.append(carni.weight - 1.1 * weight_newborn)
-            else:
-                correct_weights.append(carni.weight)
-
-        # Then find the old weights and the new weights
-        old_list_of_animals = self.cell.herbi_list + self.cell.carni_list
         mocker.patch('random.gauss', return_value=weight_newborn)
         # Makes sure newborns have the right weight.
-        self.cell.birth()
-        new_list_of_animals = self.cell.herbi_list + self.cell.carni_list
-        new_list_parents = []
-        for animal in new_list_of_animals:
-            if animal.weight != weight_newborn:
-                new_list_parents.append(animal)
-
-        old_weights = []
+        self.herbi_cell.birth()
         new_weights = []
-        for old_animal, new_animal in zip(old_list_of_animals, new_list_parents):
-            # Using zip like this makes sure we don't count any newborns.
-            old_weights.append(old_animal.weight)
-            new_weights.append(new_animal.weight)
+        for herbi in self.herbi_cell.herbi_list:
+            if herbi.weight != weight_newborn:
+                new_weights.append(herbi.weight)
 
-        assert pytest.approx(new_weights) == correct_weights
+        assert pytest.approx(new_weights) == correct_weights_after_birth
 
     def test_no_zombies(self, initial_cell_class, mocker):
         """
@@ -518,11 +529,43 @@ class TestDesert:
         assert herbi_before > herbi_after
 
 
+class TestHighland:
+
+    def test_make_highland_instance(self):
+        """
+        Makes sure it is possible to make a Highland-instance.
+        """
+        high = Highland()
+        assert isinstance(high, Highland)
+
+    def test_default_f_max(self):
+        """Test that default value for f_max is 300.0"""
+        high = Highland()
+        params = high.get_params()
+        assert params['f_max'] == 300.0
+
+    def test_animal_eat_rest_of_fodder_in_cell(self):
+        """
+        Test that herbivore eats the remainder of fodder in cell, even though
+        it is less that what it wants to eat.
+        Herbivore wants to eat an amount F=10.0.
+        Will set f_max in cell to 8.0 and calculate the gain of weight for
+        the herbivore when eating fodder=8.0. Weight calculated should be equal
+        to the weight of the herbivore.
+        """
+        animal = [{'species': 'Herbivore', 'age': 2, 'weight': 20}]
+        high = Highland(animals_list=animal)
+        high.set_params({'f_max': 8.0})
+        high.animals_in_cell_eat()
+        weight_after_eaten = 20 + 0.9*8.0
+        assert high.herbi_list[0].weight == weight_after_eaten
+
+
 class TestWater:
 
-    def test_make_water_instance(self):
+    def test_make_highland_instance(self):
         """
-        Makes sure it is possible to make a water-instance.
+        Makes sure it is possible to make a Water-instance.
         """
-        w = Water(animals_list=None)
+        w = Water()
         assert isinstance(w, Water)

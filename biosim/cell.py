@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+
+__author__ = "Marie Kolvik Valøy, Christine Brinchmann"
+__email__ = "mvaloy@nmbu.no, christibr@nmbu.no"
+
 from biosim.animals import Herbivores, Carnivores
 import random
 from itertools import zip_longest
@@ -133,7 +137,7 @@ class SingleCell:
         fodder_in_cell = self._params['f_max']
         for herbi in self.herbi_list:
             fodder = herbi.get_params()['F']
-            if fodder <= fodder_in_cell:
+            if fodder_in_cell >= fodder:
                 herbi.update_weight(amount_fodder_eaten=fodder)
                 fodder_in_cell -= fodder
             elif fodder_in_cell > 0:
