@@ -17,7 +17,7 @@ in the cell. Animals who wants to migrate, but are not allowed
 to has to be added once more.
 
 The SingleCell class
-___________________
+_______________________
 .. autoclass:: biosim.cell.SingleCell
    :members:
 

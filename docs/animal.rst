@@ -15,11 +15,11 @@ ___________________
    :members:
 
 The Herbiovores subclass
-________________________
+__________________________
 .. autoclass:: biosim.animals.Herbivores
    :members:
 
 The Carnivores subclass
-_______________________
+_________________________
 .. autoclass:: biosim.animals.Carnivores
    :members:
