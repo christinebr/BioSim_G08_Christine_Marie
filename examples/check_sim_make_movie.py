@@ -12,7 +12,7 @@ __email__ = "mvaloy@nmbu.no, christibr@nmbu.no"
 Checking that it's possible to store pictures and make a movie. Remember to
 activate ffmpeg before trying.
 
-The main setup was copypasted from check_sim.py, a test from the project 
+The test run is the same as in check_sim.py, a test from the project 
 description, which could be found at:
 https://github.com/heplesser/nmbu_inf200_june2020/blob/master/project_description/check_sim.py
 """
@@ -48,7 +48,7 @@ if __name__ == '__main__':
                           for _ in range(40)]}]
 
     sim = BioSim(island_map=geogr, ini_pop=ini_herbs,
-                 img_base='img_test',
+                 img_base='img_test',  # Makes sure images will be stored
                  seed=123456,
                  hist_specs={'fitness': {'max': 1.0, 'delta': 0.05},
                              'age': {'max': 60.0, 'delta': 2},
@@ -66,6 +66,7 @@ if __name__ == '__main__':
     sim.add_population(population=ini_carns)
     sim.simulate(num_years=100, vis_years=1, img_years=5)
 
+    # Makes a movie
     sim.make_movie()
 
     input('Press ENTER to finish. Then the plot will disappear.')

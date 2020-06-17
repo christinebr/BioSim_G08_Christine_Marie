@@ -5,7 +5,8 @@ __author__ = "Marie Kolvik Valøy, Christine Brinchmann"
 __email__ = "mvaloy@nmbu.no, christibr@nmbu.no"
 
 """
-Making sure the method for making carnivores eat works as supposed.
+Testing that different methods in the cell class works with carnivores. Uses a 
+lowland cell for testing.
 """
 
 if __name__ == "__main__":
@@ -49,4 +50,3 @@ if __name__ == "__main__":
     print("Number of animals before death:", len(low.herbi_list + low.carni_list))
     low.death()
     print("Number of animals after death:", len(low.herbi_list + low.carni_list))
-
