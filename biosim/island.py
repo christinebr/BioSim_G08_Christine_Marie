@@ -6,6 +6,7 @@ import textwrap
 __author__ = "Marie Kolvik Valøy, Christine Brinchmann"
 __email__ = "mvaloy@nmbu.no, christibr@nmbu.no"
 
+
 class TheIsland:
     """ This class will represent an island. """
 

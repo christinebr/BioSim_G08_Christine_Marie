@@ -6,6 +6,7 @@ import random
 __author__ = "Marie Kolvik Valøy, Christine Brinchmann"
 __email__ = "mvaloy@nmbu.no, christibr@nmbu.no"
 
+
 class Animal:
     """This class will represent an animal."""
     _params = None

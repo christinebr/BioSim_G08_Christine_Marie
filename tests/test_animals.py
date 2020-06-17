@@ -14,12 +14,12 @@ class TestHerbivores:
 
     @pytest.fixture()
     def initial_herbivore_class(self):
+        """Make single herbivore, to be used in tests."""
         self.h = Herbivores(age=5, weight=20)
-        return self.h
 
     def test_constructor_default(self, initial_herbivore_class):
         """Test that the class Herbivores creates an instance."""
-        assert isinstance(initial_herbivore_class, Herbivores)
+        assert isinstance(self.h, Herbivores)
 
     def test_set_params_raises_keyerror(self, initial_herbivore_class):
         """
@@ -201,10 +201,21 @@ class TestCarnivores:
     @pytest.fixture()
     def initial_carnivore_class(self):
         """
-        todo: are not using this per now
+        Make single carnivore, to be used in tests.
         """
-        self.c = Carnivores(weight=20, )
-        return self.c
+        self.c = Carnivores(weight=10, age=4)
+
+    def test_to_large_newborn_weight(self, initial_carnivore_class, mocker):
+        """
+        Test that an animal does not give birth if the weight of the newborn
+        is larger that the weight of the mother.
+        """
+        self.c.set_params({'zeta': 1})  # make weight limit = 7
+        # make newborn weight = 12
+        mocker.patch('random.gauss', return_value=12)
+        prob, newborn_weight = self.c.birth(10)
+        assert prob == 0.
+        assert newborn_weight == 0.
 
     def test_invalid_value_deltaphimax(self, initial_carnivore_class):
         """Test that DeltaPhiMax is strictly positive (>0)."""
@@ -224,11 +235,8 @@ class TestCarnivores:
 
     def test_prob_kill_between_0_and_1(self):
         """
-        Test that the probability of killing a herbivore is between 0 and 1.
-        todo: maybe calculate the probability more times?
-        Returns
-        -------
-
+        Test that the probability of killing a herbivore is between 0 and 1
+        for a carnivore with big enough fitness.
         """
         carni = Carnivores(weight=10, age=2)   # fitness 0.917
         prob_kill = carni.probability_of_killing_herbivore(fitness_herbi=0.5)

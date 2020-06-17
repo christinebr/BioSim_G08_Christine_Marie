@@ -6,15 +6,13 @@ import pytest
 __author__ = "Marie Kolvik Valøy, Christine Brinchmann"
 __email__ = "mvaloy@nmbu.no, christibr@nmbu.no"
 
+
 class TestingTheIsland:
 
     @pytest.fixture()
     def initial_island(self):
         """
         Makes a simple test-model to use in tests
-        Returns
-        -------
-        A simple test-model
         """
         test_island = """\
                             WWWWW
@@ -34,15 +32,11 @@ class TestingTheIsland:
         self.island = TheIsland(landscape_of_cells=test_island, animals_on_island=test_animals)
         herbis, carnis = self.island.give_animals_in_cell(2, 3)
         self.animals = herbis + carnis
-        return self.island, self.animals
 
     @pytest.fixture()
     def start_point_migration(self):
         """
         Makes a simple test-model to use in tests for migration
-        Returns
-        -------
-        A simple test-model
         """
         test_island = """\
                             WWWWW
@@ -61,7 +55,6 @@ class TestingTheIsland:
 
         self.isl_mig = TheIsland(landscape_of_cells=test_island,
                                  animals_on_island=test_animals)
-        return self.isl_mig
 
     def test_if_check_size(self):
         """

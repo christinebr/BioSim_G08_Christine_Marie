@@ -355,10 +355,6 @@ class TestLowland:
     def initial_lowland(self):
         """
         Makes a single cell with animals to use as test-cell for lowland-class.
-
-        Returns
-        -------
-        cell: [class instance] A lowland cell with animals
         """
         animals = [{'species': 'Herbivore', 'age': 10, 'weight': 15},
                    {'species': 'Herbivore', 'age': 40, 'weight': 20},
@@ -368,7 +364,6 @@ class TestLowland:
                    {'species': 'Carnivore', 'age': 37, 'weight': 5.7}
                    ]
         self.low = Lowland(animals_list=animals)
-        return self.low
 
     def test_no_cannibalism(self, initial_lowland, mocker):
         """
@@ -484,10 +479,6 @@ class TestDesert:
     def initial_desert(self):
         """
         Makes a single cell with animals to use as test-cell for desert-class.
-
-        Returns
-        -------
-        cell: [class instance] A desert cell with animals
         """
         animals = [{'species': 'Herbivore', 'age': 10, 'weight': 15},
                    {'species': 'Herbivore', 'age': 40, 'weight': 20},
@@ -497,7 +488,6 @@ class TestDesert:
                    {'species': 'Carnivore', 'age': 37, 'weight': 5.7}
                    ]
         self.desert = Desert(animals_list=animals)
-        return self.desert
 
     def test_no_herbs(self, initial_desert, mocker):
         """Tests that herbivores can't find food in the desert.
