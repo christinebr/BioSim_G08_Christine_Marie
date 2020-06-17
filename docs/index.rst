@@ -16,8 +16,7 @@ is to test if both the species are able to survive on the island over time and
 with different scenarios.
 
 The user interface of the package is given by :mod:`biosim.simulation`.
-The :class:`BioSim` instance represents each simulation. Users kan call the
- :meth:`BioSim.simulate` method on these instances as often as wanted to
+The :class:`BioSim` instance represents each simulation. Users kan call the :meth:`BioSim.simulate` method on these instances as often as wanted to
 simulate a given number of years. It's also possible to add new animals on the
 island between calls.
 

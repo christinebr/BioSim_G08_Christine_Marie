@@ -14,7 +14,7 @@ to migrate into is not a water cell. Animals who are allowed to
 migrate are added in their new cells, animals who are not allowed
 to migrate are added back into their old cell.
 
-The island is also responsible for keeping track of locations
+The island is also responsible for keeping track of the location
 of all cells.
 
 The Island class
