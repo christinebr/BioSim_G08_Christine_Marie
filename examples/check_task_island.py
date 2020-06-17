@@ -9,9 +9,7 @@ __author__ = "Marie Kolvik Valøy, Christine Brinchmann"
 __email__ = "mvaloy@nmbu.no, christibr@nmbu.no"
 
 """
-Island in the task description.
-
-
+Testing our simulation with the island in the task description.
 """
 
 
@@ -63,4 +61,4 @@ if __name__ == '__main__':
 
     sim.simulate(num_years=200, vis_years=1, img_years=2000)
 
-    input('Press ENTER')
+    input('Press ENTER, and the plot will disappear.')
