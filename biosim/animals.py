@@ -80,12 +80,12 @@ class Animal:
         Update the weight of an animal under certain conditions:
             - the weight increases if the animal have eaten, by the amount of
               fodder eaten by the animal times the animal-parameter 'beta'.
-            - the weight decreases if the animal have given birth, by the
-              weight of the newborn animal.
+            - if the animal gives birth, its weight decreases with the weight
+              of the newborn animal times the parameter 'xi'.
             - the weight decreases for every animal at the end of the year,
               this happens when the default values of both parameters is used.
               The weight then decreases by the weight of the animal times
-              the animal-parameter 'eta'.
+              the parameter 'eta'.
 
         Parameters
         ----------
@@ -116,7 +116,7 @@ class Animal:
 
     def fitness(self):
         """
-        Calculates the value of fitness for an animal, which says something
+        Calculates the value of fitness for an animal, this says something
         about the overall condition of the animal.
         The value of fitness is between 0 and 1.
             - If the weight of the animal is less than or equal to zero
@@ -155,8 +155,8 @@ class Animal:
         """
         Calculates the probability that an animal gives birth.
         The probability of birth lies between 0 and 1.
-            - If num=1 (only one animal) the probability of giving birth is 0.
-            - If the weight of an animal is less that a weight limit, the
+            - If num = 1 (only one animal) the probability of giving birth is 0.
+            - If the weight of an animal is less than a weight limit, the
               probability of giving birth is also 0.
 
         Parameters
@@ -207,7 +207,8 @@ class Animal:
 
         Returns
         -------
-        float the probability that an animal will die.
+        float
+            the probability that an animal will die.
         """
         if self.weight <= 0:
             return 1.0  # the animal is dead
