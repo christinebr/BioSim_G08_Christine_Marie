@@ -8,7 +8,8 @@ class TheIsland:
 
     def __init__(self, landscape_of_cells, animals_on_island=None):
         """
-        Create an island consisting of cells based on landscape-types.
+        Create an island consisting of cells with attributes decided by
+        the type of landscape.
 
         Parameters
         ----------
@@ -42,7 +43,8 @@ class TheIsland:
         Checks if the landscape of the island follows the specifications.
             - only have 'W' around edges
             - no other characters than 'L', 'H', 'D' and 'W'
-            - all lines in the string must have equal length
+            - all lines in the string must have equal length, be aware that
+              trailing whitespace will disrupt this.
 
         Raises
         -------
@@ -92,7 +94,7 @@ class TheIsland:
     def construct_island_with_cells(self):
         """
         Construction the island by initialising a class for each of the
-        landscape types. For each cell the class is initialized with no
+        landscape types. For each cell the class is initialized without
         animals.
         """
         self.island_cells = [[] for _ in range(self.row)]
@@ -109,7 +111,7 @@ class TheIsland:
 
     def add_animals_on_island(self, new_animals):
         """
-        Add animals on island by adding animals to specified cells.
+        Insert animals on island by adding animals to specified cells.
 
         Parameters
         ----------
@@ -154,7 +156,7 @@ class TheIsland:
     def where_can_animals_migrate_to(self, row, col):
         """
         Check if any of the neighboring adjacent cells are water, and
-        returns the directions animals can migrate to.
+        returns the directions animals can migrate.
 
         Parameters
         ----------
@@ -189,7 +191,8 @@ class TheIsland:
         """
         Makes migration happen, by creating a ghost island where migrating
         animals makes a 'pit-stop' to a cell before getting added to that
-        cell later in the 'real' island
+        cell later in the 'real' island. This is to avoid animals migrating
+        more than once.
         """
         # Make ghost island to store migrating animals
         ghost_island = [[[] for _ in range(self.col)] for _ in range(self.row)]
@@ -235,8 +238,7 @@ class TheIsland:
         west : list
             animals wanting to move west
         ghost_island : list of lists
-            a replicate of the island, but an element in an inner row contains
-            list of animals
+            a replicate of the island, with lists of animals in each position.
 
         Returns
         -------
@@ -290,8 +292,8 @@ class TheIsland:
     def animals_die(self):
         """
         Letting animals on the island die.
-        Looping through the cells of the island and the animals in the
-        cells have a change of dying.
+        Looping through the cells of the island and giving the animals in the
+        cells a change to die.
         """
         for row in self.island_cells:
             for cell in row:
@@ -314,11 +316,9 @@ class TheIsland:
         self.all_animals_losses_weight()
         self.animals_die()
 
-    def give_animals_in_cell(self, row, col):
+    def _give_animals_in_cell(self, row, col):
         """
         Give lists of herbivores and carnivores in a given cell
-
-        todo: was this only made for tests purposes and uses in the main-section?
 
         Parameters
         ----------
@@ -340,8 +340,9 @@ class TheIsland:
 
     def herbis_and_carnis_on_island(self):
         """
-        Make two island, one for herbivores and one for carnivores.
-        In each cell the number of herbivores/carnivores are stored.
+        Make two islands, one for herbivores and one for carnivores.
+        In each cell the number of herbivores/carnivores are stored. This is
+        used to make heatmaps.
 
         Returns
         -------
