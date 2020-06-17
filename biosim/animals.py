@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
+
 import numpy as np
 import random
 
+__author__ = "Marie Kolvik Valøy, Christine Brinchmann"
+__email__ = "mvaloy@nmbu.no, christibr@nmbu.no"
 
 class Animal:
     """This class will represent an animal."""

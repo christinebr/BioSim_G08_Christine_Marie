@@ -4,6 +4,9 @@ from biosim.animals import Herbivores, Carnivores
 import pytest
 from scipy.stats import normaltest
 
+__author__ = "Marie Kolvik Valøy, Christine Brinchmann"
+__email__ = "mvaloy@nmbu.no, christibr@nmbu.no"
+
 alpha = 0.01  # Significant level for statistical tests
 
 
