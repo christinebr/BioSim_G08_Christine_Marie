@@ -18,7 +18,7 @@ specifications are given, the module will not store any pictures.
 It's also possible to make the module make a movie from the
 stored pictures.
 
-To make a movie the user must have the program ``ffmpeg``. This could be
+To make a movie the user must have the program ``ffmpeg`` installed. This could be
 installed using ``conda install ffmpeg`` in your preferred terminal.
 
 

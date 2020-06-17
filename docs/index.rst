@@ -12,12 +12,19 @@ at NMBU, completed in June 2020.
 BioSim simulates the population dynamics on the fictional island Rossumøya.
 Rossumøya has two species of animals, herbivores and carnivores, and four different
 types of landscape, lowland, highland, desert an water. The goal of the project
-is to test if animals will go extinct in different scenarios.
+is to test if both the species are able to survive on the island over time and
+with different scenarios.
 
 The user interface of the package is given by :mod:`biosim.simulation`.
-The :class:`BioSim` instance represents each simulation. On these instances the
-the :meth:`BioSim.simulate` method can be called as often as wanted to
-simulate a given number of years.
+The :class:`BioSim` instance represents each simulation. Users kan call the
+ :meth:`BioSim.simulate` method on these instances as often as wanted to
+simulate a given number of years. It's also possible to add new animals on the
+island between calls.
+
+The simulation can also handle other islands, as long as
+they follow the descriptions: only consisting of the prescribed four types of
+landscapes, and all outer cell should be water cells. This has to be specified
+when initialising.
 
 .. toctree::
    :maxdepth: 2
