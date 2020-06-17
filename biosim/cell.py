@@ -16,7 +16,8 @@ class SingleCell:
         """
         Parameters
         ----------
-        animals_list: [list] List of animals, default-value is None
+        animals_list: [list]
+            List of animals, default-value is None
 
         Returns
         -------
@@ -38,7 +39,8 @@ class SingleCell:
 
         Parameters
         ----------
-        animals: [list] List of animals that shall be added to the cell.
+        animals: [list]
+            List of animals that shall be added to the cell.
 
         Returns
         -------
@@ -56,14 +58,13 @@ class SingleCell:
     def set_params(cls, new_params):
         """
         Set parameters for class.
-        Raises a KeyError if given an invalid parameter name, i.e. a key that's
-        not present in the dictionary.
-        Raises a ValueError if given invalid value for key.
 
         Parameters
         ----------
         new_params: [dict]
-            Dictionary with new parameter values
+            Dictionary with parameter name as keys and parameter value as value.
+
+            ``new_params = {'key': value}``
 
         Returns
         -------
@@ -71,7 +72,10 @@ class SingleCell:
 
         Raises
         ------
-        KeyError if given an invalid parameter name.
+        KeyError:
+            if given an invalid parameter name
+        ValueError:
+            if given an invalid parameter value
         """
         for key in new_params:
             if key not in cls._params:
@@ -82,11 +86,12 @@ class SingleCell:
     @classmethod
     def get_params(cls):
         """
-        Makes it possible to get the parameter values
+        Makes it possible to get the parameter dictionary.
 
         Returns
         -------
-        _params: [dict] Dictionary of parameter values.
+        _params: [dict]
+            Dictionary of the parameters.
         """
         return cls._params
 
