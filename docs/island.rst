@@ -4,15 +4,15 @@ Write text here
 
 The Island module
 __________________
--- automodule:: biosim.island
+.. automodule:: biosim.island
    :members:
 
 The Cell module
 _________________
--- automodule:: biosim.cell
+.. automodule:: biosim.cell
    :members:
 
 The Animal module
 ___________________
--- automodule:: biosim.animals
+.. automodule:: biosim.animals
    :members:
