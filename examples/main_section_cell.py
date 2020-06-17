@@ -6,8 +6,8 @@ __author__ = "Marie Kolvik Valøy, Christine Brinchmann"
 __email__ = "mvaloy@nmbu.no, christibr@nmbu.no"
 
 """
-This was the main block of cell.py. We used to test the outputs of our new
-methods.
+This was the main block of cell.py. We used this to test the outputs of our new
+methods. Uses a lowland cell for testing.
 """
 
 

@@ -6,8 +6,8 @@ __author__ = "Marie Kolvik Valøy, Christine Brinchmann"
 __email__ = "mvaloy@nmbu.no, christibr@nmbu.no"
 
 """
-This was the main block of animals.py. We used to test the outputs of our new
-methods.
+This was the main block of animals.py. We used this to check outputs of our 
+newmade methods.
 """
 
 if __name__ == "__main__":

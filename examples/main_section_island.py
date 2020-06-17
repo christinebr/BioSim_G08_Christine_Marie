@@ -6,8 +6,8 @@ __author__ = "Marie Kolvik Valøy, Christine Brinchmann"
 __email__ = "mvaloy@nmbu.no, christibr@nmbu.no"
 
 """
-This was the main block of island.py. We used to test the outputs of our new
-methods.
+This was the main block of island.py. We used this to test the outputs of our 
+new methods.
 """
 
 if __name__ == "__main__":
@@ -76,6 +76,8 @@ if __name__ == "__main__":
     print("Animals in cell after:",
           len(isl.island_cells[1][1].herbi_list+isl.island_cells[1][1].carni_list))
 
+    # Testing an island with more than one inhabitable cell:
+    print('\nBIGGER ISLAND, FOR TESTING MIGRATION')
     bigger_island = """\
                         WWWWW
                         WLLLW
@@ -94,15 +96,14 @@ if __name__ == "__main__":
     print("Landscape used in TheIsland-class\n", isl2.island_cells)
     isl2.add_animals_on_island(new_animals=animals_isl2)
     print(isl2.give_animals_in_cell(2, 2))
-    print("before migration")
-    print(isl2.migration())
-    print(isl2.migration())
-    print(isl2.migration())
-    print(isl2.migration())
-    print(isl2.migration())
-    print(isl2.migration())
-    print(isl2.migration())
-    print(isl2.migration())
+    isl2.migration()
+    isl2.migration()
+    isl2.migration()
+    isl2.migration()
+    isl2.migration()
+    isl2.migration()
+    isl2.migration()
+    isl2.migration()
     print("after migration")
     herb, carn = isl2.give_animals_in_cell(2, 2)
     print(f"\nAnimals in (2, 2):", len(herb + carn))
