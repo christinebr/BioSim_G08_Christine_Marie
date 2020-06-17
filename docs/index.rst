@@ -6,13 +6,13 @@
 Welcome to BioSim's documentation!
 ===================================
 
-We made this as the exam project in the course INF200, advanced programing,
-at NMBU, in june 2020.
+This is our exam project in the course INF200, advanced programing,
+at NMBU, completed in June 2020.
 
 BioSim simulates the population dynamics on the fictional island Rossumøya.
 Rossumøya has two species of animals, herbivores and carnivores, and four different
 types of landscape, lowland, highland, desert an water. The goal of the project
-is to test if animals will go extinct in different scenarios. 
+is to test if animals will go extinct in different scenarios.
 
 .. toctree::
    :maxdepth: 2
