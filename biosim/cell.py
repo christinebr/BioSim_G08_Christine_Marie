@@ -138,10 +138,10 @@ class SingleCell:
         for herbi in self.herbi_list:
             fodder = herbi.get_params()['F']
             if fodder_in_cell >= fodder:
-                herbi.update_weight(amount_fodder_eaten=fodder)
+                herbi.update_weight_after_eating(amount_fodder_eaten=fodder)
                 fodder_in_cell -= fodder
             elif fodder_in_cell > 0:
-                herbi.update_weight(amount_fodder_eaten=fodder_in_cell)
+                herbi.update_weight_after_eating(amount_fodder_eaten=fodder_in_cell)
                 fodder_in_cell = 0
 
     def carnivores_eats(self):
@@ -187,14 +187,14 @@ class SingleCell:
                 prob_birth_herbi, birth_weight_herbi = herbi.birth(num_herbi)
                 if random.random() < prob_birth_herbi:
                     newborn_herbi.append(Herbivores(age=0, weight=birth_weight_herbi))
-                    herbi.update_weight(weight_of_newborn=birth_weight_herbi)
+                    herbi.update_weight_after_birth(weight_of_newborn=birth_weight_herbi)
                     # This updates the weight of the mother according to the weight of the newborn
 
             if carni:  # need this because carni is None if num_herbi > num_carni
                 prob_birth_carni, birth_weight_carni = carni.birth(num_carni)
                 if random.random() < prob_birth_carni:
                     newborn_carni.append(Carnivores(age=0, weight=birth_weight_carni))
-                    carni.update_weight(weight_of_newborn=birth_weight_carni)
+                    carni.update_weight_after_birth(weight_of_newborn=birth_weight_carni)
 
         # Adds the newborn animals to the list of animals
         self.herbi_list.extend(newborn_herbi)
@@ -299,10 +299,10 @@ class SingleCell:
         weight attribute of each animal.
         """
         for herbi in self.herbi_list:
-            herbi.update_weight()
+            herbi.update_weight_end_of_year()
 
         for carni in self.carni_list:
-            carni.update_weight()
+            carni.update_weight_end_of_year()
 
     def death(self):
         """

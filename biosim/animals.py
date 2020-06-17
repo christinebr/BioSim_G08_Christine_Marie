@@ -40,7 +40,8 @@ class Animal:
         Parameters
         ----------
         new_params : dict
-            dictionary with new parameter values
+            dictionary with parameter name as key and new parameter values as
+            value: ``{'key': new_value}``
 
         Raises
         ------
@@ -79,39 +80,18 @@ class Animal:
         """
         self.age += 1
 
-    def update_weight(self, amount_fodder_eaten=None, weight_of_newborn=None):
+    def update_weight_after_eating(self, amount_fodder_eaten):
         """
-        Update the weight of an animal under certain conditions:
-            - the weight increases if the animal have eaten, by the amount of
-              fodder eaten by the animal times the animal-parameter 'beta'.
-            - if the animal gives birth, its weight decreases with the weight
-              of the newborn animal times the parameter 'xi'.
-            - the weight decreases for every animal at the end of the year,
-              this happens when the default values of both parameters is used.
-              The weight then decreases by the weight of the animal times
-              the parameter 'eta'.
+        Update the weight of an animal after eating. The weight increases by
+        the amount of fodder eaten by the animal times the animal-parameter
+        'beta'.
 
         Parameters
         ----------
-        amount_fodder_eaten: None or float
+        amount_fodder_eaten: float
             the amount of fodder eaten by an animal
-        weight_of_newborn: None or float
-            the weight of a newborn to be subtracted from the weight of the mother
-
-        Raises
-        -------
-        ValueError
-            if both parameters are given as a number, because an
-            animal can't eat and give birth at the same time
         """
-        if weight_of_newborn and amount_fodder_eaten:
-            raise ValueError('No animal could give birth and eat at the same time')
-        elif amount_fodder_eaten:
-            self.weight += round(self._params['beta'] * amount_fodder_eaten, 2)
-        elif weight_of_newborn:
-            self.weight -= round(self._params['xi'] * weight_of_newborn, 2)
-        else:
-            self.weight -= round(self._params['eta'] * self.weight, 2)
+        self.weight += round(self._params['beta'] * amount_fodder_eaten, 2)
 
     @staticmethod
     def _q(sign, x, x_half, phi):
@@ -202,6 +182,18 @@ class Animal:
         return round(random.gauss(self._params['w_birth'],
                                   self._params['sigma_birth']), 2)
 
+    def update_weight_after_birth(self, weight_of_newborn):
+        """
+        Update the weight of an animal after giving birth. The weight decreases
+        with the weight of the newborn animal times the parameter 'xi'.
+
+        Parameters
+        ----------
+        weight_of_newborn: float
+            the weight of a newborn animal
+        """
+        self.weight -= round(self._params['xi'] * weight_of_newborn, 2)
+
     def probability_death(self):
         """
         The probability of death for an animal lies between 0 and 1
@@ -219,6 +211,13 @@ class Animal:
         else:
             # Probability of death:
             return self._params['omega'] * (1 - self.fitness())
+
+    def update_weight_end_of_year(self):
+        """
+        Update the weight of an animal at the end of the year. The weight
+        decreases by the weight of the animal times the parameter 'eta'.
+        """
+        self.weight -= round(self._params['eta'] * self.weight, 2)
 
 
 class Herbivores(Animal):

@@ -89,7 +89,7 @@ class TestHerbivores:
         Test that a herbivore gain weight when eating an amount of fodder.
         """
         old_weight = self.h.weight
-        self.h.update_weight(amount_fodder_eaten=8)
+        self.h.update_weight_after_eating(amount_fodder_eaten=8)
         assert self.h.weight > old_weight
 
     def test_decrease_weight_not_eating(self, initial_herbivore_class):
@@ -97,7 +97,7 @@ class TestHerbivores:
         Test that a herbivore losses weight "at the end of the year"/haven't eaten
         """
         old_weight = self.h.weight
-        self.h.update_weight(amount_fodder_eaten=None)
+        self.h.update_weight_end_of_year()
         assert self.h.weight < old_weight
 
     def test_decrease_weight_after_given_birth(self):
@@ -108,7 +108,7 @@ class TestHerbivores:
         prob, newborn_weight = h.birth(num=10)
         assert prob != 0
         assert newborn_weight != 0
-        h.update_weight(weight_of_newborn=newborn_weight)
+        h.update_weight_after_birth(weight_of_newborn=newborn_weight)
         assert h.weight < 35
 
     def test_fitness_between_0_and_1(self, initial_herbivore_class):
@@ -155,13 +155,13 @@ class TestHerbivores:
         """
         assert self.h.birth(num=2)[0] == 0
 
-    def test_not_eating_and_feeding_at_once(self, initial_herbivore_class):
-        """
-        Checks that the update_weight method raises a ValueError if an animal
-        tries to eat and get a child at the same moment
-        """
-        with pytest.raises(ValueError):
-            self.h.update_weight(weight_of_newborn=10, amount_fodder_eaten=3)
+    # def test_not_eating_and_feeding_at_once(self, initial_herbivore_class):
+    #     """
+    #     Checks that the update_weight method raises a ValueError if an animal
+    #     tries to eat and get a child at the same moment
+    #     """
+    #     with pytest.raises(ValueError):
+    #         self.h.update_weight(weight_of_newborn=10, amount_fodder_eaten=3)
 
     def test_fitness_update_with_weight(self, initial_herbivore_class):
         """
@@ -172,7 +172,7 @@ class TestHerbivores:
         """
         h = self.h
         fitness1 = h.fitness()
-        h.update_weight(amount_fodder_eaten=50)
+        h.update_weight_after_eating(amount_fodder_eaten=50)
         fitness2 = h.fitness()
         assert fitness1 != fitness2
 
