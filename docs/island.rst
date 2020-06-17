@@ -17,7 +17,7 @@ to migrate are added back into their old cell.
 The island is also responsible for keeping track of locations
 of all cells.
 
-The Island module
+The Island class
 __________________
-.. automodule:: biosim.island
+.. autoclass:: biosim.island
    :members:

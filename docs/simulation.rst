@@ -19,7 +19,7 @@ It's also possible to make the module make a movie from the
 stored pictures.
 
 
-The Simulation class
+The BioSim class
 ______________________
-.. automodule:: biosim.simulation
+.. autoclass:: biosim.simulation
    :members:
