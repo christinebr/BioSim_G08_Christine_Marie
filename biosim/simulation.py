@@ -165,13 +165,9 @@ class BioSim:
 
         Parameters
         ----------
-        hist_specs: [dict]
+        hist_specs : dict
             Specifications for histograms, for more information, see the
             general documentation for the class.
-
-        Returns
-        -------
-        None
         """
         if 'fitness' in hist_specs.keys():
             self._fit_max = hist_specs['fitness']['max']
@@ -199,14 +195,10 @@ class BioSim:
 
         Parameters
         ----------
-        species: [str]
+        species : str
             Name of animal species, 'Herbivore' or 'Carnivore'
-        params: [dict]
+        params : dict
             Dictionary with valid parameter specification for species
-
-        Returns
-        -------
-        None
         """
         if species == "Herbivore":
             Herbivores.set_params(params)
@@ -220,9 +212,9 @@ class BioSim:
 
         Parameters
         ----------
-        landscape: [str]
+        landscape : str
             Code letters for landscape, 'L' or 'H'
-        params: [dict]
+        params : dict
             Dictionary with valid parameter specification for landscape
         """
         if landscape == 'L':
@@ -236,18 +228,14 @@ class BioSim:
 
         Parameters
         ----------
-        num_years: [int]
+        num_years : int
             number of years to simulate
-        vis_years: [int]
+        vis_years : int
             years between visualization updates
-        img_years: [int]
+        img_years : int
             years between visualizations saved to files (default: vis_years)
 
         Image files will be numbered consecutively
-
-        Returns
-        -------
-        None
         """
         if img_years is None:
             img_years = vis_years
@@ -273,10 +261,6 @@ class BioSim:
             - Plot of number of animals on the island
             - Heatmaps for distribution of herbivores and carnivores
             - Histograms showing distribution of animals fitness, age and weight.
-
-        Returns
-        _______
-        None
         """
         # Create figure window
         if self._fig is None:
@@ -322,15 +306,6 @@ class BioSim:
         Initial code for this function was taken from Hans Ekkehard Plesser
         from nmbu_inf200_june2020 repository inside the directories examples->plotting
         filename: mapping.py
-
-        Parameters
-        ----------
-        geogr:
-            [str] Multiline string representing the landscape on the island.
-
-        Returns
-        -------
-        None
         """
         island_map = self.island_map.replace(' ', '') + '\n'
         # Colors to be used for the different landscapes on the island
@@ -359,7 +334,11 @@ class BioSim:
                             fontsize=4)
 
     def _line_setup_graph(self):
-        """Create the line graph/the animal count graph setup."""
+        """
+        Creates the line graph/the animal count graph setup. If this graph are
+        already made, it makes sure it's updated. It also makes the axes follow
+        specifications.
+        """
         if self._line_h is None and self._line_c is None:
             line_h = self._line_ax.plot(np.arange(0, self._final_year),
                                         np.full(self._final_year, np.nan),
@@ -384,7 +363,10 @@ class BioSim:
                                       np.hstack((ydata_c, ynew)))
 
     def _update_count(self):
-        """Updates the counter."""
+        """
+        Updates the counter that keeps track of which year of the simulation we
+        are looking at.
+        """
         self._axt.cla()
         self._axt.axis('off')
         template = '\n\nYear: {:5d}\n\nHerbivores - blue\nCarnivores - red'
@@ -396,7 +378,10 @@ class BioSim:
         txt.set_text(template.format(self._year))
 
     def _update_heatmaps(self, herbi_map, carni_map):
-        """Updates heatmaps of island."""
+        """
+        Remakes heatmas of herbivores and carnivores. Makes sure axes
+        follows specifications.
+        """
         if self._img_ax_heat1 is not None:
             self._img_ax_heat1.set_data(herbi_map)
         else:
@@ -424,7 +409,9 @@ class BioSim:
             self._carn_ax.set_yticklabels(range(1, 1 + self.height))
 
     def _update_histograms(self, herb_prop, carn_prob):
-        """Update histograms."""
+        """
+        Remakes histograms. Makes sure axes follows specifications.
+        """
         self._fitness_ax.cla()
         self._fitness_ax.set_xlim([0, self._fit_max])
         self._fitness_ax.set_ylim([0, 2000])
@@ -465,7 +452,9 @@ class BioSim:
                              edgecolor='red')
 
     def _update_line_graph(self, num_herb=0, num_carn=0):
-        """Update the line graph/the animal count graph."""
+        """
+        Update the line graph/the animal count graph.
+        """
         ydata_h = self._line_h.get_ydata()
         ydata_h[self._year] = num_herb
         self._line_h.set_ydata(ydata_h)
@@ -478,7 +467,10 @@ class BioSim:
             self._line_ax.set_ylim(0, round(new_ymax, -3))
 
     def _update_graphics(self):
-        """Updates graphics each year."""
+        """
+        Updates graphics each year. Uses the methods for updating plots. Makes
+        a pause so that the plot are visible between updates.
+        """
         _, h, c = self._isl.total_num_animals_on_island()
         self._update_line_graph(num_herb=h, num_carn=c)
         h_map, c_map = self._isl.herbis_and_carnis_on_island()
@@ -505,23 +497,42 @@ class BioSim:
 
         Parameters
         ----------
-        population: List of dictionaries specifying population
+        population : list of dicts
+            List of dictionaries specifying population
         """
         self._isl.add_animals_on_island(new_animals=population)
 
     @property
     def year(self):
-        """Last year simulated."""
+        """
+        Makes it possible to get the last year simulated.
+
+        Returns
+        -------
+        int
+            Last year simulated.
+        """
         return self._year
 
     @property
     def num_animals(self):
-        """Total number of animals on island."""
+        """
+        Makes it possible to get the number of animals on the island.
+        Returns
+        --------
+        int
+            Total number of animals on island.
+        """
         return self._isl.total_num_animals_on_island()[0]
 
     @property
     def num_animals_per_species(self):
-        """Number of animals per species in island, as dictionary."""
+        """
+        Makes it possible to get the number of animals on the island by specie.
+        Returns
+        -------
+        dict
+            Number of animals per species in island, as dictionary."""
         herbis = self._isl.total_num_animals_on_island()[1]
         carnis = self._isl.total_num_animals_on_island()[2]
         return {'Herbivore': herbis, 'Carnivore': carnis}
@@ -530,8 +541,9 @@ class BioSim:
         """
         Create MPEG4 movie from visualization images saved.
 
-        .. :note:
-            Requires ffmpeg
+        Note
+        ----
+        Requires ffmpeg
 
         The movie is stored as img_base + movie_fmt
         """
