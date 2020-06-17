@@ -4,9 +4,10 @@
 Initial code taken from:
 https://github.com/heplesser/nmbu_inf200_june2020/blob/7240186b0a97b24a325fa68280be344e5e49a9da/
 examples/randvis_project/randvis/simulation.py#L234
-and the project descriptions.
+and the project descriptions. These are written by Hans Ekkehard Plesser.
 
-Done a lot of modifications.
+The initial specifications for ffmpeg are still unchanged. We've done a lot of
+modifications else.
 """
 
 from biosim.animals import Herbivores, Carnivores
@@ -49,14 +50,23 @@ class BioSim:
         """
         Parameters
         ----------
-        island_map: Multi-line string specifying island geography
-        ini_pop: List of dictionaries specifying initial population
-        seed: Integer used as random number seed
-        ymax_animals: Number specifying y-axis limit for graph showing animal numbers
-        cmax_animals: Dict specifying color-code limits for animal densities
-        hist_specs: Specifications for histograms, see below
-        img_base: String with beginning of file name for figure, including path
-        img_fmt: String with file type for figures, e.g. 'png'
+        island_map : str
+            Multi-line string specifying island geography
+        ini_pop : list
+            List of dictionaries specifying initial population
+        seed : int
+            Integer used as random number seed
+        ymax_animals : int or None
+            Number specifying y-axis limit for graph showing animal numbers
+        cmax_animals : dict or None
+            Dictionary specifying color-code limits for animal densities
+        hist_specs : dict (or None)
+            Specifications for histograms, see below
+        img_base : str
+            String with beginning of file name for figure, including path
+        img_fmt : str
+            String with file type for figures, e.g. 'png'
+
 
         If ymax_animals is None, the y-axis limit should be adjusted automtically.
 
@@ -204,6 +214,7 @@ class BioSim:
             years between visualization updates
         img_years : int
             years between visualizations saved to files (default: vis_years)
+
 
         Image files will be numbered consecutively
         """
@@ -488,6 +499,7 @@ class BioSim:
     def num_animals(self):
         """
         Makes it possible to get the number of animals on the island.
+
         Returns
         --------
         int
@@ -499,10 +511,12 @@ class BioSim:
     def num_animals_per_species(self):
         """
         Makes it possible to get the number of animals on the island by specie.
+
         Returns
         -------
         dict
-            Number of animals per species in island, as dictionary."""
+            Number of animals per species in island, as dictionary.
+        """
         herbis = self._isl.total_num_animals_on_island()[1]
         carnis = self._isl.total_num_animals_on_island()[2]
         return {'Herbivore': herbis, 'Carnivore': carnis}
@@ -514,6 +528,7 @@ class BioSim:
         Note
         ----
         Requires ffmpeg
+
 
         The movie is stored as img_base + movie_fmt
         """
