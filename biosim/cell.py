@@ -30,8 +30,8 @@ class SingleCell:
 
     def add_animals_to_cell(self, animals):
         """
-        Adding animals to the cell and sorting them into lists of herbivores
-        and carnivores, by appending the correct animal-class to the lists.
+        Receives list of animals and sorts them into lists of herbivores and
+        carnivores by appending to self.herbi_list and self.carni_list.
 
         Parameters
         ----------
@@ -43,8 +43,6 @@ class SingleCell:
                 self.herbi_list.append(Herbivores(age=animal['age'], weight=animal['weight']))
             if animal['species'] == 'Carnivore':
                 self.carni_list.append(Carnivores(age=animal['age'], weight=animal['weight']))
-
-        self.animals_list = self.herbi_list + self.carni_list
 
     @classmethod
     def set_params(cls, new_params):
@@ -304,8 +302,8 @@ class SingleCell:
 
     def death(self):
         """
-        Decides which of the animals that dies and updates the animal_list
-        accordingly.
+        Decides which of the animals that dies and updates the herbi_list and
+        carni_list accordingly.
         """
         survived_herbis = []
         for herbi in self.herbi_list:
