@@ -51,7 +51,8 @@ class TestSingleCell:
         animals.
         """
         cell = SingleCell()
-        assert cell.animals_list == []
+        assert cell.herbi_list == []
+        assert cell.carni_list == []
 
     def test_add_animals_after_migration(self, initial_two_herbivore_cell):
         """
