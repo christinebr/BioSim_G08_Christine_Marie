@@ -25,9 +25,11 @@ they follow the descriptions: only consisting of the prescribed four types of
 landscapes, and all outer cell should be water cells. This has to be specified
 when initialising.
 
+Contents
+-----------
+
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
 
    animal
    cell
@@ -36,7 +38,7 @@ when initialising.
 
 
 Indices and tables
-==================
+---------------------
 
 * :ref:`genindex`
 * :ref:`modindex`
