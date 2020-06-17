@@ -61,4 +61,4 @@ if __name__ == '__main__':
 
     sim.simulate(num_years=200, vis_years=1, img_years=2000)
 
-    input('Press ENTER, and the plot will disappear.')
+    input('Press ENTER to finish. Then the plot will disappear.')

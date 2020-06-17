@@ -68,4 +68,4 @@ if __name__ == '__main__':
 
     sim.make_movie()
 
-    input('Press ENTER, and the plot will disappear.')
+    input('Press ENTER to finish. Then the plot will disappear.')

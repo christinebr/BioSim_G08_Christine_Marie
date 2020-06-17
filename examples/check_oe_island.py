@@ -21,6 +21,7 @@ https://github.com/heplesser/nmbu_inf200_june2020/blob/master/project_descriptio
 if __name__ == '__main__':
     plt.ion()
 
+    # The island
     geogr = """\
                WWWWWWWWWWWWWWWWWWWWW
                WWWWWWWWWWWWWWWWWLWWW
@@ -43,6 +44,7 @@ if __name__ == '__main__':
                WWWWWWWWWWWWWWWWWWWWW"""
     geogr = textwrap.dedent(geogr)
 
+    # Adding animals almost in the middle of the island.
     ini_herbs = [{'loc': (10, 10),
                   'pop': [{'species': 'Herbivore',
                            'age': 5,
@@ -61,15 +63,11 @@ if __name__ == '__main__':
                              'weight': {'max': 60, 'delta': 2}},
                  )
 
-    sim.set_animal_parameters('Herbivore', {'zeta': 3.2, 'xi': 1.8})
-    sim.set_animal_parameters('Carnivore', {'a_half': 70, 'phi_age': 0.5,
-                                            'omega': 0.3, 'F': 65,
-                                            'DeltaPhiMax': 9.})
-    sim.set_landscape_parameters('L', {'f_max': 700})
-
+    # First simulate 50 years without carnivores
     sim.simulate(num_years=50, img_years=2000)
 
+    # Add carnivores and run for 150 years more
     sim.add_population(population=ini_carns)
     sim.simulate(num_years=150, vis_years=1, img_years=2000)
 
-    input('Press ENTER, and the plot will disappear.')
+    input('Press ENTER to finish. Then the plot will disappear.')
