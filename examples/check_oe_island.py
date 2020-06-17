@@ -6,14 +6,13 @@ import matplotlib.pyplot as plt
 from biosim.simulation import BioSim
 
 """
-Compatibility check for BioSim simulations.
+Test how things go with an island with the form of an ø.
 
-This script shall function with biosim packages written for
-the INF200 project June 2020.
+
 """
 
-__author__ = "Hans Ekkehard Plesser, NMBU"
-__email__ = "hans.ekkehard.plesser@nmbu.no"
+__author__ = ""
+__email__ = ""
 
 
 if __name__ == '__main__':
@@ -21,17 +20,23 @@ if __name__ == '__main__':
 
     geogr = """\
                WWWWWWWWWWWWWWWWWWWWW
-               WWWWWWWWHWWWWLLLLLLLW
-               WHHHHHLLLLWWLLLLLLLWW
-               WHHHHHHHHHWWLLLLLLWWW
-               WHHHHHLLLLLLLLLLLLWWW
-               WHHHHHLLLDDLLLHLLLWWW
-               WHHLLLLLDDDLLLHHHHWWW
-               WWHHHHLLLDDLLLHWWWWWW
-               WHHHLLLLLDDLLLLLLLWWW
-               WHHHHLLLLDDLLLLWWWWWW
-               WWHHHHLLLLLLLLWWWWWWW
-               WWWHHHHLLLLLLLWWWWWWW
+               WWWWWWWWWWWWWWWWWLWWW
+               WWWWWWWWHHHHHWWWLLLWW
+               WWWWWWHHHHHHHHHLLLLLW
+               WWWWWHHHHHHHHHHHLLLWW
+               WWWWHHHHWWWWWHHHHLWWW
+               WWWHHHHWWWWWLLHHHHWWW
+               WWHHHHWWWWLLLLLWHHHWW
+               WWHHHWWWWLLLLLWWHHHWW
+               WWHHHWWWLLLLLWWWHHHWW
+               WWWHHHLLLLLWWWWWHHHWW
+               WWWHHHLLLLWWWWWHHHWWW
+               WWWWHHHLLWWWWWHHHHWWW
+               WWWLHHHHWWWWHHHHHWWWW
+               WWLLLHHHHHHHHHHHWWWWW
+               WLLLLLHHHHHHHHHWWWWWW
+               WWLLLWWWHHHHHWWWWWWWW
+               WWWLWWWWWWWWWWWWWWWWW
                WWWWWWWWWWWWWWWWWWWWW"""
     geogr = textwrap.dedent(geogr)
 
@@ -59,10 +64,10 @@ if __name__ == '__main__':
                                             'DeltaPhiMax': 9.})
     sim.set_landscape_parameters('L', {'f_max': 700})
 
-    sim.simulate(num_years=100, vis_years=1, img_years=2000)
+    sim.simulate(num_years=50, vis_years=1, img_years=2000)
 
     sim.add_population(population=ini_carns)
-    sim.simulate(num_years=100, vis_years=1, img_years=2000)
+    sim.simulate(num_years=150, vis_years=1, img_years=2000)
 
     # plt.savefig('check_sim.pdf')
 

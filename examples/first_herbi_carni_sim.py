@@ -25,7 +25,7 @@ if __name__ == "__main__":
                           for _ in range(20)]}]
 
     low = Lowland(ini_herbs[0]['pop'])
-    low.add_new_animals_to_cell(ini_carns[0]['pop'])
+    low.add_animals_to_cell(ini_carns[0]['pop'])
     herbi_count = []
     carni_count = []
     years = list(range(300))

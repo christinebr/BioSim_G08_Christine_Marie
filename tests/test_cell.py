@@ -1,15 +1,24 @@
 # -*- coding: utf-8 -*-
 
-from biosim.cell import SingleCell, Lowland, Desert
+from biosim.cell import SingleCell, Lowland, Desert, Water
 from biosim.animals import Herbivores, Carnivores
 import pytest
-import random
+from scipy.stats import binom_test
+
+alpha = 0.01  # Significant level for statistical tests
 
 
 class TestSingleCell:
 
     @pytest.fixture()
     def initial_cell_class(self):
+        """
+        Makes a single cell with animals to use as test-cell.
+
+        Returns
+        -------
+        None
+        """
         animals = [{'species': 'Herbivore', 'age': 10, 'weight': 40},
                    {'species': 'Herbivore', 'age': 40, 'weight': 20},
                    {'species': 'Herbivore', 'age': 2, 'weight': 8},
@@ -18,17 +27,33 @@ class TestSingleCell:
                    {'species': 'Carnivore', 'age': 37, 'weight': 3.5}
                    ]
         self.cell = SingleCell(animals_list=animals)
-        return self.cell
+
+    @pytest.fixture()
+    def initial_statistic_cell(self):
+        """
+        Makes a single cell with animals to use as test-cell for statistic tests.
+
+        Returns
+        -------
+        None
+        """
+        self.herbivores = [{'species': 'Herbivore', 'age': 5, 'weight': 20}
+                           for _ in range(100)]
+        self.stat_cell = SingleCell(animals_list=self.herbivores)
 
     def test_empty_animal_list(self):
+        """
+        Check that it's possible to call SingleCell without supplying any
+        animals (i.e. with animals_list=None).
+        """
         cell = SingleCell(animals_list=None)
         assert cell.animals_list == []
 
     def test_that_all_animals_age(self, initial_cell_class):
         """
         Tests that method age makes all animals get one year older.
-        The sum of the age in the test-sett increases with a number equal to the number of
-        animals every year.
+        The sum of the age in the test-sett increases with a number equal to
+        the number of animals every year.
         """
         sum_old = 0
         for animal in self.cell.herbi_list + self.cell.carni_list:
@@ -44,9 +69,11 @@ class TestSingleCell:
 
     def test_that_give_birth(self, initial_cell_class, mocker):
         """
-        Tests that the birth-method makes more animals, both among herbivores and carnivores.
+        Tests that the birth-method makes more animals, both among herbivores
+        and carnivores.
         """
         mocker.patch('random.random', return_value=0)
+        # Making sure all animals who are able to give birth does so.
         herbis_before = len(self.cell.herbi_list)
         carnis_before = len(self.cell.carni_list)
         self.cell.birth()
@@ -58,8 +85,12 @@ class TestSingleCell:
     def test_that_newborns_weights_something(self, initial_cell_class, mocker):
         """
         Tests that the birth method assigns a weight to the newborn animal.
+        Strictly speaking, the test checks all animals, but if no animal has
+        weight zero, there are no newborns with this weight either. And we've
+        already established that the birth-method makes new animals.
         """
         mocker.patch('random.random', return_value=0)
+        # Makes sure there are newborns
         self.cell.birth()
         nonexsistent_newborns = 0
         for animal in self.cell.herbi_list + self.cell.carni_list:
@@ -70,29 +101,29 @@ class TestSingleCell:
 
     def test_that_mother_looses_weight(self, initial_cell_class, mocker):
         """
-        Tests that the birth method makes the mother loose weight.
+        Tests that the birth method makes the mother loose the correct amount
+        of weight.
         """
+        # Makes sure that there will be newborns
         mocker.patch('random.random', return_value=0)
-        mocker.patch('random.gauss', return_value=7)
-        # Starts with finding what the weight of the mother should be after giving birth
-        weight_limit_herbi = 3.5 * (8 + 1.5)
-        weight_newborn = random.gauss(7, 1)
-        weight_limit_carni = 3.5 * (6 + 1.)
+        weight_newborn = 7
         correct_weights = []
         for herbi in self.cell.herbi_list:
-            if herbi.weight > weight_limit_herbi:
+            if herbi.weight > 3.5 * (8 + 1.5):  # Tests against the weight limit for herbivores
                 correct_weights.append(herbi.weight - 1.2 * weight_newborn)
             else:
                 correct_weights.append(herbi.weight)
 
         for carni in self.cell.carni_list:
-            if carni.weight > weight_limit_carni:
+            if carni.weight > 3.5 * (6 + 1.):  # Tests against the weight limit for carnivores
                 correct_weights.append(carni.weight - 1.1 * weight_newborn)
             else:
                 correct_weights.append(carni.weight)
 
         # Then find the old weights and the new weights
         old_list_of_animals = self.cell.herbi_list + self.cell.carni_list
+        mocker.patch('random.gauss', return_value=weight_newborn)
+        # Makes sure newborns have the right weight.
         self.cell.birth()
         new_list_of_animals = self.cell.herbi_list + self.cell.carni_list
         new_list_parents = []
@@ -103,49 +134,21 @@ class TestSingleCell:
         old_weights = []
         new_weights = []
         for old_animal, new_animal in zip(old_list_of_animals, new_list_parents):
+            # Using zip like this makes sure we don't count any newborns.
             old_weights.append(old_animal.weight)
             new_weights.append(new_animal.weight)
 
         assert pytest.approx(new_weights) == correct_weights
 
-        # mocker.patch('random.random', return_value=0)
-        # mocker.patch('random.gauss', return_value=7)
-        # old_list_of_animals = deepcopy(self.cell.animals_list)
-        # self.cell.birth()
-        # new_list_of_animals = self.cell.animals_list
-        # old_weights = []
-        # new_weights = []
-        # correct_weights = []
-        # for old_animal, new_animal in zip(old_list_of_animals, new_list_of_animals):
-        #     # zip will use the shortest list, in this case old_list, to decide the length of the
-        #     # zipped list. This way the newborns will not count.
-        #     old_weights.append(old_animal['weight'])
-        #     new_weights.append(new_animal['weight'])
-        #
-        #     if old_animal['species'] == 'Herbivore':
-        #         weight_of_newborn = random.gauss(8, 1.5)
-        #         weight_limit = 3.5 * (8 + 1.5)
-        #         if old_animal['weight'] > weight_limit:
-        #             correct_weights.append(old_animal['weight'] - 1.2 * weight_of_newborn)
-        #         else:
-        #             correct_weights.append(old_animal['weight'])
-        #     else:
-        #         weight_of_newborn_carn = random.gauss(6, 1.0)
-        #         weight_limit = 3.5 * (6 + 1.0)
-        #         if old_animal['weight'] > weight_limit:
-        #             correct_weights.append(old_animal['weight'] - 1.1 * weight_of_newborn_carn)
-        #         else:
-        #             correct_weights.append(old_animal['weight'])
-        #
-        # assert new_weights == correct_weights
-
     def test_no_zombies(self, initial_cell_class, mocker):
         """
-        Tests that dead animals does not continue to exist (no zombies welcome on this island).
+        Tests that dead animals does not continue to exist (no zombies welcome
+        on this island).
 
-        The first test checks that an animal of weight zero disappears. Also checks that the two
-            animals that are supposed to survive actually does so.
-        The second test checks that when all animals dies, all of them disappears.
+        The first test checks that an animal of weight zero disappears. And
+        that that the animals that are supposed to survive actually does so.
+        The second test checks that when all animals dies, all of them
+        disappears.
         """
         mocker.patch('random.random', return_value=1)
         old_list_of_animals = self.cell.herbi_list + self.cell.carni_list
@@ -160,10 +163,10 @@ class TestSingleCell:
         list_of_animals = self.cell.herbi_list + self.cell.carni_list
         assert len(list_of_animals) == 0
 
-    def test_that_newborn_same_speci_as_parent(self,initial_cell_class, mocker):
+    def test_that_newborn_same_speci_as_parent(self, initial_cell_class, mocker):
         """
-        Tests that herbivores only gives birth to herbivores and carnivores only gives
-        birth to carnivores.
+        Tests that herbivores only gives birth to herbivores and carnivores
+        only gives birth to carnivores.
         """
         mocker.patch('random.random', return_value=0)
         mocker.patch('random.gauss', return_value=7)
@@ -175,26 +178,30 @@ class TestSingleCell:
         for carni in self.cell.carni_list:
             cars.append(isinstance(carni, Carnivores))
 
-        assert herbis == [True]*len(self.cell.herbi_list) and cars == [True]*len(self.cell.carni_list)
+        assert herbis == [True]*len(self.cell.herbi_list) and \
+            cars == [True]*len(self.cell.carni_list)
 
     def test_possible_no_animals(self):
         """
-        Checking that there wil be no problems if no animals are given into the class.
+        Checking that there wil be no problems if no animals are given into
+        the class.
         """
         animals = []
-        cellt = SingleCell(animals_list=animals)
-        assert len(cellt.herbi_list + cellt.carni_list) == 0
+        empty_cell = SingleCell(animals_list=animals)
+        assert len(empty_cell.herbi_list + empty_cell.carni_list) == 0
 
     def test_sorting_correct(self, initial_cell_class):
         """
-        Checks that the sorting of animals_list gives lists with the correct numbers of
-        herbivores and carnivores.
+        Checks that the sorting of animals_list gives lists with the correct
+        numbers of herbivores and carnivores.
         """
-        assert len(self.cell.herbi_list + self.cell.carni_list) == 6
+        assert len(self.cell.herbi_list) == 3
+        assert len(self.cell.carni_list) == 3
 
     def test_sorting_equal_fitness(self):
         """
-        Check that the sorting method for fitness can handle animals with equal fitness
+        Check that the sorting method for fitness can handle animals with
+        equal fitness.
         """
         animals = [{'species': 'Herbivore', 'age': 10, 'weight': 40},
                    {'species': 'Herbivore', 'age': 10, 'weight': 40},
@@ -207,6 +214,9 @@ class TestSingleCell:
         assert cellt.carni_list == sorted_carni
 
     def test_weight_loss_end_of_year(self, initial_cell_class):
+        """
+        Tests that all the method that makes animals loos weight at the end of
+        the year does work."""
         sum_old = 0
         for animal in self.cell.herbi_list + self.cell.carni_list:
             sum_old += animal.weight
@@ -242,6 +252,11 @@ class TestSingleCell:
         assert num_animals_before == num_animals_after
 
     def test_animals_migrate_north(self, initial_cell_class, mocker):
+        """
+        Makes all animals migrate northward, then check that all animals is in
+        the list for animals who wants to move to the north, and that no
+        animals has magically appeared in any of the other lists.
+        """
         num_animals_before = len(self.cell.herbi_list+self.cell.carni_list)
         mocker.patch('random.random', return_value=0)  # Makes sure all animals migrate
         mocker.patch('random.choice', return_value='North')
@@ -252,6 +267,11 @@ class TestSingleCell:
         assert len(west) == 0
 
     def test_animals_migrate_east(self, initial_cell_class, mocker):
+        """
+        Makes all animals migrate eastward, then check that all animals is in
+        the list for animals who wants to move to the east, and that no
+        animals has magically appeared in any of the other lists.
+        """
         num_animals_before = len(self.cell.herbi_list+self.cell.carni_list)
         mocker.patch('random.random', return_value=0)  # Makes sure all animals migrate
         mocker.patch('random.choice', return_value='East')
@@ -262,6 +282,11 @@ class TestSingleCell:
         assert len(west) == 0
 
     def test_animals_migrate_south(self, initial_cell_class, mocker):
+        """
+        Makes all animals migrate southward, then check that all animals is in
+        the list for animals who wants to move to the south, and that no
+        animals has magically appeared in any of the other lists.
+        """
         num_animals_before = len(self.cell.herbi_list+self.cell.carni_list)
         mocker.patch('random.random', return_value=0)  # Makes sure all animals migrate
         mocker.patch('random.choice', return_value='South')
@@ -272,6 +297,11 @@ class TestSingleCell:
         assert len(west) == 0
 
     def test_animals_migrate_west(self, initial_cell_class, mocker):
+        """
+        Makes all animals migrate westward, then check that all animals is in
+        the list for animals who wants to move to the west, and that no
+        animals has magically appeared in any of the other lists.
+        """
         num_animals_before = len(self.cell.herbi_list+self.cell.carni_list)
         mocker.patch('random.random', return_value=0)  # Makes sure all animals migrate
         mocker.patch('random.choice', return_value='West')
@@ -281,11 +311,44 @@ class TestSingleCell:
         assert len(south) == 0
         assert len(west) == num_animals_before
 
+    def test_stat_probability_of_migration(self, initial_statistic_cell):
+        """
+        Statistically tests if migration distributes the animals as excepted.
+        The number of runs are the number of animals in the initial statistic cell.
+        """
+        number_of_runs = len(self.herbivores)
+        prob_migration = self.stat_cell.herbi_list[0].probability_of_migration()
+        # The probability is the same for all animals, because they does not
+        # age, nor get hungry.
+        num_migrate = len(self.stat_cell.animals_stay_or_move())
+        assert binom_test(num_migrate, number_of_runs, prob_migration) > alpha
+
+    def test_stat_probability_of_death(self, initial_statistic_cell):
+        """
+        Statistically tests if animals dies with the expected probability.
+        The number of runs are the number of animals in the initial statistic
+        cell.
+        """
+        number_of_runs = len(self.herbivores)
+        prob_death = self.stat_cell.herbi_list[0].probability_death()
+        # The probability is the same for all animals, because they does not
+        # age, nor get hungry.
+        self.stat_cell.death()
+        num_dead = number_of_runs - len(self.stat_cell.herbi_list)
+        assert binom_test(num_dead, number_of_runs, prob_death) > alpha
+
 
 class TestLowland:
 
     @pytest.fixture()
     def initial_lowland(self):
+        """
+        Makes a single cell with animals to use as test-cell for lowland-class.
+
+        Returns
+        -------
+        cell: [class instance] A lowland cell with animals
+        """
         animals = [{'species': 'Herbivore', 'age': 10, 'weight': 15},
                    {'species': 'Herbivore', 'age': 40, 'weight': 20},
                    {'species': 'Herbivore', 'age': 2, 'weight': 8},
@@ -309,7 +372,7 @@ class TestLowland:
 
     def test_if_cell_collect_fitness_for_all_animals(self, initial_lowland):
         """
-        Test if cell can collect fitness for all animals and return them
+        Tests if cell can collect fitness for all animals and return them
         in a list.
         """
         num_animals_in_cell = len(self.low.herbi_list + self.low.carni_list)
@@ -323,7 +386,7 @@ class TestLowland:
 
     def test_if_cell_collect_age_for_all_animals(self, initial_lowland):
         """
-        Test if cell can collect age for all animals and return them in
+        Tests if cell can collect age for all animals and return them in
         a list.
         """
         num_animals_in_cell = len(self.low.herbi_list + self.low.carni_list)
@@ -347,8 +410,8 @@ class TestLowland:
 
     def test_herbivores_eaten(self, initial_lowland, mocker):
         """
-        Tests that carnivores eat herbivores, check that the number of herbivores are lower
-        after eating.
+        Tests that carnivores eat herbivores by check that the number of
+        herbivores are lower after eating.
         """
         mocker.patch('random.random', return_value=0)
         herbi_before = len(self.low.herbi_list)
@@ -374,6 +437,7 @@ class TestLowland:
         av_carni_before = sum_weight_carni_before/len(self.low.carni_list)
 
         mocker.patch('random.random', return_value=0.03)
+        # Makes sure some herbivores, but not all, are eaten.
         self.low.animals_in_cell_eat()
         sum_weight_herbi_after = 0
         for herbi in self.low.herbi_list:
@@ -388,8 +452,12 @@ class TestLowland:
         assert av_carni_before < av_carni_after
 
     def test_set_params_raises_keyerror(self, initial_lowland):
+        """
+        Check that the method set_params raises a keyerror when given an
+        illegal key.
+        """
         with pytest.raises(KeyError):
-            self.low.set_params({'g_max':200.0})
+            self.low.set_params({'g_max': 200.0})
 
     def test_set_params_cell(self, initial_lowland):
         """Tests that it is possible to update parameters for cell."""
@@ -403,6 +471,13 @@ class TestDesert:
 
     @pytest.fixture()
     def initial_desert(self):
+        """
+        Makes a single cell with animals to use as test-cell for desert-class.
+
+        Returns
+        -------
+        cell: [class instance] A desert cell with animals
+        """
         animals = [{'species': 'Herbivore', 'age': 10, 'weight': 15},
                    {'species': 'Herbivore', 'age': 40, 'weight': 20},
                    {'species': 'Herbivore', 'age': 2, 'weight': 8},
@@ -420,7 +495,7 @@ class TestDesert:
         for herbi in self.desert.herbi_list:
             sum_weight_before += herbi.weight
 
-        mocker.patch('random.random', return_value=1) #Makes sure no herbis are killed
+        mocker.patch('random.random', return_value=1)  # Makes sure no herbis are killed
         self.desert.animals_in_cell_eat()
         sum_weight_after = 0
         for herbi in self.desert.herbi_list:
@@ -429,14 +504,25 @@ class TestDesert:
 
     def test_only_carnivores_kill(self, initial_desert, mocker):
         """
-        Test that only carnivores kill and eat other animals. Does so by checking that
-        the number of carnivores stay constant, while the number of herbivores decreases.
+        Test that only carnivores kill and eat other animals. Does so by
+        checking that the number of carnivores stay constant, while the number
+        of herbivores decreases.
         """
         herbi_before = len(self.desert.herbi_list)
         carni_before = len(self.desert.carni_list)
-        mocker.patch('random.random', return_value=0.01) #Makes sure some herbis are killed
+        mocker.patch('random.random', return_value=0.01)  # Makes sure some herbis are killed
         self.desert.animals_in_cell_eat()
         herbi_after = len(self.desert.herbi_list)
         carni_after = len(self.desert.carni_list)
         assert carni_before == carni_after
         assert herbi_before > herbi_after
+
+
+class TestWater:
+
+    def test_make_water_instance(self):
+        """
+        Makes sure it is possible to make a water-instance.
+        """
+        w = Water(animals_list=None)
+        assert isinstance(w, Water)

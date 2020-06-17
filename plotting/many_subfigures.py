@@ -4,17 +4,28 @@ Example for creating axes, including empty axes with text.
 
 from biosim.island import TheIsland
 import matplotlib.pyplot as plt
+import numpy as np
 from matplotlib.gridspec import GridSpec
 
+# fig = plt.figure()
+# grid = fig.add_gridspec(ncols=3, nrows=3, wspace=0.2, hspace=0.4)
+# ax1 = fig.add_subplot(grid[0, 0])
+# ax3 = fig.add_subplot(grid[0, 2])
+# ax4 = fig.add_subplot(grid[1, 0], anchor='E')
+# ax6 = fig.add_subplot(grid[1, 2], anchor='W')
+# ax7 = fig.add_subplot(grid[2, 0])
+# ax8 = fig.add_subplot(grid[2, 1])
+# ax9 = fig.add_subplot(grid[2, 2])
+# fig.show()
+
 fig = plt.figure()
-grid = fig.add_gridspec(ncols=3, nrows=3, wspace=0.4, hspace=0.3)
-ax1 = fig.add_subplot(grid[0, 0])
-ax3 = fig.add_subplot(grid[0, 2])
-ax4 = fig.add_subplot(grid[1, 0])
-ax6 = fig.add_subplot(grid[1, 2])
-ax7 = fig.add_subplot(grid[2, 0])
-ax8 = fig.add_subplot(grid[2, 1])
-ax9 = fig.add_subplot(grid[2, 2])
+ax1 = fig.add_subplot(3, 3, 1)
+ax3 = fig.add_subplot(3, 3, 3)
+ax4 = fig.add_subplot(3, 3, 4)
+ax6 = fig.add_subplot(3, 3, 6)
+ax7 = fig.add_subplot(3, 3, 7)
+ax8 = fig.add_subplot(3, 3, 8)
+ax9 = fig.add_subplot(3, 3, 9)
 fig.show()
 
 # # Making the island, with some animals
@@ -31,7 +42,7 @@ geogr_island = """\
            WDDLW
            WWWWW"""
 
-# New and bigger island
+# # New and bigger island
 # geogr = """WWWWWWWWW
 # WWLHLLDDW
 # WDDLDHHLW
@@ -115,8 +126,8 @@ ax3.plot(years, carni_count, label='Carnivores')
 #ax3.legend()
 
 ax3.set_title('Animals count', fontsize=font)
-# list_xticks = [0, int(years/4), int(years/2), int(years*3/4), years]
-list_xticks = [0, 25, 50, 75, 100]
+list_xticks = [0, int(num_of_years/4), int(num_of_years/2), int(num_of_years*3/4), num_of_years]
+#list_xticks = [0, 25, 50, 75, 100]
 ax3.set_xticks(list_xticks)
 ax3.set_xticklabels(list_xticks, fontsize=font_axes)
 # ax3.set_xlabel('Years')
@@ -128,25 +139,25 @@ carnis_lists = []
 for row in range(island.row):
     herbis_row = []
     carnis_row = []
-    for col in range(island.colon):
+    for col in range(island.col):
         herbis, carnis = island.give_animals_in_cell(row+1, col+1)
         herbis_row.append(len(herbis))
         carnis_row.append(len(carnis))
     herbis_lists.append(herbis_row)
     carnis_lists.append(carnis_row)
 
-ax4.imshow(herbis_lists, cmap='viridis')
+im = ax4.imshow(herbis_lists, cmap='viridis')
 ax4.set_title('Herbivore distribution', fontsize=font)
-# ax4.colorbar(cax=ax4)
+fig.colorbar(im, ax=ax4, orientation='vertical')
 ax4.set_xticks(range(len(geogr_rgb[0])))
 ax4.set_xticklabels(range(1, 1 + len(geogr_rgb[0])), fontsize=font_axes)
 ax4.set_yticks(range(len(geogr_rgb)))
 ax4.set_yticklabels(range(1, 1 + len(geogr_rgb)), fontsize=font_axes)
 
 ### ax6
-ax6.imshow(carnis_lists, cmap='viridis')
+im = ax6.imshow(carnis_lists, cmap='viridis')
 ax6.set_title('Carnivore distribution', fontsize=font)
-# ax4.colorbar(cax=ax4)
+fig.colorbar(im, ax=ax6, orientation='vertical')
 ax6.set_xticks(range(len(geogr_rgb[0])))
 ax6.set_xticklabels(range(1, 1 + len(geogr_rgb[0])), fontsize=font_axes)
 ax6.set_yticks(range(len(geogr_rgb)))
@@ -161,8 +172,9 @@ ax7.hist(herbi_fitness, bins=20, range=(0, 1), histtype='stepfilled', fill=False
 ax7.hist(carni_fitness, bins=20, range=(0, 1), histtype='stepfilled', fill=False, edgecolor='red')
 
 ax7.set_title('Fitness', fontsize=font)
-ax7.set_xticks([0, 0.25, 0.5, 0.75, 1])
-ax7.set_xticklabels([0, 0.25, 0.5, 0.75, 1], fontsize=font_axes)
+xticks = np.linspace(0, 1, 5)
+ax7.set_xticks(xticks)
+ax7.set_xticklabels(xticks, fontsize=font_axes)
 # ax7.set_yticklabels(fontsize=font_axes)
 
 #### ax8

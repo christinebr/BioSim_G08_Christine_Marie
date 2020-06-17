@@ -30,7 +30,7 @@ if __name__ == "__main__":
     years = list(range(300))
     for year in years:
         if year == 50:
-            low.add_new_animals_to_cell(ini_carns[0]['pop'])
+            low.add_animals_to_cell(ini_carns[0]['pop'])
         herbi_count.append(len(low.herbi_list))
         carni_count.append(len(low.carni_list))
         low.animals_in_cell_eat()

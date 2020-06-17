@@ -2,16 +2,26 @@
 from biosim.animals import Herbivores, Carnivores
 import random
 from itertools import zip_longest
-from operator import itemgetter  # attrgetter
+from operator import itemgetter
 
 
 class SingleCell:
     """
-    Keeps control of the amount of animals of both species and fodder, and landscape-type.
+    Keeps control of the number of animals of both species,the amount of
+    fodder, and landscape-type.
     """
-    _params = None  # = {}, or just an empty dictionary?
+    _params = None
 
     def __init__(self, animals_list=None):
+        """
+        Parameters
+        ----------
+        animals_list: [list] List of animals, default-value is None
+
+        Returns
+        -------
+        None
+        """
         if animals_list:
             self.animals_list = animals_list
         else:
@@ -19,13 +29,22 @@ class SingleCell:
 
         self.carni_list = []
         self.herbi_list = []
-        self.sort_animals_by_species()
+        self.add_animals_to_cell(self.animals_list)
 
-    def sort_animals_by_species(self):
+    def add_animals_to_cell(self, animals):
         """
-        Sorting the animals in lists of herbivores and carnivores.
+        Adding animals to the cell and sorting them into lists of herbivores
+        and carnivores, by appending the correct animal-class to the lists.
+
+        Parameters
+        ----------
+        animals: [list] List of animals that shall be added to the cell.
+
+        Returns
+        -------
+        None
         """
-        for animal in self.animals_list:
+        for animal in animals:
             if animal['species'] == 'Herbivore':
                 self.herbi_list.append(Herbivores(age=animal['age'], weight=animal['weight']))
             if animal['species'] == 'Carnivore':
@@ -33,32 +52,26 @@ class SingleCell:
 
         self.animals_list = self.herbi_list + self.carni_list
 
-    def add_new_animals_to_cell(self, new_animals):
-        # if new_animals:
-        #     animals = new_animals
-        # else:
-        #     animals = self.animals_list
-
-        for animal in new_animals:
-            if animal['species'] == 'Herbivore':
-                self.herbi_list.append(Herbivores(age=animal['age'], weight=animal['weight']))
-            if animal['species'] == 'Carnivore':
-                self.carni_list.append(Carnivores(age=animal['age'], weight=animal['weight']))
-
-        # self.animals_list = self.herbi_list + self.carni_list
-
     @classmethod
     def set_params(cls, new_params):
         """
         Set parameters for class.
-        Raises a KeyError if given an invalid parameter name, invalid key used
-        in the dictionary.
+        Raises a KeyError if given an invalid parameter name, i.e. a key that's
+        not present in the dictionary.
         Raises a ValueError if given invalid value for key.
 
         Parameters
         ----------
         new_params: [dict]
             Dictionary with new parameter values
+
+        Returns
+        -------
+        None
+
+        Raises
+        ------
+        KeyError if given an invalid parameter name.
         """
         for key in new_params:
             if key not in cls._params:
@@ -68,27 +81,36 @@ class SingleCell:
 
     @classmethod
     def get_params(cls):
+        """
+        Makes it possible to get the parameter values
+
+        Returns
+        -------
+        _params: [dict] Dictionary of parameter values.
+        """
         return cls._params
 
     def sort_animals_after_fitness(self):
         """
         Sorting the animals after fitness
-            - herbivores are sorted from lowest to highest fitness
-            - carnivores are sorted from highest to lowest fitness
+            - herbivores are sorted from lowest to highest fitness.
+            - carnivores are sorted from highest to lowest fitness.
+
+        Returns
+        -------
+        sorted_herbis: [list of class-instances]
+            List of herbivores sorted from lowest to highest fitness.
+        sorted_carnis: [list of class-instances]
+            List of herbivores sorted from highest to lowest fitness.
         """
-        # Sorting the herbivores after fitness
-        # fining the fitness of each herbi and placing them in a list
+        # Sorting the herbivores from low to high fitness
         fitness_herbi = [herbi.fitness() for herbi in self.herbi_list]
-        # the first element is the herbi with lowest fitness
         zip_fitness_herbis = zip(fitness_herbi, self.herbi_list)
         sorted_herbi_after_fitness = sorted(zip_fitness_herbis, key=itemgetter(0))
         sorted_herbis = [herb for _, herb in sorted_herbi_after_fitness]
 
-        # Sorting the carnivores after fitness
-        # fining the fitness of each herbi and placing them in a list
+        # Sorting the carnivores from high to low fitness
         fitness_carni = [carni.fitness() for carni in self.carni_list]
-        # sorting the self.carni_list after the fitness_carni
-        # the first element is the carni with the highest fitness
         zip_fitness_carnis = zip(fitness_carni, self.carni_list)
         sorted_carni_after_fitness = sorted(zip_fitness_carnis, key=itemgetter(0), reverse=True)
         sorted_carnis = [carn for _, carn in sorted_carni_after_fitness]
@@ -97,11 +119,34 @@ class SingleCell:
 
     def animals_in_cell_eat(self):
         """
-        shuffles the animals, loops through all the animals in self.animal_list
-        call the function animal.update_weight()
+        Animals in the cell eats, first herbivores and then carnivores.
+
+        Returns
+        -------
+        None
         """
-        # Herbivore eats
-        random.shuffle(self.herbi_list)  # Shuffles the herbivore, they eat in random order
+        # If there are herbivores in the cell, they eat
+        if self.herbi_list:
+            self.herbivores_eats()
+
+        # If there are herbivores and carnivores in the cell, the carnivores
+        # eats by trying to kill herbivores
+        if self.herbi_list and self.carni_list:
+            self.carnivores_eats()
+
+    def herbivores_eats(self):
+        """
+        The herbivores eat in random order and each herbivore wants to eat a
+        fixed amount of fodder. The herbivores eats as long as there is
+        available fodder in the cell. Each time a herbivore eats, the weight
+        of that herbivore is updated.
+
+        Returns
+        -------
+        None
+        """
+        # Shuffles the herbivores, they eat in random order
+        random.shuffle(self.herbi_list)
         fodder_in_cell = self._params['f_max']
         for herbi in self.herbi_list:
             fodder = herbi.get_params()['F']
@@ -112,35 +157,59 @@ class SingleCell:
                 herbi.update_weight(amount_fodder_eaten=fodder_in_cell)
                 fodder_in_cell = 0
 
-        # Carnivores eats
+    def carnivores_eats(self):
+        """
+        The carnivores eats by killing herbivores. The carnivores and
+        herbivores are sorted after fitness. The fittest carnivore eats first
+        and each carnivore tries to eat the herbivore with lowest fitness. One
+        carnivore eats at a time and it stops to eat when the desired amount of
+        fodder is reached. Each time a carnivore eats, the weight of that
+        carnivore is updated.
+
+        The surviving herbivores are stored in a list which in the end is used
+        to update the herbivore list.
+
+        Returns
+        -------
+        None
+        """
         sorted_herbi, sorted_carni = self.sort_animals_after_fitness()
         for carni in sorted_carni:  # first carni has the highest fitness
+            appetite = carni.get_params()['F']
             not_killed_herbis = []
             for herbi in sorted_herbi:  # first herbi has the lowest fitness
                 prob_kill = carni.probability_of_killing_herbivore(fitness_herbi=herbi.fitness())
-                if random.random() < prob_kill:  # carni kills herbi
+                if random.random() < prob_kill and appetite > 0:  # carni kills herbi
                     carni.update_weight_after_kill(weight_herbi=herbi.weight)
+                    appetite -= herbi.weight
                 else:
                     not_killed_herbis.append(herbi)
             sorted_herbi = not_killed_herbis
 
         self.herbi_list = sorted_herbi  # the herbis remaining are the not_killed_herbis
-        self.carni_list = sorted_carni  # the carnis after eating
+        self.carni_list = sorted_carni  # carnis after eating
 
     def birth(self):
         """
-        Decides if animals are born and updates the animal_list
+        Decides if animals are born and updates lists of herbivores and
+        carnivores. The animal giving birth, the mother, loses weight and a
+        new animal (herbivore or carnivore) is added.
+
+        Returns
+        -------
+        None
         """
         num_herbi = len(self.herbi_list)
         num_carni = len(self.carni_list)
 
         newborn_herbi, newborn_carni = [], []
         for herbi, carni, in zip_longest(self.herbi_list, self.carni_list):
-            if herbi:  # need this because herbi is None if num_carni > num_herbi
+            if herbi:  # needs this because herbi is None if num_carni > num_herbi
                 prob_birth_herbi, birth_weight_herbi = herbi.birth(num_herbi)
                 if random.random() < prob_birth_herbi:
                     newborn_herbi.append(Herbivores(age=0, weight=birth_weight_herbi))
                     herbi.update_weight(weight_of_newborn=birth_weight_herbi)
+                    # This updates the weight of the mother according to the weight of the newborn
 
             if carni:  # need this because carni is None if num_herbi > num_carni
                 prob_birth_carni, birth_weight_carni = carni.birth(num_carni)
@@ -154,12 +223,14 @@ class SingleCell:
 
     def animals_stay_or_move(self):
         """
-        Check if animals stay in cell or migrate to an other cell
+        Check if animals stay in a cell or wants migrate to another cell.
+        The method updates the list of herbivores and carnivores to only
+        include the animals wanting to stay in the cell.
 
         Returns
         -------
         animals_move: [list]
-            list of animals that moves out of the cell
+            list of animals that wants to migrate from the cell
         """
         animals_stay = []
         animals_move = []
@@ -185,11 +256,19 @@ class SingleCell:
 
     def animals_migrate(self):
         """
+        Sorts animals that wants to migrate from the cell in lists
+        representing the direction they wants to move in.
 
         Returns
         -------
-        north, east, south, west: [list] list with animals wanting to move
-                                  to the name of the list
+        north: [list]
+            Animals who wants to move to the north.
+        east: [list]
+            Animals who wants to move to the east.
+        south: [list]
+            Animals who wants to move to the south.
+        west: [list]
+            Animals who wants to move to the west.
         """
         animals_move = self.animals_stay_or_move()
         north = []
@@ -210,7 +289,20 @@ class SingleCell:
         return north, east, south, west
 
     def add_animals_after_migration(self, animals_migrated):
-        """ Adds animals to cell after migration """
+        """
+        Adds animals to cell after migration. Updates the attributes of the
+        class in the end.
+
+        Parameters
+        ----------
+        animals_migrated: [list]
+            list with animals to be added to either herbivore or carnivore list
+
+        Returns
+        -------
+        None
+
+        """
         for animal in animals_migrated:
             if isinstance(animal, Herbivores):
                 self.herbi_list.append(animal)
@@ -218,7 +310,13 @@ class SingleCell:
                 self.carni_list.append(animal)
 
     def aging_of_animals(self):
-        """Makes sure animals ages"""
+        """
+        Makes sure animals ages. Updates the age attribute of each animals.
+
+        Returns
+        -------
+        None
+        """
         for herbi in self.herbi_list:
             herbi.update_age()
 
@@ -227,27 +325,40 @@ class SingleCell:
 
     def weight_loss_end_of_year(self):
         """
-        Makes all the animals looses weight according to their start-weight and the constant eta
+        Makes all the animals loose weight at the end of a year. Updates the
+        weight attribute of each animal.
+
+        Returns
+        -------
+        None
         """
         for herbi in self.herbi_list:
             herbi.update_weight()
+
         for carni in self.carni_list:
             carni.update_weight()
 
     def death(self):
         """
         Decides which of the animals that dies and updates the animal_list
+        accordingly.
+
+        Returns
+        -------
+        None
         """
         survived_herbis = []
         for herbi in self.herbi_list:
             if random.random() > herbi.probability_death():
-                # Testing if the animal survives, not if it dies. That's why we use > instead of <
+                # Tests if the animal survives, not if it dies.
+                # That's why we use > instead of <
                 survived_herbis.append(herbi)
 
         survived_carnis = []
         for carni in self.carni_list:
             if random.random() > carni.probability_death():
-                # Testing if the animal survives, not if it dies. That's why we use > instead of <
+                # Testing if the animal survives, not if it dies.
+                # That's why we use > instead of <
                 survived_carnis.append(carni)
 
         self.herbi_list = survived_herbis
@@ -256,12 +367,16 @@ class SingleCell:
     def collect_fitness_age_weight_herbi(self):
         """
         Collects the fitness, age and weight for all herbivores and returns
-        it in three lists, one fitness, one for age and one for weight
+        it in three lists, one with fitness, one with age and one with weight.
+
         Returns
         -------
-        fitness: [list] fitness of herbivores in cell
-        age:     [list] age of herbivores in cell
-        weight:  [list] weight of herbivores in cell
+        fitness: [list]
+            fitness of herbivores in cell
+        age: [list]
+            age of herbivores in cell
+        weight: [list]
+            weight of herbivores in cell
         """
         fitness = []
         age = []
@@ -276,12 +391,16 @@ class SingleCell:
     def collect_fitness_age_weight_carni(self):
         """
         Collects the fitness, age and weight for all carnivores and returns
-        it in three lists, one fitness, one for age and one for weight
+        it in three lists, one fitness, one for age and one for weight.
+
         Returns
         -------
-        fitness: [list] fitness of carnivores in cell
-        age:     [list] age of carnivores in cell
-        weight:  [list] weight of carnivores in cell
+        fitness: [list]
+            fitness of carnivores in cell
+        age: [list]
+            age of carnivores in cell
+        weight: [list]
+            weight of carnivores in cell
         """
         fitness = []
         age = []
@@ -295,83 +414,33 @@ class SingleCell:
 
 
 class Water(SingleCell):
+    """Represents the water-landscape."""
     _params = {'f_max': 0.0}
-    """
-    Represents the water-landscape.
-    """
+
     def __init__(self, animals_list):
         super().__init__(animals_list)
 
 
 class Desert(SingleCell):
+    """Represents the desert-landscape."""
     _params = {'f_max': 0.0}
-    """
-    Represents the desert-landscape.
-    """
+
     def __init__(self, animals_list):
         super().__init__(animals_list)
 
 
 class Lowland(SingleCell):
+    """Represents the lowland-landscape."""
     _params = {'f_max': 800.0}
-    """
-    Represents the lowland-landscape.
-    """
+
     def __init__(self, animals_list):
         super().__init__(animals_list)
 
 
 class Highland(SingleCell):
+    """Represents the highland_landscape."""
+
     _params = {'f_max': 300.0}
-    """
-    Represents the highland_landscape.
-    """
+
     def __init__(self, animals_list):
         super().__init__(animals_list)
-
-    def animals_eat(self):
-        return self.animals_in_cell_eat()
-
-
-if __name__ == "__main__":
-    animals = [{'species': 'Herbivore', 'age': 1, 'weight': 5},
-               {'species': 'Herbivore', 'age': 8, 'weight': 25},
-               {'species': 'Herbivore', 'age': 5, 'weight': 15},
-               {'species': 'Carnivore', 'age': 6, 'weight': 15},
-               {'species': 'Carnivore', 'age': 3, 'weight': 8},
-               {'species': 'Carnivore', 'age': 23, 'weight': 12}]
-
-    low = Lowland(animals_list=animals)
-
-    w_before = [ani.weight for ani in (low.herbi_list+low.carni_list)]
-    print("Weight before eating:", w_before)
-    # Eating
-    low.animals_in_cell_eat()
-    w_after = [ani.weight for ani in (low.herbi_list+low.carni_list)]
-    print("Weight after eating:", w_after)
-
-    print("Number of animals before birth:", len(low.herbi_list + low.carni_list))
-    low.birth()
-    print("Number of animals after birth:", len(low.herbi_list + low.carni_list))
-
-    herb, carn = low.migration()
-    print(herb)
-    print(carn)
-
-
-    a_before = [ani.age for ani in (low.herbi_list+low.carni_list)]
-    print("Age before:", a_before)
-    # Animals aging
-    low.aging_of_animals()
-    a_after = [ani.age for ani in (low.herbi_list + low.carni_list)]
-    print("Age after:", a_after)
-
-    w_before = [ani.weight for ani in (low.herbi_list+low.carni_list)]
-    print("Weight before loss:", w_before)
-    low.weight_loss_end_of_year()
-    w_after = [ani.weight for ani in (low.herbi_list+low.carni_list)]
-    print("Weight after loss:", w_after)
-
-    print("Number of animals before death:", len(low.herbi_list + low.carni_list))
-    low.death()
-    print("Number of animals after death:", len(low.herbi_list + low.carni_list))

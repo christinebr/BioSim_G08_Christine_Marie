@@ -4,12 +4,16 @@
    contain the root `toctree` directive.
 
 Welcome to BioSim's documentation!
-==================================
+===================================
+
+This is a simulation of the ecosystem on an island.
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
+   island
+   simulation
 
 
 Indices and tables

@@ -47,10 +47,11 @@ if __name__ == '__main__':
                           for _ in range(40)]}]
 
     sim = BioSim(island_map=geogr, ini_pop=ini_herbs,
+                 img_base='img_test',
                  seed=123456,
-                 hist_specs = {'fitness': {'max': 1.0, 'delta': 0.05},
-                               'age': {'max': 60.0, 'delta': 2},
-                               'weight': {'max': 60, 'delta': 2}},
+                 hist_specs={'fitness': {'max': 1.0, 'delta': 0.05},
+                              'age': {'max': 60.0, 'delta': 2},
+                              'weight': {'max': 60, 'delta': 2}},
                  )
 
     sim.set_animal_parameters('Herbivore', {'zeta': 3.2, 'xi': 1.8})
@@ -59,11 +60,11 @@ if __name__ == '__main__':
                                             'DeltaPhiMax': 9.})
     sim.set_landscape_parameters('L', {'f_max': 700})
 
-    sim.simulate(num_years=100, vis_years=1, img_years=2000)
+    sim.simulate(num_years=100, vis_years=1, img_years=5)
 
     sim.add_population(population=ini_carns)
-    sim.simulate(num_years=100, vis_years=1, img_years=2000)
+    sim.simulate(num_years=100, vis_years=1, img_years=5)
 
-    # plt.savefig('check_sim.pdf')
+    sim.make_movie()
 
     input('Press ENTER')

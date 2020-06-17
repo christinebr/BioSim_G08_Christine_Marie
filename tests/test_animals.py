@@ -2,13 +2,16 @@
 
 from biosim.animals import Herbivores, Carnivores
 import pytest
+from scipy.stats import normaltest
+
+alpha = 0.01  # Significant level for statistical tests
 
 
 class TestHerbivores:
 
     @pytest.fixture()
     def initial_herbivore_class(self):
-        self.h = Herbivores(weight=20)
+        self.h = Herbivores(age=5, weight=20)
         return self.h
 
     def test_constructor_default(self, initial_herbivore_class):
@@ -31,6 +34,11 @@ class TestHerbivores:
         with pytest.raises(ValueError):
             self.h.set_params({'gamma': -0.8})
 
+    def test_invalid_value_eta(self, initial_herbivore_class):
+        """Test that eta < 1."""
+        with pytest.raises(ValueError):
+            self.h.set_params({'eta': 1.2})
+
     def test_update_parameters(self):
         """Test if parameters is updated correctly."""
         h1 = Herbivores(weight=20)
@@ -41,14 +49,15 @@ class TestHerbivores:
         assert param['beta'] == 0.8
         assert param['w_half'] == 2.0
 
-    def test_default_value_for_age(self, initial_herbivore_class):
+    def test_default_value_for_age(self):
         """
         Testing default value for age and that it is possible to assign
         a different value also.
         """
-        assert self.h.age == 0
-        h = Herbivores(age=3, weight=20)
-        assert h.age != 0
+        h1 = Herbivores(weight=20)
+        assert h1.age == 0
+        h2 = Herbivores(age=3, weight=20)
+        assert h2.age != 0
 
     def test_age_not_negative(self):
         """
@@ -96,6 +105,8 @@ class TestHerbivores:
         prob, newborn_weight = h.birth(num=10)
         assert prob != 0
         assert newborn_weight != 0
+        h.update_weight(weight_of_newborn=newborn_weight)
+        assert h.weight < 35
 
     def test_fitness_between_0_and_1(self, initial_herbivore_class):
         """Testing if value of fitness is between 0 and 1."""
@@ -106,6 +117,11 @@ class TestHerbivores:
         """Test if value of fitness is 0 when weight is zero or less."""
         self.h.weight = 0
         assert self.h.fitness() == 0
+
+    def test_probability_of_migration(self, initial_herbivore_class):
+        """Test that probability of migration is between 0 and 1."""
+        prob_migration = self.h.probability_of_migration()
+        assert 0 <= prob_migration <= 1
 
     def test_death_when_zero_weight(self, initial_herbivore_class):
         """
@@ -166,6 +182,17 @@ class TestHerbivores:
         prob_death = h.probability_death()
         assert prob_death <= 1
 
+    def test_stat_birth_weight(self, initial_herbivore_class):
+        """
+        Tests if the birth weight of a herbivore is drawn from a normal
+        distribution.
+        """
+        num_of_runs = 300
+        array_birth_weight = []
+        for _ in range(num_of_runs):
+            array_birth_weight.append(self.h.birth_weight())
+        assert normaltest(array_birth_weight)[1] > alpha
+
 
 class TestCarnivores:
     @pytest.fixture()
@@ -175,6 +202,13 @@ class TestCarnivores:
         """
         self.c = Carnivores(weight=20, )
         return self.c
+
+    def test_invalid_value_deltaphimax(self, initial_carnivore_class):
+        """Test that DeltaPhiMax is strictly positive (>0)."""
+        with pytest.raises(ValueError):
+            self.c.set_params({'DeltaPhiMax': -0.7})
+        with pytest.raises(ValueError):
+            self.c.set_params({'DeltaPhiMax': 0})
 
     def test_prob_kill_0_when_large_herbi_fitness(self):
         """
