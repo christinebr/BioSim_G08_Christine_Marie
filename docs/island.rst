@@ -19,5 +19,5 @@ of all cells.
 
 The Island class
 __________________
-.. autoclass:: biosim.island
+.. autoclass:: biosim.island.TheIsland
    :members:

@@ -21,5 +21,5 @@ stored pictures.
 
 The BioSim class
 ______________________
-.. autoclass:: biosim.simulation
+.. autoclass:: biosim.simulation.BioSim
    :members:
