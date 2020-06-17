@@ -13,9 +13,11 @@ class Animal:
 
         Parameters
         ----------
-        weight: [float] the weight of an animal
-        age: [int] the age of an animal
-                   default value is zero (the age at birth)
+        weight: [float]
+            the weight of an animal
+        age: [int]
+            the age of an animal
+            default value is zero (the age at birth)
         """
         if weight < 0:
             raise ValueError("Weight can't be negative")
@@ -34,12 +36,15 @@ class Animal:
 
         Parameters
         ----------
-        new_params: [dict] dictionary with new parameter values
+        new_params: [dict]
+            dictionary with new parameter values
 
         Raises
         ------
-        KeyError: if invalid parameter name
-        ValueError: if invalid parameter value
+        KeyError:
+            if invalid parameter name
+        ValueError:
+            if invalid parameter value
         """
         for key, value in new_params.items():
             if key not in cls._params:
@@ -60,13 +65,18 @@ class Animal:
 
         Returns
         -------
-        _params: [dict] dictionary with class parameters
+        _params: [dict]
+            dictionary with class parameters
         """
         return cls._params
 
     def update_age(self):
         """
         Updating the age of the animal by 1.
+
+        Returns
+        -------
+        None
         """
         self.age += 1
 
@@ -91,8 +101,9 @@ class Animal:
 
         Raises
         -------
-        ValueError: if both parameters are given as a number, because an
-                    animal can't eat and give birth at the same time
+        ValueError:
+            if both parameters are given as a number, because an
+            animal can't eat and give birth at the same time
         """
         if weight_of_newborn and amount_fodder_eaten:
             raise ValueError('No animal could give birth and eat at the same time')
@@ -113,14 +124,15 @@ class Animal:
         Calculates the value of fitness for an animal, which says something
         about the overall condition of the animal.
         The value of fitness is between 0 and 1.
-        - If the weight of the animal is less than or equal to zero
-        the values of fitness is zero
-        - Otherwise the value of fitness is calculated from the age, the
-        weight and the other parameters of the animal.
+            - If the weight of the animal is less than or equal to zero
+              the values of fitness is zero
+            - Otherwise the value of fitness is calculated from the age, the
+              weight and the other parameters of the animal.
 
         Returns
         -------
-        [float] The value of fitness for an animal.
+        [float]
+            The value of fitness for an animal.
         """
         if self.weight <= 0:
             return 0.
@@ -139,7 +151,8 @@ class Animal:
 
         Returns
         -------
-        [float] The animals probability of migrating
+        [float]
+            The animals probability of migrating
         """
         return self._params['mu'] * self.fitness()
 
@@ -147,9 +160,9 @@ class Animal:
         """
         Calculates the probability that an animal gives birth.
         The probability of birth lies between 0 and 1.
-        - If num=1 (only one animal) the probability of giving birth is 0.
-        - If the weight of an animal is less that a weight limit, the
-        probability of giving birth is also 0.
+            - If num=1 (only one animal) the probability of giving birth is 0.
+            - If the weight of an animal is less that a weight limit, the
+              probability of giving birth is also 0.
 
         Parameters
         ----------
@@ -158,8 +171,10 @@ class Animal:
 
         Returns
         -------
-        [float] the probability that an animal will give birth.
-        [float] weight of the newborn animal
+        [float]
+            the probability that an animal will give birth.
+        [float]
+            weight of the newborn animal
         """
         weight_limit = self._params['zeta'] * (self._params['w_birth']
                                                + self._params['sigma_birth'])
@@ -182,7 +197,8 @@ class Animal:
 
         Returns
         -------
-        [float] the weight of a newborn animal
+        [float]
+            the weight of a newborn animal
         """
         return round(random.gauss(self._params['w_birth'],
                                   self._params['sigma_birth']), 2)
@@ -242,12 +258,13 @@ class Carnivores(Animal):
 
         Parameters
         ----------
-        fitness_herbi: [float] the fitness of the herbivore that the carnivore
-                               is trying to kill.
+        fitness_herbi: [float] '
+            the fitness of the herbivore that the carnivore is trying to kill.
 
         Returns
         -------
-        [float] the probability that a carnivore kills the herbivore.
+        [float]
+            the probability that a carnivore kills the herbivore.
         """
         fitness_carni = self.fitness()
         if fitness_carni <= fitness_herbi:
@@ -264,6 +281,7 @@ class Carnivores(Animal):
 
         Parameters
         ----------
-        weight_herbi: [float] the weight of the herbivore killed
+        weight_herbi: [float]
+            the weight of the herbivore killed
         """
         self.weight += round(self._params['beta']*weight_herbi, 2)
