@@ -4,5 +4,5 @@ Write text here
 
 The Simulation module
 ______________________
--- automodule:: biosim.simulation
+.. automodule:: biosim.simulation
    :members:
