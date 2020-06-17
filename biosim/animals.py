@@ -113,10 +113,10 @@ class Animal:
         Calculates the value of fitness for an animal, which says something
         about the overall condition of the animal.
         The value of fitness is between 0 and 1.
-            - If the weight of the animal is less than or equal to zero
-              the values of fitness is zero
-            - Otherwise the value of fitness is calculated from the age, the
-              weight and the other parameters of the animal.
+        - If the weight of the animal is less than or equal to zero
+        the values of fitness is zero
+        - Otherwise the value of fitness is calculated from the age, the
+        weight and the other parameters of the animal.
 
         Returns
         -------
@@ -147,9 +147,9 @@ class Animal:
         """
         Calculates the probability that an animal gives birth.
         The probability of birth lies between 0 and 1.
-            - If num=1 (only one animal) the probability of giving birth is 0.
-            - If the weight of an animal is less that a weight limit, the
-              probability of giving birth is also 0.
+        - If num=1 (only one animal) the probability of giving birth is 0.
+        - If the weight of an animal is less that a weight limit, the
+        probability of giving birth is also 0.
 
         Parameters
         ----------
