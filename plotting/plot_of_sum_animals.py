@@ -3,6 +3,12 @@
 import matplotlib.pyplot as plt
 from biosim.island import TheIsland
 
+"""
+This is where we test how to make the plot of the number of herbivores and 
+carnivores on the island and tests changes before implementing into the main 
+plot section.
+"""
+
 if __name__ == "__main__":
     num_of_years = 100
     geogr = """\

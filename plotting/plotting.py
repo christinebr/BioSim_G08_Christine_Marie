@@ -4,6 +4,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 from biosim.island import TheIsland
 
+"""
+We considered making a separate class for plotting, but then decided against it.
+This is our try, it has not been updated, nor tested.
+"""
+
 
 class Plotting:
 

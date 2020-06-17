@@ -3,6 +3,12 @@
 import matplotlib.pyplot as plt
 from biosim.island import TheIsland
 
+"""
+This is where we test how to make histograms and changes in histograms before 
+implementing changes into the main plot section. We test for fitness, but the
+same ideas can be used for age and weight.
+"""
+
 if __name__ == "__main__":
     num_of_years = 100
     geogr = """\
@@ -31,7 +37,7 @@ if __name__ == "__main__":
 
     island = TheIsland(geogr, ini_animals)
 
-    # Just testing
+    # Just for testing
     herbi_fitness = [0.9, 0.3, 0.5, 0.4, 0.6, 0.5, 0.7, 0.3, 0.95, 0.2, 0.3, 0.3]
     carni_fitness = [0.6, 0.4, 0.6, 0.5, 0.6, 0.5, 0.5, 0.5]
 

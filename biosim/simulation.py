@@ -6,7 +6,7 @@ https://github.com/heplesser/nmbu_inf200_june2020/blob/7240186b0a97b24a325fa6828
 examples/randvis_project/randvis/simulation.py#L234
 and the project descriptions.
 
-Done a lot of modifications. 
+Done a lot of modifications.
 """
 
 from biosim.animals import Herbivores, Carnivores

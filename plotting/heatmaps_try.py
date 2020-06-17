@@ -3,6 +3,11 @@
 import matplotlib.pyplot as plt
 from biosim.island import TheIsland
 
+"""
+This is where we test how to make heatmaps and changes in heatmaps before 
+implementing changes into the main plot section.
+"""
+
 geogr_island = """\
            WWWWW
            WWLHW
@@ -42,11 +47,3 @@ for row in range(island.row):
 plt.imshow(herbis_lists, cmap='viridis')
 plt.colorbar()
 plt.show()
-
-# def heatmap2d(arr: np.ndarray):
-#     plt.imshow(arr, cmap='viridis')
-#     plt.colorbar()
-#     plt.show()
-#
-# test_array = [[2, 5, 8, 3 ,0, 5], [0, 4, 6, 5, 2, 3]]
-# heatmap2d(test_array)

@@ -1,11 +1,13 @@
-"""
-Example for creating axes, including empty axes with text.
-"""
+# -*- coding: utf-8 -*-
 
 from biosim.island import TheIsland
 import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib.gridspec import GridSpec
+
+"""
+This is where we test out plotting with subplots, and how they work together. 
+Copy-pasting from different other sections.
+"""
 
 # fig = plt.figure()
 # grid = fig.add_gridspec(ncols=3, nrows=3, wspace=0.2, hspace=0.4)
