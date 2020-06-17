@@ -99,13 +99,13 @@ class TheIsland:
         for x, row in enumerate(self.landscape):
             for cell in row:
                 if cell == 'W':
-                    self.island_cells[x].append(Water(animals_list=None))
+                    self.island_cells[x].append(Water(animals_list=[]))
                 elif cell == 'L':
-                    self.island_cells[x].append(Lowland(animals_list=None))
+                    self.island_cells[x].append(Lowland(animals_list=[]))
                 elif cell == 'H':
-                    self.island_cells[x].append(Highland(animals_list=None))
+                    self.island_cells[x].append(Highland(animals_list=[]))
                 elif cell == 'D':
-                    self.island_cells[x].append(Desert(animals_list=None))
+                    self.island_cells[x].append(Desert(animals_list=[]))
 
     def add_animals_on_island(self, new_animals):
         """
