@@ -77,11 +77,6 @@ if __name__ == "__main__":
                      'pop': [{'species': 'Carnivore', 'age': 5, 'weight': 30}
                              for _ in range(200)]
                      }]
-                    # {'loc': (2, 3),
-                    #  'pop': [{'species': 'Herbivore', 'age': 5, 'weight': 30}
-                    #          for _ in range(10)]
-                    #  }
-                    # ]
 
     isl2 = TheIsland(landscape_of_cells=bigger_island)
     print("Original landscape given in:\n", isl2.landscape)

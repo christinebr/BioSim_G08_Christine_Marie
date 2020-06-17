@@ -9,21 +9,21 @@ geogr_island = """\
            WDDLW
            WWWWW"""
 ini_animals = [{'loc': (2, 3),
-                 'pop': [{'species': 'Herbivore',
-                          'age': 5,
-                          'weight': 20} for _ in range(200)]
-                        + [{'species': 'Carnivore',
-                            'age': 5,
-                            'weight': 20} for _ in range(20)]
+                'pop': [{'species': 'Herbivore',
+                         'age': 5,
+                         'weight': 20} for _ in range(200)]
+                + [{'species': 'Carnivore',
+                    'age': 5,
+                    'weight': 20} for _ in range(20)]
                 },
                {'loc': (3, 3),
                 'pop': [{'species': 'Herbivore',
-                          'age': 5,
-                          'weight': 20} for _ in range(200)]
-                        + [{'species': 'Carnivore',
-                            'age': 5,
-                            'weight': 20} for _ in range(20)]}
-                ]
+                         'age': 5,
+                         'weight': 20} for _ in range(200)]
+                + [{'species': 'Carnivore',
+                    'age': 5,
+                    'weight': 20} for _ in range(20)]}
+               ]
 
 island = TheIsland(geogr_island, ini_animals)
 
@@ -47,7 +47,6 @@ plt.show()
 #     plt.imshow(arr, cmap='viridis')
 #     plt.colorbar()
 #     plt.show()
-#
 #
 # test_array = [[2, 5, 8, 3 ,0, 5], [0, 4, 6, 5, 2, 3]]
 # heatmap2d(test_array)
