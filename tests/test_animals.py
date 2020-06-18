@@ -16,6 +16,8 @@ class TestHerbivores:
     def initial_herbivore_class(self):
         """Makes a  single herbivore, to be used in tests."""
         self.herb = Herbivores(age=5, weight=20)
+        yield
+        Herbivores.set_params(Herbivores._params)
 
     def test_constructor_default(self, initial_herbivore_class):
         """Test that the class Herbivores creates an instance."""
@@ -177,6 +179,8 @@ class TestCarnivores:
         Make single carnivore, to be used in tests.
         """
         self.carn = Carnivores(weight=10, age=4)
+        yield
+        Carnivores.set_params(Carnivores._params)
 
     def test_to_large_newborn_weight(self, initial_carnivore_class, mocker):
         """
@@ -192,8 +196,10 @@ class TestCarnivores:
 
     def test_invalid_value_deltaphimax(self, initial_carnivore_class):
         """Test that DeltaPhiMax is strictly positive (>0)."""
+
         with pytest.raises(ValueError):
             self.carn.set_params({'DeltaPhiMax': -0.7})
+
         with pytest.raises(ValueError):
             self.carn.set_params({'DeltaPhiMax': 0})
 
