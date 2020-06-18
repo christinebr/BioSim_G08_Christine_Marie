@@ -561,3 +561,12 @@ class TestWater:
         """
         w = Water()
         assert isinstance(w, Water)
+
+    def test_value_error_if_add_animals(self):
+        """
+        Tests that the water cell raises a ValueError if the user tries to
+        place animals in it.
+        """
+        animals = [{'species': 'Herbivore', 'age': 10, 'weight': 40}]
+        with pytest.raises(ValueError):
+            Water(animals_list=animals)

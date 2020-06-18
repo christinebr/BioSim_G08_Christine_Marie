@@ -386,6 +386,8 @@ class Water(SingleCell):
     _params = {'f_max': 0.0}
 
     def __init__(self, animals_list=None):
+        if animals_list:
+            raise ValueError('Not allowed to place animals in a water cell.')
         super().__init__(animals_list)
 
 
