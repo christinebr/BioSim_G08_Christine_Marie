@@ -10,7 +10,6 @@ This was the main block of cell.py. We used this to test the outputs of our new
 methods. Uses a lowland cell for testing.
 """
 
-
 if __name__ == "__main__":
     animals = [{'species': 'Herbivore', 'age': 1, 'weight': 5},
                {'species': 'Herbivore', 'age': 8, 'weight': 25},
@@ -21,11 +20,11 @@ if __name__ == "__main__":
 
     low = Lowland(animals_list=animals)
 
-    w_before = [ani.weight for ani in (low.herbi_list+low.carni_list)]
+    w_before = [ani.weight for ani in (low.herbi_list + low.carni_list)]
     print("Weight before eating:", w_before)
     # Eating
     low.animals_in_cell_eat()
-    w_after = [ani.weight for ani in (low.herbi_list+low.carni_list)]
+    w_after = [ani.weight for ani in (low.herbi_list + low.carni_list)]
     print("Weight after eating:", w_after)
 
     print("Number of animals before birth:", len(low.herbi_list + low.carni_list))
@@ -38,17 +37,17 @@ if __name__ == "__main__":
     print(f"South: {south}")
     print(f"West: {west}")
 
-    a_before = [ani.age for ani in (low.herbi_list+low.carni_list)]
+    a_before = [ani.age for ani in (low.herbi_list + low.carni_list)]
     print("Age before:", a_before)
     # Animals aging
     low.aging_of_animals()
     a_after = [ani.age for ani in (low.herbi_list + low.carni_list)]
     print("Age after:", a_after)
 
-    w_before = [ani.weight for ani in (low.herbi_list+low.carni_list)]
+    w_before = [ani.weight for ani in (low.herbi_list + low.carni_list)]
     print("Weight before loss:", w_before)
     low.weight_loss_end_of_year()
-    w_after = [ani.weight for ani in (low.herbi_list+low.carni_list)]
+    w_after = [ani.weight for ani in (low.herbi_list + low.carni_list)]
     print("Weight after loss:", w_after)
 
     print("Number of animals before death:", len(low.herbi_list + low.carni_list))

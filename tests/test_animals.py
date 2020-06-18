@@ -202,7 +202,7 @@ class TestCarnivores:
         Checks that probability of killing a herbivore is 0 when it has high
         fitness
         """
-        carni = Carnivores(weight=10, age=2)   # fitness 0.917
+        carni = Carnivores(weight=10, age=2)  # fitness 0.917
         prob_kill = carni.probability_of_killing_herbivore(fitness_herbi=0.999)
         assert prob_kill == 0
 
@@ -211,7 +211,7 @@ class TestCarnivores:
         Test that the probability of killing a herbivore is between 0 and 1
         for a carnivore with high enough fitness.
         """
-        carni = Carnivores(weight=10, age=2)   # fitness 0.917
+        carni = Carnivores(weight=10, age=2)  # fitness 0.917
         prob_kill = carni.probability_of_killing_herbivore(fitness_herbi=0.5)
         assert 0 <= prob_kill <= 1
 

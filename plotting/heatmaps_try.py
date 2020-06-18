@@ -20,17 +20,17 @@ ini_animals = [{'loc': (2, 3),
                 'pop': [{'species': 'Herbivore',
                          'age': 5,
                          'weight': 20} for _ in range(200)]
-                + [{'species': 'Carnivore',
-                    'age': 5,
-                    'weight': 20} for _ in range(20)]
+                       + [{'species': 'Carnivore',
+                           'age': 5,
+                           'weight': 20} for _ in range(20)]
                 },
                {'loc': (3, 3),
                 'pop': [{'species': 'Herbivore',
                          'age': 5,
                          'weight': 20} for _ in range(200)]
-                + [{'species': 'Carnivore',
-                    'age': 5,
-                    'weight': 20} for _ in range(20)]}
+                       + [{'species': 'Carnivore',
+                           'age': 5,
+                           'weight': 20} for _ in range(20)]}
                ]
 
 island = TheIsland(geogr_island, ini_animals)

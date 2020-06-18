@@ -24,9 +24,9 @@ class TestingTheIsland:
                          'pop': [{'species': 'Herbivore',
                                   'age': 5,
                                   'weight': 35} for _ in range(200)]
-                        + [{'species': 'Carnivore',
-                            'age': 5,
-                            'weight': 20} for _ in range(20)]}
+                                + [{'species': 'Carnivore',
+                                    'age': 5,
+                                    'weight': 20} for _ in range(20)]}
                         ]
 
         self.island = TheIsland(landscape_of_cells=test_island, animals_on_island=test_animals)
@@ -48,9 +48,9 @@ class TestingTheIsland:
                          'pop': [{'species': 'Herbivore',
                                   'age': 5,
                                   'weight': 35} for _ in range(200)]
-                        + [{'species': 'Carnivore',
-                            'age': 5,
-                            'weight': 20} for _ in range(20)]}
+                                + [{'species': 'Carnivore',
+                                    'age': 5,
+                                    'weight': 20} for _ in range(20)]}
                         ]
 
         self.isl_mig = TheIsland(landscape_of_cells=test_island,

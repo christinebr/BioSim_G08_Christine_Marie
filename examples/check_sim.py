@@ -17,7 +17,6 @@ https://github.com/heplesser/nmbu_inf200_june2020/blob/master/project_descriptio
 __author__ = "Hans Ekkehard Plesser, NMBU"
 __email__ = "hans.ekkehard.plesser@nmbu.no"
 
-
 if __name__ == '__main__':
     plt.ion()
 

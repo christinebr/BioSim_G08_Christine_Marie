@@ -17,7 +17,6 @@ Notes:
 __author__ = 'Hans Ekkehard Plesser'
 __email__ = 'hans.ekkehard.plesser@nmbu.no'
 
-
 import pytest
 import pandas
 import glob

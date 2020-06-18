@@ -17,7 +17,6 @@ description, which could be found at:
 https://github.com/heplesser/nmbu_inf200_june2020/blob/master/project_description/check_sim.py
 """
 
-
 if __name__ == '__main__':
     plt.ion()
 
@@ -49,8 +48,8 @@ if __name__ == '__main__':
     ini_pop = [{'loc': (2, 3),
                 'pop': [{'species': 'Herbivore', 'age': 5, 'weight': 20}
                         for _ in range(150)]
-                + [{'species': 'Carnivore', 'age': 5, 'weight': 20}
-                    for _ in range(20)]}]
+                       + [{'species': 'Carnivore', 'age': 5, 'weight': 20}
+                          for _ in range(20)]}]
 
     sim = BioSim(island_map=geogr, ini_pop=ini_pop, seed=654321,
                  hist_specs={'fitness': {'max': 1.0, 'delta': 0.05},

@@ -47,9 +47,9 @@ if __name__ == '__main__':
                   'pop': [{'species': 'Herbivore',
                            'age': 5, 'weight': 20}
                           for _ in range(1000)]
-                 + [{'species': 'Carnivore',
-                     'age': 5, 'weight': 20}
-                    for _ in range(1000)]
+                         + [{'species': 'Carnivore',
+                             'age': 5, 'weight': 20}
+                            for _ in range(1000)]
                   }
                  ]
 

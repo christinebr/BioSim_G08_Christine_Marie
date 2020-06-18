@@ -69,17 +69,17 @@ ini_animals = [{'loc': (2, 4),
                 'pop': [{'species': 'Herbivore',
                          'age': 5,
                          'weight': 20} for _ in range(200)]
-                + [{'species': 'Carnivore',
-                    'age': 5,
-                    'weight': 20} for _ in range(20)]
+                       + [{'species': 'Carnivore',
+                           'age': 5,
+                           'weight': 20} for _ in range(20)]
                 },
                {'loc': (3, 3),
                 'pop': [{'species': 'Herbivore',
                          'age': 5,
                          'weight': 20} for _ in range(200)]
-                + [{'species': 'Carnivore',
-                    'age': 5,
-                    'weight': 20} for _ in range(20)]}
+                       + [{'species': 'Carnivore',
+                           'age': 5,
+                           'weight': 20} for _ in range(20)]}
                ]
 
 island = TheIsland(geogr_island, ini_animals)
@@ -133,7 +133,8 @@ ax3.plot(years, carni_count, label='Carnivores')
 # ax3.legend()
 
 ax3.set_title('Animals count', fontsize=font)
-list_xticks = [0, int(num_of_years/4), int(num_of_years/2), int(num_of_years*3/4), num_of_years]
+list_xticks = [0, int(num_of_years / 4), int(num_of_years / 2), int(num_of_years * 3 / 4),
+               num_of_years]
 # list_xticks = [0, 25, 50, 75, 100]
 ax3.set_xticks(list_xticks)
 ax3.set_xticklabels(list_xticks, fontsize=font_axes)
@@ -203,7 +204,6 @@ carni_weight = island.collect_fitness_age_weight_carni()[2]
 ax9.hist(herbi_weight, bins=20, histtype='stepfilled', fill=False, edgecolor='blue')
 ax9.hist(carni_weight, bins=20, range=(0, 40), histtype='stepfilled', fill=False, edgecolor='red')
 ax9.set_title('Weight', fontsize=font)
-
 
 ###
 # axes for text

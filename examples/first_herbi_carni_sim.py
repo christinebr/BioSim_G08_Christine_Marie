@@ -15,13 +15,13 @@ loop.
 if __name__ == "__main__":
 
     ini_herbs = [{'species': 'Herbivore',
-                             'age': 5,
-                             'weight': 20}
+                  'age': 5,
+                  'weight': 20}
                  for _ in range(150)]
 
     ini_carns = [{'species': 'Carnivore',
-                             'age': 5,
-                             'weight': 20}
+                  'age': 5,
+                  'weight': 20}
                  for _ in range(20)]
 
     low = Lowland(ini_herbs)

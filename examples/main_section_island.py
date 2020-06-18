@@ -71,10 +71,10 @@ if __name__ == "__main__":
            ]
 
     print("\nAnimals in cell before:",
-          len(isl.island_cells[1][1].herbi_list+isl.island_cells[1][1].carni_list))
+          len(isl.island_cells[1][1].herbi_list + isl.island_cells[1][1].carni_list))
     isl.add_animals_on_island(new_animals=new)
     print("Animals in cell after:",
-          len(isl.island_cells[1][1].herbi_list+isl.island_cells[1][1].carni_list))
+          len(isl.island_cells[1][1].herbi_list + isl.island_cells[1][1].carni_list))
 
     # Testing an island with more than one inhabitable cell:
     print('\nBIGGER ISLAND, FOR TESTING MIGRATION')

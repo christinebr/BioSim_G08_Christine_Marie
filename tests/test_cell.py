@@ -191,8 +191,8 @@ class TestSingleCell:
         for carni in self.cell.carni_list:
             cars.append(isinstance(carni, Carnivores))
 
-        assert herbis == [True]*len(self.cell.herbi_list) and \
-            cars == [True]*len(self.cell.carni_list)
+        assert herbis == [True] * len(self.cell.herbi_list) and \
+               cars == [True] * len(self.cell.carni_list)
 
     def test_possible_no_animals(self):
         """
@@ -245,10 +245,10 @@ class TestSingleCell:
         Test that all animals in cell wants to move when mocking
         random.random(). check that no animals are left in cell
         """
-        num_animals_before = len(self.cell.herbi_list+self.cell.carni_list)
+        num_animals_before = len(self.cell.herbi_list + self.cell.carni_list)
         mocker.patch('random.random', return_value=0)
         moving_animals = self.cell.animals_stay_or_move()
-        num_animals_after = len(self.cell.herbi_list+self.cell.carni_list)
+        num_animals_after = len(self.cell.herbi_list + self.cell.carni_list)
         assert len(moving_animals) == num_animals_before
         assert num_animals_after == 0
 
@@ -257,10 +257,10 @@ class TestSingleCell:
         Test that no animals in cell wants to move when mocking
         random.random(). check that no animals are left in cell
         """
-        num_animals_before = len(self.cell.herbi_list+self.cell.carni_list)
+        num_animals_before = len(self.cell.herbi_list + self.cell.carni_list)
         mocker.patch('random.random', return_value=1)
         moving_animals = self.cell.animals_stay_or_move()
-        num_animals_after = len(self.cell.herbi_list+self.cell.carni_list)
+        num_animals_after = len(self.cell.herbi_list + self.cell.carni_list)
         assert len(moving_animals) == 0
         assert num_animals_before == num_animals_after
 
@@ -270,7 +270,7 @@ class TestSingleCell:
         the list for animals who wants to move to the north, and that no
         animals has magically appeared in any of the other lists.
         """
-        num_animals_before = len(self.cell.herbi_list+self.cell.carni_list)
+        num_animals_before = len(self.cell.herbi_list + self.cell.carni_list)
         mocker.patch('random.random', return_value=0)  # Makes sure all animals migrate
         mocker.patch('random.choice', return_value='North')
         north, east, south, west = self.cell.animals_migrate()
@@ -285,7 +285,7 @@ class TestSingleCell:
         the list for animals who wants to move to the east, and that no
         animals has magically appeared in any of the other lists.
         """
-        num_animals_before = len(self.cell.herbi_list+self.cell.carni_list)
+        num_animals_before = len(self.cell.herbi_list + self.cell.carni_list)
         mocker.patch('random.random', return_value=0)  # Makes sure all animals migrate
         mocker.patch('random.choice', return_value='East')
         north, east, south, west = self.cell.animals_migrate()
@@ -300,7 +300,7 @@ class TestSingleCell:
         the list for animals who wants to move to the south, and that no
         animals has magically appeared in any of the other lists.
         """
-        num_animals_before = len(self.cell.herbi_list+self.cell.carni_list)
+        num_animals_before = len(self.cell.herbi_list + self.cell.carni_list)
         mocker.patch('random.random', return_value=0)  # Makes sure all animals migrate
         mocker.patch('random.choice', return_value='South')
         north, east, south, west = self.cell.animals_migrate()
@@ -315,7 +315,7 @@ class TestSingleCell:
         the list for animals who wants to move to the west, and that no
         animals has magically appeared in any of the other lists.
         """
-        num_animals_before = len(self.cell.herbi_list+self.cell.carni_list)
+        num_animals_before = len(self.cell.herbi_list + self.cell.carni_list)
         mocker.patch('random.random', return_value=0)  # Makes sure all animals migrate
         mocker.patch('random.choice', return_value='West')
         north, east, south, west = self.cell.animals_migrate()
@@ -437,12 +437,12 @@ class TestLowland:
         sum_weight_herbi_before = 0
         for herbi in self.low.herbi_list:
             sum_weight_herbi_before += herbi.weight
-        av_herbi_before = sum_weight_herbi_before/len(self.low.herbi_list)
+        av_herbi_before = sum_weight_herbi_before / len(self.low.herbi_list)
 
         sum_weight_carni_before = 0
         for carni in self.low.carni_list:
             sum_weight_carni_before += carni.weight
-        av_carni_before = sum_weight_carni_before/len(self.low.carni_list)
+        av_carni_before = sum_weight_carni_before / len(self.low.carni_list)
 
         mocker.patch('random.random', return_value=0.03)
         # Makes sure some herbivores, but not all, are eaten.
@@ -450,11 +450,11 @@ class TestLowland:
         sum_weight_herbi_after = 0
         for herbi in self.low.herbi_list:
             sum_weight_herbi_after += herbi.weight
-        av_herbi_after = sum_weight_herbi_after/len(self.low.herbi_list)
+        av_herbi_after = sum_weight_herbi_after / len(self.low.herbi_list)
         sum_weight_carni_after = 0
         for carni in self.low.carni_list:
             sum_weight_carni_after += carni.weight
-        av_carni_after = sum_weight_carni_after/len(self.low.carni_list)
+        av_carni_after = sum_weight_carni_after / len(self.low.carni_list)
 
         assert av_herbi_before < av_herbi_after
         assert av_carni_before < av_carni_after
@@ -549,7 +549,7 @@ class TestHighland:
         high = Highland(animals_list=animal)
         high.set_params({'f_max': 8.0})
         high.animals_in_cell_eat()
-        weight_after_eaten = 20 + 0.9*8.0
+        weight_after_eaten = 20 + 0.9 * 8.0
         assert high.herbi_list[0].weight == weight_after_eaten
 
 
