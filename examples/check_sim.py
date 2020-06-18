@@ -10,6 +10,8 @@ Compatibility check for BioSim simulations.
 
 This script shall function with biosim packages written for
 the INF200 project June 2020.
+
+https://github.com/heplesser/nmbu_inf200_june2020/blob/master/project_description/check_sim.py
 """
 
 __author__ = "Hans Ekkehard Plesser, NMBU"

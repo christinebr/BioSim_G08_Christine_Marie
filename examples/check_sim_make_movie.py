@@ -61,10 +61,14 @@ if __name__ == '__main__':
                                             'DeltaPhiMax': 9.})
     sim.set_landscape_parameters('L', {'f_max': 700})
 
+    # Simulate first 100 years with only herbivores
     sim.simulate(num_years=100, vis_years=1, img_years=5)
 
+    # Add carnivores and simulate 100 years more
     sim.add_population(population=ini_carns)
     sim.simulate(num_years=100, vis_years=1, img_years=5)
+
+    # To get longer video - increase num_years to simulate more years
 
     # Makes a movie
     sim.make_movie()

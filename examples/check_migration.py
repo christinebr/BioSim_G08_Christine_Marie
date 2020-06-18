@@ -23,6 +23,10 @@ The island have no obstacles, i. e. only one type of landscape (lowland).
 
 This is sett to simulate for 20 years, by then the animals has hit the outer
 parts of the island, and the migrating patterns becomes less clearly visible.
+
+The main setup was copypasted from check_sim.py, a test from the project 
+description, which could be found at:
+https://github.com/heplesser/nmbu_inf200_june2020/blob/master/project_description/check_sim.py
 """
 if __name__ == '__main__':
     plt.ion()
@@ -57,7 +61,7 @@ if __name__ == '__main__':
                  )
 
     # Setting the parameters of animals so that the numbers don't change, and
-    # they are fit and wants to migrate as long as the simualtion goes.
+    # they are fit and wants to migrate as long as the simulation goes.
     sim.set_animal_parameters('Herbivore',
                               {'mu': 1, 'omega': 0, 'gamma': 0,
                                'a_half': 1000})

@@ -10,6 +10,11 @@ __email__ = "mvaloy@nmbu.no, christibr@nmbu.no"
 
 """
 Testing our simulation with the island in the task description.
+
+
+The main setup was copypasted from check_sim.py, a test from the project 
+description, which could be found at:
+https://github.com/heplesser/nmbu_inf200_june2020/blob/master/project_description/check_sim.py
 """
 
 
