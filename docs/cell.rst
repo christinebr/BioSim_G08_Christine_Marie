@@ -1,20 +1,24 @@
-The Cell
+Cell
 ===========
 The cell keeps track of animals of both species, the amount of
-fodder and the type of landscape in the area. There are four
-types of landscape, lowland, highland, dessert and water, which
-are represented with subclasses. Animals can not stay in the
-water. All animals can stay in the dessert, but herbivores will
-find no food. Both lowland and highland provide fodder. There
-are parameters for the amount of fodder that appear in a cell
+fodder and the cell is of a specified landscape type. There are four
+types of landscape: lowland, highland, desert and water, which
+are represented with subclasses. The :class:`Lowland` class, :class:`Highland`
+class,  :class:`Desert` class and :class:`Water` class are subclasses of the
+:class:`SingleCell` class.
+
+Animals can not stay in water. All animals can stay in the dessert, but
+herbivores will find no food. Both lowland and highland provide fodder, but
+different amount: there are more food in the lowland than in the highland.
+There are parameters for the amount of fodder that appear in a cell
 of a certain type of landscape in the beginning of the
-year, these can be changed by the user. The cell makes sure
-animals eat, give birth, die and lose weight as supposed. It
-also checks how many animals wants to migrate and the direction
+year, these can be changed by the user.
+
+The cell makes sure animals eat, give birth, die and lose weight as supposed.
+It also checks how many animals wants to migrate and the direction
 they wants to migrate. Animals who wants to migrate are sorted
-out of the cells, only animals who don't want to migrate stays
-in the cell. Animals who wants to migrate, but are not allowed
-to has to be added once more.
+out of the cells, only animals who don't migrate stays in the cell.
+
 
 The SingleCell class
 _______________________

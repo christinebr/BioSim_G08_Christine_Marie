@@ -44,6 +44,11 @@ plt.rc('ytick', labelsize=5)
 
 
 class BioSim:
+    """"
+    This is the class for simulation of the island. It also takes care of the
+    graphics.
+    """
+
     def __init__(self, island_map, ini_pop, seed,
                  ymax_animals=None, cmax_animals=None, hist_specs=None,
                  img_base=None, img_fmt='png'):
