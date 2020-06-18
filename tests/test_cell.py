@@ -30,7 +30,7 @@ class TestSingleCell:
     @pytest.fixture()
     def initial_two_herbivore_cell(self):
         """
-        Makes a single cell with animals to use as test-cell for statistic tests.
+        Makes a single cell with animals to use as test-cell for statistical tests.
         """
         two_herbivores = [{'species': 'Herbivore', 'age': 5, 'weight': 40}
                           for _ in range(2)]
@@ -39,7 +39,7 @@ class TestSingleCell:
     @pytest.fixture()
     def initial_statistic_cell(self):
         """
-        Makes a single cell with animals to use as test-cell for statistic tests.
+        Makes a single cell with animals to use as test-cell for statistical tests.
         """
         self.herbivores = [{'species': 'Herbivore', 'age': 5, 'weight': 20}
                            for _ in range(100)]
@@ -113,7 +113,8 @@ class TestSingleCell:
         Tests that the birth method assigns a weight to the newborn animal.
         Strictly speaking, the test checks all animals, but if no animal has
         weight zero, there are no newborns with this weight either. And we've
-        already established that the birth-method makes new animals.
+        already established in an earlier test that the birth-method makes new
+        animals.
         """
         mocker.patch('random.random', return_value=0)
         # Makes sure there are newborns
@@ -157,8 +158,8 @@ class TestSingleCell:
         Tests that dead animals does not continue to exist (no zombies welcome
         on this island).
 
-        The first test checks that an animal of weight zero disappears. And
-        that that the animals that are supposed to survive actually does so.
+        The first test checks that an animal of weight zero disappears, and
+        that the animals who are supposed to survive actually does so.
         The second test checks that when all animals dies, all of them
         disappears.
         """
