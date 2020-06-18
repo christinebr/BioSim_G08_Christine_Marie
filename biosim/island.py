@@ -129,6 +129,12 @@ class TheIsland:
         """
         for dictionary in new_animals:
             x, y = dictionary['loc']  # Location of a cell
+
+            if x < 0 or x > self.row:
+                raise ValueError('x-coordinate (row-coordinate) not valid')
+            if y < 0 or y > self.col:
+                raise ValueError('y-coordinate (column-coordinate) not valid')
+
             landscape_type = self.landscape[x - 1][y - 1]  # Landscape type of cell
             if landscape_type == 'W':
                 raise ValueError("Animals can't stay in water")

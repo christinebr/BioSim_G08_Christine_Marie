@@ -146,6 +146,23 @@ class TestingTheIsland:
         with pytest.raises(ValueError):
             self.island.add_animals_on_island(new_animals)
 
+    def test_nonexistent_coordinated(self, initial_island):
+        """
+        Test that a ValueError is raised if trying to place animals on
+        nonexistent coordinates.
+        """
+        # the island is 5x5
+        wrong_x = [{'loc': (6, 6),
+                    'pop': {'species': 'Herbivore', 'age': 5, 'weight': 35}}]
+        wrong_y = [{'loc': (3, 6),
+                    'pop': {'species': 'Herbivore', 'age': 5, 'weight': 35}}]
+
+        with pytest.raises(ValueError):
+            self.island.add_animals_on_island(wrong_x)
+
+        with pytest.raises(ValueError):
+            self.island.add_animals_on_island(wrong_y)
+
     def test_that_number_of_animals_is_updated(self, initial_island, mocker):
         """
         Tests that number of animals before the year starts is updated by
