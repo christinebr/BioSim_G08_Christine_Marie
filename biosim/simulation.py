@@ -34,7 +34,7 @@ _CONVERT_BINARY = 'magick'
 # for the graphics files
 _DEFAULT_GRAPHICS_DIR = os.path.join('..', 'data')
 _DEFAULT_GRAPHICS_NAME = 'dv'
-_DEFAULT_MOVIE_FORMAT = 'mp4'   # alternatives: mp4, gif
+_DEFAULT_MOVIE_FORMAT = 'mp4'  # alternatives: mp4, gif
 
 # Set fontsize for text, axes title and tick labels
 plt.rc('font', size=8)
@@ -118,11 +118,11 @@ class BioSim:
         # Setting the max value and number of bins for the histograms
         if hist_specs is None:
             self._fit_max = 1.0
-            self._fit_bins = int(self._fit_max/0.05)
+            self._fit_bins = int(self._fit_max / 0.05)
             self._age_max = 60
-            self._age_bins = int(self._age_max/2)
+            self._age_bins = int(self._age_max / 2)
             self._weight_max = 60
-            self._weight_bins = int(self._weight_max/2)
+            self._weight_bins = int(self._weight_max / 2)
         else:
             self._set_hist_specs(hist_specs)
 

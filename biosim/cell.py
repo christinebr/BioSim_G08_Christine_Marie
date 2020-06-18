@@ -236,7 +236,7 @@ class SingleCell:
                 self.herbi_list.append(animal)
             elif isinstance(animal, Carnivores):
                 self.carni_list.append(animal)
-        
+
         return animals_move
 
     def animals_migrate(self):

@@ -118,10 +118,10 @@ class Animal:
         else:
             return (self._q(+1, self.age,
                             self._params['a_half'],
-                            self._params['phi_age']))\
-                      * (self._q(-1, self.weight,
-                                 self._params['w_half'],
-                                 self._params['phi_weight']))
+                            self._params['phi_age'])) \
+                   * (self._q(-1, self.weight,
+                              self._params['w_half'],
+                              self._params['phi_weight']))
 
     def probability_of_migration(self):
         """
@@ -167,7 +167,7 @@ class Animal:
             return 0., 0.
 
         birth_weight_newborn = self.birth_weight()
-        weight_loss = birth_weight_newborn*self._params['xi']
+        weight_loss = birth_weight_newborn * self._params['xi']
         if weight_loss > self.weight:  # animal loses to much weight, no birth
             return 0., 0.
         else:  # animal gives birth
@@ -275,7 +275,7 @@ class Carnivores(Animal):
         if fitness_carni <= fitness_herbi:
             return 0.
         elif 0 < fitness_carni - fitness_herbi < self._params['DeltaPhiMax']:
-            return (fitness_carni - fitness_herbi)/self._params['DeltaPhiMax']
+            return (fitness_carni - fitness_herbi) / self._params['DeltaPhiMax']
         else:
             return 1.
 
@@ -289,4 +289,4 @@ class Carnivores(Animal):
         weight_herbi : float
             the weight of the herbivore killed
         """
-        self.weight += round(self._params['beta']*weight_herbi, 2)
+        self.weight += round(self._params['beta'] * weight_herbi, 2)
