@@ -80,19 +80,6 @@ class Animal:
         """
         self.age += 1
 
-    def update_weight_after_eating(self, amount_fodder_eaten):
-        """
-        Update the weight of an animal after eating. The weight increases by
-        the amount of fodder eaten by the animal times the animal-parameter
-        'beta'.
-
-        Parameters
-        ----------
-        amount_fodder_eaten : float
-            the amount of fodder eaten by an animal
-        """
-        self.weight += round(self._params['beta'] * amount_fodder_eaten, 2)
-
     @staticmethod
     def _q(sign, x, x_half, phi):
         """ Static method of function used in fitness-method """
@@ -239,6 +226,19 @@ class Herbivores(Animal):
     def __init__(self, weight, age=0):
         """Create a herbivore with age 0."""
         super().__init__(weight, age)
+
+    def update_weight_after_eating(self, amount_fodder_eaten):
+        """
+        Update the weight of an animal after eating. The weight increases by
+        the amount of fodder eaten by the animal times the animal-parameter
+        'beta'.
+
+        Parameters
+        ----------
+        amount_fodder_eaten : float
+            the amount of fodder eaten by an animal
+        """
+        self.weight += round(self._params['beta'] * amount_fodder_eaten, 2)
 
 
 class Carnivores(Animal):
