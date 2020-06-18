@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from biosim.cell import SingleCell, Lowland, Desert, Water
+__author__ = "Marie Kolvik Valøy, Christine Brinchmann"
+__email__ = "mvaloy@nmbu.no, christibr@nmbu.no"
+
+from biosim.cell import SingleCell, Lowland, Desert, Water, Highland
 from biosim.animals import Herbivores, Carnivores
 import pytest
 from scipy.stats import binom_test
@@ -14,10 +17,6 @@ class TestSingleCell:
     def initial_cell_class(self):
         """
         Makes a single cell with animals to use as test-cell.
-
-        Returns
-        -------
-        None
         """
         animals = [{'species': 'Herbivore', 'age': 10, 'weight': 40},
                    {'species': 'Herbivore', 'age': 40, 'weight': 20},
@@ -29,13 +28,18 @@ class TestSingleCell:
         self.cell = SingleCell(animals_list=animals)
 
     @pytest.fixture()
+    def initial_two_herbivore_cell(self):
+        """
+        Makes a single cell with animals to use as test-cell for statistical tests.
+        """
+        two_herbivores = [{'species': 'Herbivore', 'age': 5, 'weight': 40}
+                          for _ in range(2)]
+        self.herbi_cell = SingleCell(animals_list=two_herbivores)
+
+    @pytest.fixture()
     def initial_statistic_cell(self):
         """
-        Makes a single cell with animals to use as test-cell for statistic tests.
-
-        Returns
-        -------
-        None
+        Makes a single cell with animals to use as test-cell for statistical tests.
         """
         self.herbivores = [{'species': 'Herbivore', 'age': 5, 'weight': 20}
                            for _ in range(100)]
@@ -44,16 +48,38 @@ class TestSingleCell:
     def test_empty_animal_list(self):
         """
         Check that it's possible to call SingleCell without supplying any
-        animals (i.e. with animals_list=None).
+        animals.
         """
-        cell = SingleCell(animals_list=None)
-        assert cell.animals_list == []
+        cell = SingleCell()
+        assert cell.herbi_list == []
+        assert cell.carni_list == []
+
+    def test_add_animals_after_migration(self, initial_two_herbivore_cell):
+        """
+        Test that it is possible to add animals to cell. The animals added is
+        either a class instance of Herbivores or Carnivores. Check this by
+        adding three carnivores to the cell first, and then adding two
+        herbivores.
+        """
+        # Before: 2 herbis and 0 carnis
+        assert len(self.herbi_cell.herbi_list) == 2
+        assert len(self.herbi_cell.carni_list) == 0
+        new_carnis = [Carnivores(age=9, weight=10) for _ in range(3)]
+        self.herbi_cell.add_animals_after_migration(new_carnis)
+        # After: 2 herbis and 3 carnis
+        assert len(self.herbi_cell.herbi_list) == 2
+        assert len(self.herbi_cell.carni_list) == 3
+        new_herbis = [Herbivores(age=3, weight=20) for _ in range(2)]
+        self.herbi_cell.add_animals_after_migration(new_herbis)
+        # After: 4 herbis and 3 carnis
+        assert len(self.herbi_cell.herbi_list) == 4
+        assert len(self.herbi_cell.carni_list) == 3
 
     def test_that_all_animals_age(self, initial_cell_class):
         """
         Tests that method age makes all animals get one year older.
-        The sum of the age in the test-sett increases with a number equal to
-        the number of animals every year.
+        The sum of the age in the test-set increases with a number equal to
+        the number of animals in the cell.
         """
         sum_old = 0
         for animal in self.cell.herbi_list + self.cell.carni_list:
@@ -87,7 +113,8 @@ class TestSingleCell:
         Tests that the birth method assigns a weight to the newborn animal.
         Strictly speaking, the test checks all animals, but if no animal has
         weight zero, there are no newborns with this weight either. And we've
-        already established that the birth-method makes new animals.
+        already established in an earlier test that the birth-method makes new
+        animals.
         """
         mocker.patch('random.random', return_value=0)
         # Makes sure there are newborns
@@ -99,54 +126,40 @@ class TestSingleCell:
 
         assert nonexsistent_newborns == 0
 
-    def test_that_mother_looses_weight(self, initial_cell_class, mocker):
+    def test_that_mother_looses_weight(self, initial_two_herbivore_cell, mocker):
         """
         Tests that the birth method makes the mother loose the correct amount
         of weight.
+        The two herbivores in 'initial_two_herbivore_cell' have weight 40,
+        which is above the weight limit to give birth for herbivores
+            3.5 * (8 + 1.5) = 33.25
+        This, in addition to the mocker of random.random(), makes sure that
+        both herbivores gives birth.
         """
         # Makes sure that there will be newborns
         mocker.patch('random.random', return_value=0)
         weight_newborn = 7
-        correct_weights = []
-        for herbi in self.cell.herbi_list:
-            if herbi.weight > 3.5 * (8 + 1.5):  # Tests against the weight limit for herbivores
-                correct_weights.append(herbi.weight - 1.2 * weight_newborn)
-            else:
-                correct_weights.append(herbi.weight)
+        correct_weights_after_birth = []
+        for herbi in self.herbi_cell.herbi_list:
+            correct_weights_after_birth.append(herbi.weight - 1.2 * weight_newborn)
 
-        for carni in self.cell.carni_list:
-            if carni.weight > 3.5 * (6 + 1.):  # Tests against the weight limit for carnivores
-                correct_weights.append(carni.weight - 1.1 * weight_newborn)
-            else:
-                correct_weights.append(carni.weight)
-
-        # Then find the old weights and the new weights
-        old_list_of_animals = self.cell.herbi_list + self.cell.carni_list
         mocker.patch('random.gauss', return_value=weight_newborn)
         # Makes sure newborns have the right weight.
-        self.cell.birth()
-        new_list_of_animals = self.cell.herbi_list + self.cell.carni_list
-        new_list_parents = []
-        for animal in new_list_of_animals:
-            if animal.weight != weight_newborn:
-                new_list_parents.append(animal)
-
-        old_weights = []
+        self.herbi_cell.birth()
         new_weights = []
-        for old_animal, new_animal in zip(old_list_of_animals, new_list_parents):
-            # Using zip like this makes sure we don't count any newborns.
-            old_weights.append(old_animal.weight)
-            new_weights.append(new_animal.weight)
+        for herbi in self.herbi_cell.herbi_list:
+            if herbi.weight != weight_newborn:
+                new_weights.append(herbi.weight)
 
-        assert pytest.approx(new_weights) == correct_weights
+        assert pytest.approx(new_weights) == correct_weights_after_birth
 
     def test_no_zombies(self, initial_cell_class, mocker):
         """
         Tests that dead animals does not continue to exist (no zombies welcome
         on this island).
 
-        The first test checks that an animal of weight zero disappears. And
-        that that the animals that are supposed to survive actually does so.
+        The first test checks that an animal of weight zero disappears, and
+        that the animals who are supposed to survive actually does so.
         The second test checks that when all animals dies, all of them
         disappears.
         """
@@ -178,8 +191,8 @@ class TestSingleCell:
         for carni in self.cell.carni_list:
             cars.append(isinstance(carni, Carnivores))
 
-        assert herbis == [True]*len(self.cell.herbi_list) and \
-            cars == [True]*len(self.cell.carni_list)
+        assert herbis == [True] * len(self.cell.herbi_list) and \
+               cars == [True] * len(self.cell.carni_list)
 
     def test_possible_no_animals(self):
         """
@@ -232,10 +245,10 @@ class TestSingleCell:
         Test that all animals in cell wants to move when mocking
         random.random(). check that no animals are left in cell
         """
-        num_animals_before = len(self.cell.herbi_list+self.cell.carni_list)
+        num_animals_before = len(self.cell.herbi_list + self.cell.carni_list)
         mocker.patch('random.random', return_value=0)
         moving_animals = self.cell.animals_stay_or_move()
-        num_animals_after = len(self.cell.herbi_list+self.cell.carni_list)
+        num_animals_after = len(self.cell.herbi_list + self.cell.carni_list)
         assert len(moving_animals) == num_animals_before
         assert num_animals_after == 0
 
@@ -244,10 +257,10 @@ class TestSingleCell:
         Test that no animals in cell wants to move when mocking
         random.random(). check that no animals are left in cell
         """
-        num_animals_before = len(self.cell.herbi_list+self.cell.carni_list)
+        num_animals_before = len(self.cell.herbi_list + self.cell.carni_list)
         mocker.patch('random.random', return_value=1)
         moving_animals = self.cell.animals_stay_or_move()
-        num_animals_after = len(self.cell.herbi_list+self.cell.carni_list)
+        num_animals_after = len(self.cell.herbi_list + self.cell.carni_list)
         assert len(moving_animals) == 0
         assert num_animals_before == num_animals_after
 
@@ -257,7 +270,7 @@ class TestSingleCell:
         the list for animals who wants to move to the north, and that no
         animals has magically appeared in any of the other lists.
         """
-        num_animals_before = len(self.cell.herbi_list+self.cell.carni_list)
+        num_animals_before = len(self.cell.herbi_list + self.cell.carni_list)
         mocker.patch('random.random', return_value=0)  # Makes sure all animals migrate
         mocker.patch('random.choice', return_value='North')
         north, east, south, west = self.cell.animals_migrate()
@@ -272,7 +285,7 @@ class TestSingleCell:
         the list for animals who wants to move to the east, and that no
         animals has magically appeared in any of the other lists.
         """
-        num_animals_before = len(self.cell.herbi_list+self.cell.carni_list)
+        num_animals_before = len(self.cell.herbi_list + self.cell.carni_list)
         mocker.patch('random.random', return_value=0)  # Makes sure all animals migrate
         mocker.patch('random.choice', return_value='East')
         north, east, south, west = self.cell.animals_migrate()
@@ -287,7 +300,7 @@ class TestSingleCell:
         the list for animals who wants to move to the south, and that no
         animals has magically appeared in any of the other lists.
         """
-        num_animals_before = len(self.cell.herbi_list+self.cell.carni_list)
+        num_animals_before = len(self.cell.herbi_list + self.cell.carni_list)
         mocker.patch('random.random', return_value=0)  # Makes sure all animals migrate
         mocker.patch('random.choice', return_value='South')
         north, east, south, west = self.cell.animals_migrate()
@@ -302,7 +315,7 @@ class TestSingleCell:
         the list for animals who wants to move to the west, and that no
         animals has magically appeared in any of the other lists.
         """
-        num_animals_before = len(self.cell.herbi_list+self.cell.carni_list)
+        num_animals_before = len(self.cell.herbi_list + self.cell.carni_list)
         mocker.patch('random.random', return_value=0)  # Makes sure all animals migrate
         mocker.patch('random.choice', return_value='West')
         north, east, south, west = self.cell.animals_migrate()
@@ -344,10 +357,6 @@ class TestLowland:
     def initial_lowland(self):
         """
         Makes a single cell with animals to use as test-cell for lowland-class.
-
-        Returns
-        -------
-        cell: [class instance] A lowland cell with animals
         """
         animals = [{'species': 'Herbivore', 'age': 10, 'weight': 15},
                    {'species': 'Herbivore', 'age': 40, 'weight': 20},
@@ -357,7 +366,6 @@ class TestLowland:
                    {'species': 'Carnivore', 'age': 37, 'weight': 5.7}
                    ]
         self.low = Lowland(animals_list=animals)
-        return self.low
 
     def test_no_cannibalism(self, initial_lowland, mocker):
         """
@@ -429,12 +437,12 @@ class TestLowland:
         sum_weight_herbi_before = 0
         for herbi in self.low.herbi_list:
             sum_weight_herbi_before += herbi.weight
-        av_herbi_before = sum_weight_herbi_before/len(self.low.herbi_list)
+        av_herbi_before = sum_weight_herbi_before / len(self.low.herbi_list)
 
         sum_weight_carni_before = 0
         for carni in self.low.carni_list:
             sum_weight_carni_before += carni.weight
-        av_carni_before = sum_weight_carni_before/len(self.low.carni_list)
+        av_carni_before = sum_weight_carni_before / len(self.low.carni_list)
 
         mocker.patch('random.random', return_value=0.03)
         # Makes sure some herbivores, but not all, are eaten.
@@ -442,11 +450,11 @@ class TestLowland:
         sum_weight_herbi_after = 0
         for herbi in self.low.herbi_list:
             sum_weight_herbi_after += herbi.weight
-        av_herbi_after = sum_weight_herbi_after/len(self.low.herbi_list)
+        av_herbi_after = sum_weight_herbi_after / len(self.low.herbi_list)
         sum_weight_carni_after = 0
         for carni in self.low.carni_list:
             sum_weight_carni_after += carni.weight
-        av_carni_after = sum_weight_carni_after/len(self.low.carni_list)
+        av_carni_after = sum_weight_carni_after / len(self.low.carni_list)
 
         assert av_herbi_before < av_herbi_after
         assert av_carni_before < av_carni_after
@@ -473,10 +481,6 @@ class TestDesert:
     def initial_desert(self):
         """
         Makes a single cell with animals to use as test-cell for desert-class.
-
-        Returns
-        -------
-        cell: [class instance] A desert cell with animals
         """
         animals = [{'species': 'Herbivore', 'age': 10, 'weight': 15},
                    {'species': 'Herbivore', 'age': 40, 'weight': 20},
@@ -486,7 +490,6 @@ class TestDesert:
                    {'species': 'Carnivore', 'age': 37, 'weight': 5.7}
                    ]
         self.desert = Desert(animals_list=animals)
-        return self.desert
 
     def test_no_herbs(self, initial_desert, mocker):
         """Tests that herbivores can't find food in the desert.
@@ -518,11 +521,43 @@ class TestDesert:
         assert herbi_before > herbi_after
 
 
+class TestHighland:
+
+    def test_make_highland_instance(self):
+        """
+        Makes sure it is possible to make a Highland-instance.
+        """
+        high = Highland()
+        assert isinstance(high, Highland)
+
+    def test_default_f_max(self):
+        """Test that default value for f_max is 300.0"""
+        high = Highland()
+        params = high.get_params()
+        assert params['f_max'] == 300.0
+
+    def test_animal_eat_rest_of_fodder_in_cell(self):
+        """
+        Test that herbivore eats the remainder of fodder in cell, even though
+        it is less that what it wants to eat.
+        Herbivore wants to eat an amount F=10.0.
+        Will set f_max in cell to 8.0 and calculate the gain of weight for
+        the herbivore when eating fodder=8.0. Weight calculated should be equal
+        to the weight of the herbivore.
+        """
+        animal = [{'species': 'Herbivore', 'age': 2, 'weight': 20}]
+        high = Highland(animals_list=animal)
+        high.set_params({'f_max': 8.0})
+        high.animals_in_cell_eat()
+        weight_after_eaten = 20 + 0.9 * 8.0
+        assert high.herbi_list[0].weight == weight_after_eaten
+
+
 class TestWater:
 
-    def test_make_water_instance(self):
+    def test_make_highland_instance(self):
         """
-        Makes sure it is possible to make a water-instance.
+        Makes sure it is possible to make a Water-instance.
         """
-        w = Water(animals_list=None)
+        w = Water()
         assert isinstance(w, Water)

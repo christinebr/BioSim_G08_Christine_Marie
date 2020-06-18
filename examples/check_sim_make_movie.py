@@ -5,16 +5,17 @@ import matplotlib.pyplot as plt
 
 from biosim.simulation import BioSim
 
+__author__ = "Marie Kolvik Valøy, Christine Brinchmann"
+__email__ = "mvaloy@nmbu.no, christibr@nmbu.no"
+
 """
-Compatibility check for BioSim simulations.
+Checking that it's possible to store pictures and make a movie. Remember to
+activate ffmpeg before trying.
 
-This script shall function with biosim packages written for
-the INF200 project June 2020.
+The test run is the same as in check_sim.py, a test from the project 
+description, which could be found at:
+https://github.com/heplesser/nmbu_inf200_june2020/blob/master/project_description/check_sim.py
 """
-
-__author__ = "Hans Ekkehard Plesser, NMBU"
-__email__ = "hans.ekkehard.plesser@nmbu.no"
-
 
 if __name__ == '__main__':
     plt.ion()
@@ -47,11 +48,11 @@ if __name__ == '__main__':
                           for _ in range(40)]}]
 
     sim = BioSim(island_map=geogr, ini_pop=ini_herbs,
-                 img_base='img_test',
+                 img_base='img_test',  # Makes sure images will be stored
                  seed=123456,
                  hist_specs={'fitness': {'max': 1.0, 'delta': 0.05},
-                              'age': {'max': 60.0, 'delta': 2},
-                              'weight': {'max': 60, 'delta': 2}},
+                             'age': {'max': 60.0, 'delta': 2},
+                             'weight': {'max': 60, 'delta': 2}},
                  )
 
     sim.set_animal_parameters('Herbivore', {'zeta': 3.2, 'xi': 1.8})
@@ -60,11 +61,16 @@ if __name__ == '__main__':
                                             'DeltaPhiMax': 9.})
     sim.set_landscape_parameters('L', {'f_max': 700})
 
+    # Simulate first 100 years with only herbivores
     sim.simulate(num_years=100, vis_years=1, img_years=5)
 
+    # Add carnivores and simulate 100 years more
     sim.add_population(population=ini_carns)
     sim.simulate(num_years=100, vis_years=1, img_years=5)
 
+    # To get longer video - increase num_years to simulate more years
+
+    # Makes a movie
     sim.make_movie()
 
-    input('Press ENTER')
+    input('Press ENTER to finish. Then the plot will disappear.')

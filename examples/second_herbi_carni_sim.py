@@ -2,35 +2,34 @@
 
 from biosim.cell import Lowland
 import matplotlib.pyplot as plt
-import textwrap
 
+__author__ = "Marie Kolvik Valøy, Christine Brinchmann"
+__email__ = "mvaloy@nmbu.no, christibr@nmbu.no"
+
+"""
+Our second test run on plotting both herbivores and carnivores in a cell. No
+migration. Since we only use the cell class, we have to do the annual cycle 
+using a for loop.
+"""
 
 if __name__ == "__main__":
-    geogr = """\
-               WWW
-               WLW
-               WWW"""
-    geogr = textwrap.dedent(geogr)
+    ini_herbs = [{'species': 'Herbivore',
+                  'age': 5,
+                  'weight': 20}
+                 for _ in range(150)]
 
-    ini_herbs = [{'loc': (10, 10),
-                  'pop': [{'species': 'Herbivore',
-                           'age': 5,
-                           'weight': 20}
-                          for _ in range(150)]}]
+    ini_carns = [{'species': 'Carnivore',
+                  'age': 5,
+                  'weight': 20}
+                 for _ in range(20)]
 
-    ini_carns = [{'loc': (10, 10),
-                  'pop': [{'species': 'Carnivore',
-                           'age': 5,
-                           'weight': 20}
-                          for _ in range(10)]}]
-
-    low = Lowland(ini_herbs[0]['pop'])
+    low = Lowland(ini_herbs)
     herbi_count = []
     carni_count = []
     years = list(range(300))
     for year in years:
         if year == 50:
-            low.add_animals_to_cell(ini_carns[0]['pop'])
+            low.add_animals_to_cell(ini_carns)  # Adding carnivores after 50 years
         herbi_count.append(len(low.herbi_list))
         carni_count.append(len(low.carni_list))
         low.animals_in_cell_eat()

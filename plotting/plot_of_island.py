@@ -2,7 +2,13 @@
 
 import matplotlib.pyplot as plt
 
+__author__ = "Marie Kolvik Valøy, Christine Brinchmann"
+__email__ = "mvaloy@nmbu.no, christibr@nmbu.no"
+
 """
+This is where we test how to make the map of the island and make changes in the
+map before implementing changes into the main plot section.
+
 Initial code taken from Hans Ekkehard Plesser
 from nmbu_inf200_june2020 repository inside the directories examples->plotting
 filename: mapping.py

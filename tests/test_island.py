@@ -3,6 +3,9 @@
 from biosim.island import TheIsland
 import pytest
 
+__author__ = "Marie Kolvik Valøy, Christine Brinchmann"
+__email__ = "mvaloy@nmbu.no, christibr@nmbu.no"
+
 
 class TestingTheIsland:
 
@@ -10,9 +13,6 @@ class TestingTheIsland:
     def initial_island(self):
         """
         Makes a simple test-model to use in tests
-        Returns
-        -------
-        A simple test-model
         """
         test_island = """\
                             WWWWW
@@ -24,23 +24,19 @@ class TestingTheIsland:
                          'pop': [{'species': 'Herbivore',
                                   'age': 5,
                                   'weight': 35} for _ in range(200)]
-                        + [{'species': 'Carnivore',
-                            'age': 5,
-                            'weight': 20} for _ in range(20)]}
+                                + [{'species': 'Carnivore',
+                                    'age': 5,
+                                    'weight': 20} for _ in range(20)]}
                         ]
 
         self.island = TheIsland(landscape_of_cells=test_island, animals_on_island=test_animals)
         herbis, carnis = self.island.give_animals_in_cell(2, 3)
         self.animals = herbis + carnis
-        return self.island, self.animals
 
     @pytest.fixture()
     def start_point_migration(self):
         """
         Makes a simple test-model to use in tests for migration
-        Returns
-        -------
-        A simple test-model
         """
         test_island = """\
                             WWWWW
@@ -52,14 +48,13 @@ class TestingTheIsland:
                          'pop': [{'species': 'Herbivore',
                                   'age': 5,
                                   'weight': 35} for _ in range(200)]
-                        + [{'species': 'Carnivore',
-                            'age': 5,
-                            'weight': 20} for _ in range(20)]}
+                                + [{'species': 'Carnivore',
+                                    'age': 5,
+                                    'weight': 20} for _ in range(20)]}
                         ]
 
         self.isl_mig = TheIsland(landscape_of_cells=test_island,
                                  animals_on_island=test_animals)
-        return self.isl_mig
 
     def test_if_check_size(self):
         """
@@ -133,9 +128,8 @@ class TestingTheIsland:
                             WLDLW
                             WWWWW"""
         isl = TheIsland(landscape_of_cells=test_island)
-        num_animals = isl.total_num_animals_on_island()[0]
-        assert isl.animals_on_island == []
-        assert num_animals == 0
+        tot_num_animals = isl.total_num_animals_on_island()[0]
+        assert tot_num_animals == 0
 
     def test_adding_animals_to_water_cell(self, initial_island):
         """

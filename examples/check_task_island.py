@@ -5,10 +5,17 @@ import matplotlib.pyplot as plt
 
 from biosim.simulation import BioSim
 
-"""
-Island in the task description.
-"""
+__author__ = "Marie Kolvik Valøy, Christine Brinchmann"
+__email__ = "mvaloy@nmbu.no, christibr@nmbu.no"
 
+"""
+Testing our simulation with the island in the task description.
+
+
+The main setup was copypasted from check_sim.py, a test from the project 
+description, which could be found at:
+https://github.com/heplesser/nmbu_inf200_june2020/blob/master/project_description/check_sim.py
+"""
 
 if __name__ == '__main__':
     plt.ion()
@@ -41,8 +48,8 @@ if __name__ == '__main__':
     ini_pop = [{'loc': (2, 3),
                 'pop': [{'species': 'Herbivore', 'age': 5, 'weight': 20}
                         for _ in range(150)]
-                + [{'species': 'Carnivore', 'age': 5, 'weight': 20}
-                    for _ in range(20)]}]
+                       + [{'species': 'Carnivore', 'age': 5, 'weight': 20}
+                          for _ in range(20)]}]
 
     sim = BioSim(island_map=geogr, ini_pop=ini_pop, seed=654321,
                  hist_specs={'fitness': {'max': 1.0, 'delta': 0.05},
@@ -58,4 +65,4 @@ if __name__ == '__main__':
 
     sim.simulate(num_years=200, vis_years=1, img_years=2000)
 
-    input('Press ENTER')
+    input('Press ENTER to finish. Then the plot will disappear.')

@@ -6,18 +6,39 @@
 Welcome to BioSim's documentation!
 ===================================
 
-This is a simulation of the ecosystem on an island.
+This is our exam project in the course INF200, advanced programing,
+at NMBU, completed in June 2020.
+
+BioSim simulates the population dynamics on the fictional island Rossumøya.
+Rossumøya has two species of animals, herbivores and carnivores, and four different
+types of landscape, lowland, highland, desert an water. The goal of the project
+is to test if both the species are able to survive on the island over time and
+with different scenarios.
+
+The user interface of the package is given by :mod:`biosim.simulation`.
+The :class:`BioSim` instance represents each simulation. Users kan call the :meth:`BioSim.simulate` method on these instances as often as wanted to
+simulate a given number of years. It's also possible to add new animals on the
+island between calls.
+
+The simulation can also handle other islands, as long as
+they follow the descriptions: only consisting of the prescribed four types of
+landscapes, and all outer cell should be water cells. This has to be specified
+when initialising.
+
+Contents
+-----------
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
 
+   animal
+   cell
    island
    simulation
 
 
 Indices and tables
-==================
+---------------------
 
 * :ref:`genindex`
 * :ref:`modindex`

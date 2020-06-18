@@ -1,4 +1,14 @@
+# -*- coding: utf-8 -*-
+
 from biosim.island import TheIsland
+
+__author__ = "Marie Kolvik Valøy, Christine Brinchmann"
+__email__ = "mvaloy@nmbu.no, christibr@nmbu.no"
+
+"""
+This was the main block of island.py. We used this to test the outputs of our 
+new methods.
+"""
 
 if __name__ == "__main__":
     ini_herbs = [{'loc': (2, 2),
@@ -61,11 +71,13 @@ if __name__ == "__main__":
            ]
 
     print("\nAnimals in cell before:",
-          len(isl.island_cells[1][1].herbi_list+isl.island_cells[1][1].carni_list))
+          len(isl.island_cells[1][1].herbi_list + isl.island_cells[1][1].carni_list))
     isl.add_animals_on_island(new_animals=new)
     print("Animals in cell after:",
-          len(isl.island_cells[1][1].herbi_list+isl.island_cells[1][1].carni_list))
+          len(isl.island_cells[1][1].herbi_list + isl.island_cells[1][1].carni_list))
 
+    # Testing an island with more than one inhabitable cell:
+    print('\nBIGGER ISLAND, FOR TESTING MIGRATION')
     bigger_island = """\
                         WWWWW
                         WLLLW
@@ -77,11 +89,6 @@ if __name__ == "__main__":
                      'pop': [{'species': 'Carnivore', 'age': 5, 'weight': 30}
                              for _ in range(200)]
                      }]
-                    # {'loc': (2, 3),
-                    #  'pop': [{'species': 'Herbivore', 'age': 5, 'weight': 30}
-                    #          for _ in range(10)]
-                    #  }
-                    # ]
 
     isl2 = TheIsland(landscape_of_cells=bigger_island)
     print("Original landscape given in:\n", isl2.landscape)
@@ -89,15 +96,14 @@ if __name__ == "__main__":
     print("Landscape used in TheIsland-class\n", isl2.island_cells)
     isl2.add_animals_on_island(new_animals=animals_isl2)
     print(isl2.give_animals_in_cell(2, 2))
-    print("before migration")
-    print(isl2.migration())
-    print(isl2.migration())
-    print(isl2.migration())
-    print(isl2.migration())
-    print(isl2.migration())
-    print(isl2.migration())
-    print(isl2.migration())
-    print(isl2.migration())
+    isl2.migration()
+    isl2.migration()
+    isl2.migration()
+    isl2.migration()
+    isl2.migration()
+    isl2.migration()
+    isl2.migration()
+    isl2.migration()
     print("after migration")
     herb, carn = isl2.give_animals_in_cell(2, 2)
     print(f"\nAnimals in (2, 2):", len(herb + carn))

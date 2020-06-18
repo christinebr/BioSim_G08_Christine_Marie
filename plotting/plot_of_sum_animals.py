@@ -3,6 +3,15 @@
 import matplotlib.pyplot as plt
 from biosim.island import TheIsland
 
+__author__ = "Marie Kolvik Valøy, Christine Brinchmann"
+__email__ = "mvaloy@nmbu.no, christibr@nmbu.no"
+
+"""
+This is where we test how to make the plot of the number of herbivores and 
+carnivores on the island and tests changes before implementing into the main 
+plot section.
+"""
+
 if __name__ == "__main__":
     num_of_years = 100
     geogr = """\
@@ -12,22 +21,22 @@ if __name__ == "__main__":
                WWWWW"""
 
     ini_animals = [{'loc': (2, 3),
-                     'pop': [{'species': 'Herbivore',
-                              'age': 5,
-                              'weight': 20} for _ in range(200)]
-                            + [{'species': 'Carnivore',
-                                'age': 5,
-                                'weight': 20} for _ in range(20)]
-                    },
-                   {'loc': (3,3),
                     'pop': [{'species': 'Herbivore',
-                              'age': 5,
-                              'weight': 20} for _ in range(200)]
-                            + [{'species': 'Carnivore',
-                                'age': 5,
-                                'weight': 20} for _ in range(20)]
+                             'age': 5,
+                             'weight': 20} for _ in range(200)]
+                           + [{'species': 'Carnivore',
+                               'age': 5,
+                               'weight': 20} for _ in range(20)]
+                    },
+                   {'loc': (3, 3),
+                    'pop': [{'species': 'Herbivore',
+                             'age': 5,
+                             'weight': 20} for _ in range(200)]
+                           + [{'species': 'Carnivore',
+                               'age': 5,
+                               'weight': 20} for _ in range(20)]
                     }
-                    ]
+                   ]
 
     island = TheIsland(geogr, ini_animals)
     # Makes the island

@@ -4,6 +4,14 @@ import matplotlib.pyplot as plt
 import numpy as np
 from biosim.island import TheIsland
 
+__author__ = "Marie Kolvik Valøy, Christine Brinchmann"
+__email__ = "mvaloy@nmbu.no, christibr@nmbu.no"
+
+"""
+We considered making a separate class for plotting, but then decided against it.
+This is our try, it has not been updated, nor tested.
+"""
+
 
 class Plotting:
 
@@ -85,12 +93,16 @@ class Plotting:
 
     def heatmaps_sepcies_dist(self, herbis_dist, carnis_dist, cmax_animals):
         """
-        Makes heatmaps showing the distribution of herbivore and carnivare distribution on the island.
+        Makes heatmaps showing the distribution of herbivore and carnivare
+        distribution on the island.
         Parameters
         ----------
-        herbis_dist: [list of lists] Amount of herbivores in each cell.
-        carnis_dist: [list of lists] Amount of carnivores in each cell.
-        cmax_animals: [dict] Maximum values for colorbars of herbivores and carnivores.
+        herbis_dist: [list of lists]
+            Amount of herbivores in each cell.
+        carnis_dist: [list of lists]
+            Amount of carnivores in each cell.
+        cmax_animals: [dict]
+            Maximum values for colorbars of herbivores and carnivores.
         """
         width_island = len(herbis_dist[0])
         height_island = len(herbis_dist)
@@ -114,19 +126,24 @@ class Plotting:
 
     def histograms(self, herbi_properties, carni_properties, hist_specs):
         """
-        Makes histograms for the properties fitness, age and weight for herbivores and arnivores.
+        Makes histograms for the properties fitness, age and weight for
+        herbivores and arnivores.
         Parameters
         ----------
-        herbi_properties: [list of lists] List of lists with fitness, age and weight for all herbivores.
-        carni_properties: [list of list] List of list with fitness, age, weight for all carnivores.
-        hist_specs: [dict of dict] Dictionary with dictionaries, with specifications for the histograms.
+        herbi_properties: [list of lists]
+            List of lists with fitness, age and weight for all herbivores.
+        carni_properties: [list of list]
+            List of list with fitness, age, weight for all carnivores.
+        hist_specs: [dict of dict]
+            Dictionary with dictionaries, with specifications for the
+            histograms.
 
         Returns
         -------
         Plots histograms
         """
-        for property, specs in hist_specs.items():
-            if property == 'fitness':
+        for prop, specs in hist_specs.items():
+            if prop == 'fitness':
                 self.ax7.hist(herbi_properties[0], binwith=specs['delta'], range=(0, specs['max']),
                               histtype='stepfilled', fill=False, edgecolor='blue')
                 self.ax7.hist(carni_properties[0], binwith=specs['delta'], range=(0, specs['max']),
@@ -135,7 +152,7 @@ class Plotting:
                 xticks = np.linspace(0, specs['max'], 5)
                 self.ax7.set_xticks(xticks)
                 self.ax7.set_xticklabels(xticks, fontsize=self.font_axes)
-            if property == 'age':
+            if prop == 'age':
                 self.ax8.hist(herbi_properties[1], binwith=specs['delta'], range=(0, specs['max']),
                               histtype='stepfilled', fill=False, edgecolor='blue')
                 self.ax8.hist(carni_properties[1], binwith=specs['delta'], range=(0, specs['max']),
@@ -144,7 +161,7 @@ class Plotting:
                 xticks = np.linspace(0, specs['max'], 4)
                 self.ax8.set_xticks(xticks)
                 self.ax8.set_xticklabels(xticks, fontsize=self.font_axes)
-            if property == 'weight':
+            if prop == 'weight':
                 self.ax9.hist(herbi_properties[2], binwith=specs['delta'], range=(0, specs['max']),
                               histtype='stepfilled', fill=False, edgecolor='blue')
                 self.ax9.hist(carni_properties[2], binwith=specs['delta'], range=(0, specs['max']),
@@ -160,6 +177,7 @@ class Plotting:
         """
         pass
 
+
 if __name__ == '__main__':
     geogr = """WWWWW
     WWLHW
@@ -174,21 +192,20 @@ if __name__ == '__main__':
                WWWWW"""
 
     ini_animals = [{'loc': (2, 4),
-                     'pop': [{'species': 'Herbivore',
-                              'age': 5,
-                              'weight': 20} for _ in range(200)]
-                            + [{'species': 'Carnivore',
-                                'age': 5,
-                                'weight': 20} for _ in range(20)]
-                    },
-                   {'loc': (3,3),
                     'pop': [{'species': 'Herbivore',
-                              'age': 5,
-                              'weight': 20} for _ in range(200)]
-                            + [{'species': 'Carnivore',
-                                'age': 5,
-                                'weight': 20} for _ in range(20)]}
-                    ]
+                             'age': 5,
+                             'weight': 20} for _ in range(200)]
+                           + [{'species': 'Carnivore',
+                               'age': 5,
+                               'weight': 20} for _ in range(20)]
+                    },
+                   {'loc': (3, 3),
+                    'pop': [{'species': 'Herbivore',
+                             'age': 5,
+                             'weight': 20} for _ in range(200)]
+                           + [{'species': 'Carnivore',
+                               'age': 5,
+                               'weight': 20} for _ in range(20)]}
+                   ]
 
     isl = TheIsland(geogr_island)
-
