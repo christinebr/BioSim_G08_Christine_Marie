@@ -11,7 +11,7 @@ at NMBU, completed in June 2020.
 
 BioSim simulates the population dynamics on the fictional island Rossumøya.
 Rossumøya has two species of animals, herbivores and carnivores, and four different
-types of landscape, lowland, highland, desert an water. The goal of the project
+types of landscape, lowland, highland, desert and water. The goal of the project
 is to test if both the species are able to survive on the island over time and
 with different scenarios.
 
@@ -21,9 +21,9 @@ simulate a given number of years. It's also possible to add new animals on the
 island between calls.
 
 The simulation can also handle other islands, as long as
-they follow the descriptions: only consisting of the prescribed four types of
-landscapes, and all outer cell should be water cells. This has to be specified
-when initialising.
+they follow the requirements: only consisting of the prescribed four types of
+landscapes, and all outer cell should be water cells. The geography of the
+island must be specified when initialising the :class:`BioSim` instance.
 
 Contents
 -----------
