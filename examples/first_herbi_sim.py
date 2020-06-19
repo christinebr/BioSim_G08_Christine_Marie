@@ -27,7 +27,8 @@ if __name__ == "__main__":
 
     low = Lowland(ini_herbs[0]['pop'])
     herbi_count = []
-    for year in range(100):
+    years = 300
+    for year in range(years):
         herbi_count.append(len(low.herbi_list + low.carni_list))
         low.animals_in_cell_eat()
         low.birth()
@@ -35,5 +36,5 @@ if __name__ == "__main__":
         low.weight_loss_end_of_year()
         low.death()
     plt.figure()
-    plt.plot([year for year in range(100)], herbi_count)
+    plt.plot([year for year in range(years)], herbi_count)
     plt.show()

@@ -32,18 +32,20 @@ if __name__ == '__main__':
     plt.ion()
 
     geogr = """\
-                WWWWWWWWW
-                WDDDDDDDW
-                WDDDDDDDW
-                WDDDDDDDW
-                WDDDDDDDW
-                WDDDDDDDW
-                WDDDDDDDW
-                WDDDDDDDW
-                WWWWWWWWW"""
+                WWWWWWWWWWW
+                WDDDDDDDDDW
+                WDDDDDDDDDW
+                WDDDDDDDDDW
+                WDDDDDDDDDW
+                WDDDDDDDDDW
+                WDDDDDDDDDW
+                WDDDDDDDDDW
+                WDDDDDDDDDW
+                WDDDDDDDDDW
+                WWWWWWWWWWW"""
     geogr = textwrap.dedent(geogr)
 
-    initial_a = [{'loc': (5, 5),
+    initial_a = [{'loc': (6, 6),
                   'pop': [{'species': 'Herbivore',
                            'age': 5, 'weight': 20}
                           for _ in range(1000)]
@@ -54,10 +56,10 @@ if __name__ == '__main__':
                  ]
 
     sim = BioSim(island_map=geogr, ini_pop=initial_a,
-                 seed=123456,
+                 seed=1,
                  hist_specs={'fitness': {'max': 1.0, 'delta': 0.05},
                              'age': {'max': 60.0, 'delta': 2},
-                             'weight': {'max': 60, 'delta': 2}},
+                             'weight': {'max': 60, 'delta': 2}}
                  )
 
     # Setting the parameters of animals so that the numbers don't change, and
